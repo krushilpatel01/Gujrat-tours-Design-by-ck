@@ -44,7 +44,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="../../index3.html" class="nav-link">Home</a>
+          <a href="../../index.php" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
           <a href="#" class="nav-link">Contact</a>
@@ -362,7 +362,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
                 <li class="breadcrumb-item active">Compose</li>
               </ol>
             </div>
@@ -517,13 +517,12 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
       </section>
       <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-      <div class="float-right d-none d-sm-block">
-        <b>Version</b> 3.2.0
-      </div>
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-    </footer>
+
+
+    <!-- footer link -->
+    <?php
+    include ('../../../components/header-footer/footer.php');
+    ?>
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
