@@ -22,7 +22,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Trip Query</title>
+    <title>AdminLTE 3 | Trip-Query</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -374,7 +374,6 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                             </ol>
                         </div>
                     </div>
-                </div><!-- /.container-fluid -->
             </section>
 
             <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
@@ -382,13 +381,10 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
             </a>
         </div>
 
-        <!-- <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.2.0
-            </div>
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-            reserved.
-        </footer> -->
+        <!-- footer link -->
+        <?php
+        include ('../../../components/header-footer/footer.php');
+        ?>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">

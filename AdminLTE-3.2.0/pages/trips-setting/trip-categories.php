@@ -1,18 +1,38 @@
 <?php
-// include '../user/config.php';
+include '../../../user/config.php';
 
 session_start();
 
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
+}
+if (isset($_POST['add_categories'])) {
+    $image = $_FILES['image']['name'];
+    $image_size = $_FILES['image']['size'];
+    $image_tmp_name = $_FILES['image']['tmp_name'];
+    $image_folder = 'upload_img/' . $image;
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $detail = $_POST['detail'];
 
-    // Print user name and ID
-//   echo "Welcome, $user_name!<br>";
-//   echo "Your user ID is: $user_id<br>";
-//   echo "Session status: Active";
-// } else {
-//   echo "Session not active or user not logged in.";
+    $select_trip_name = mysqli_query($conn, "SELECT name FROM `categories` WHERE name = '$name'") or die('query failed');
+
+    if (mysqli_num_rows($select_trip_name) > 0) {
+        $message[] = 'product name  already addded';
+    } else {
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `categories`(name, detail, image) VALUES('$name', '$detail', '$image')") or die('query failed');
+
+        if ($add_trip_query) {
+            if ($image_size > 2000000) {
+                $message[] = 'image size is to large';
+            } else {
+                move_uploaded_file($image_tmp_name, $image_folder);
+                $message[] = 'product added succesfully';
+            }
+        } else {
+            $message[] = 'product coude not be added!';
+        }
+    }
 }
 ?>
 
@@ -22,7 +42,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Trip Categories</title>
+    <title>AdminLTE 3 | Ticket-Categories</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -374,7 +394,46 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                             </ol>
                         </div>
                     </div>
-                </div><!-- /.container-fluid -->
+                    <!-- add new trip -->
+                    <div class="row add-categories">
+                        <div class="col-4 mb-5">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+                                <input type="text" name="name" id="" placeholder="Enter categories Name" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <input type="text" name="detail" id="" placeholder="Enter Categories Detail" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <input type="submit" name="add_categories" value="Add Categories"
+                                    class="btn btn-warning" style="margin: 10px auto; padding:10px 0px; width:50%;">
+                            </form>
+                        </div>
+                    </div>
+                    <!-- show trip code -->
+                    <div class="row d-flex flex-wrap">
+                        <?php
+                        $select_trip = mysqli_query($conn, "SELECT * FROM `categories`") or die('query failed');
+                        if (mysqli_num_rows($select_trip) > 0) {
+                            while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
+                                ?>
+                                <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
+                                    <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
+                                        style="width:100%; height:100%;">
+                                    <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
+                                    <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
+                                    <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
+                                        class="btn btn-warning">update</a>
+                                    <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
+                                        class="btn btn-warning">delete</a>
+                                </div>
+                                <?php
+                            }
+                        } else {
+                            echo '<p class="empty">no product added yet!</p>';
+                        }
+                        ?>
+                    </div>
+                </div>
             </section>
 
             <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
@@ -382,13 +441,10 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
             </a>
         </div>
 
-        <!-- <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.2.0
-            </div>
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-            reserved.
-        </footer> -->
+        <!-- footer link -->
+        <?php
+        include ('../../../components/header-footer/footer.php');
+        ?>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">

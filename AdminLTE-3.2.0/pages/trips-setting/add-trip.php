@@ -43,7 +43,7 @@ if (isset($_POST['add_trip'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Ticket-Booking</title>
+    <title>AdminLTE 3 | Add-Trip</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -395,71 +395,95 @@ if (isset($_POST['add_trip'])) {
                             </ol>
                         </div>
                     </div>
+                    <!-- add new trip -->
                     <div class="row add-trip">
                         <div class="col-4 mb-5">
                             <form action="" method="post" enctype="multipart/form-data">
                                 <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
-                                    style="width:100%; margin:10px auto; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
                                 <input type="text" name="name" id="" placeholder="Enter Trip Name" required
-                                    style="width:100%; margin:10px auto; text-indent:10px; outline: none;">
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
                                 <input type="text" name="price" id="" placeholder="Enter Trip price" required
-                                    style="width:100%; margin:10px auto; text-indent:10px; outline: none;">
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
                                 <input type="text" name="detail" id="" placeholder="Enter Trip Detail" required
-                                    style="width:100%; margin:10px auto; text-indent:10px; outline: none;">
-                                <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning">
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <label for="Categories">Trip Activities</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="go on safari"
+                                        id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Go On Safari
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="hiking" id="flexCheckChecked"
+                                        checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Hiking
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="hot air ballon"
+                                        id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Hot Air Ballon
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="rafting"
+                                        id="flexCheckChecked" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Rafting
+                                    </label>
+                                </div>
+                                <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
+                                    style="margin: 10px auto; padding:10px 0px; width:50%;">
                             </form>
                         </div>
                     </div>
-                    <div class="row justify-content-between">
-                        <div class="col-4 show_trip d-flex">
-                            <?php
-                            $select_trip = mysqli_query($conn, "SELECT * FROM `trip`") or die('query failed');
-                            if (mysqli_num_rows($select_trip) > 0) {
-                                while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
-                                    ?>
-                                    <div class="box">
-                                        <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
-                                            style="width:100%; height:100%;">
-                                        <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
-                                        <h2 class="price"><?php echo $fetch_trip['price']; ?></h2>
-                                        <p class="detail"><?php echo $fetch_trip['detail']; ?></p>
-                                        <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
-                                            class="btn btn-warning">update</a>
-                                        <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
-                                            class="btn btn-warning">delete</a>
-                                    </div>
-                                    <?php
-                                }
-                            } else {
-                                echo '<p class="empty">no product added yet!</p>';
+                    <!-- show trip code -->
+                    <div class="row d-flex flex-wrap">
+                        <?php
+                        $select_trip = mysqli_query($conn, "SELECT * FROM `trip`") or die('query failed');
+                        if (mysqli_num_rows($select_trip) > 0) {
+                            while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
+                                ?>
+                                <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
+                                    <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
+                                        style="width:100%; height:100%;">
+                                    <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
+                                    <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
+                                    <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
+                                    <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
+                                        class="btn btn-warning">update</a>
+                                    <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
+                                        class="btn btn-warning">delete</a>
+                                </div>
+                                <?php
                             }
-                            ?>
-                        </div>
+                        } else {
+                            echo '<p class="empty">no product added yet!</p>';
+                        }
+                        ?>
                     </div>
-
-                    <div class="col"></div>
                 </div>
-        </div><!-- /.container-fluid -->
-        </section>
+            </section>
 
-        <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
-            <i class="fas fa-chevron-up"></i>
-        </a>
-    </div>
+            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+                <i class="fas fa-chevron-up"></i>
+            </a>
+        </div>
 
-    <!-- <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 3.2.0
-            </div>
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-            reserved.
-        </footer> -->
+        <!-- footer link -->
+        <?php
+        include ('../../../components/header-footer/footer.php');
+        ?>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 
