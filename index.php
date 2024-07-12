@@ -11,6 +11,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>home page</title>
     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="components/bootstrap-5.0.2-dist/css/style.css">
+    <link rel="stylesheet" href="components/bootstrap-5.0.2-dist/css/style.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- font awesome cdn link -->
@@ -75,6 +77,7 @@ session_start();
 </script>
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="components/bootstrap-5.0.2-dist/js/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
 <!-- font awesome cdn js link -->

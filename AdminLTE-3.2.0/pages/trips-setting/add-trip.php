@@ -7,36 +7,70 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
 }
+
 if (isset($_POST['add_trip'])) {
     $image = $_FILES['image']['name'];
     $image_size = $_FILES['image']['size'];
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = 'upload_img/' . $image;
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $trip_name = mysqli_real_escape_string($conn, $_POST['name']);
     $price = $_POST['price'];
     $detail = $_POST['detail'];
 
-    $select_trip_name = mysqli_query($conn, "SELECT name FROM `trip` WHERE name = '$name'") or die('query failed');
+    // destination value get
+    $selected_value = $_POST['destination'];
+    $selected_values = explode(',', $selected_value);
+
+    if (count($selected_values) == 2) {
+        $destination_id = $conn->real_escape_string($selected_values[0]);
+        $destination = $conn->real_escape_string($selected_values[1]);
+    } 
+
+    // types value get
+    $selected_value = $_POST['types'];
+    $selected_values = explode(',', $selected_value);
+
+    if (count($selected_values) == 2) {
+        $types_id = $conn->real_escape_string($selected_values[0]);
+        $types = $conn->real_escape_string($selected_values[1]);
+    } 
+
+    // categories option value get
+    if (!empty($_POST['categories'])) {
+        // Retrieve the category names based on the selected IDs
+        $id_placeholders = implode(",", array_fill(0, count($_POST['categories']), "?"));
+        $stmt = $conn->prepare("SELECT name FROM categories WHERE id IN ($id_placeholders)");
+        $stmt->bind_param(str_repeat("i", count($_POST['categories'])), ...$_POST['categories']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $category_names = [];
+        while ($row = $result->fetch_assoc()) {
+            $category_names[] = $row['name'];
+        }
+        $category_names_str = implode(",", $category_names);
+    }
+
+    $select_trip_name = mysqli_query($conn, "SELECT name FROM `trip` WHERE name = '$trip_name'") or die('query failed');
 
     if (mysqli_num_rows($select_trip_name) > 0) {
-        $message[] = 'product name  already addded';
-    } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image) VALUES('$name', '$price', '$detail', '$image')") or die('query failed');
+        $message[] = 'Trip name already added';
+    } 
+    else {
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, destination, types, category_names, auther) VALUES('$trip_name', '$price', '$detail', '$image', '$destination', '$types', '$category_names_str', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
-                $message[] = 'image size is to large';
+                $message[] = 'Image size is too large';
             } else {
                 move_uploaded_file($image_tmp_name, $image_folder);
-                $message[] = 'product added succesfully';
+                $message[] = 'Trip added successfully';
             }
         } else {
-            $message[] = 'product coude not be added!';
+            $message[] = 'Trip could not be added!';
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -336,6 +370,7 @@ if (isset($_POST['add_trip'])) {
                                 </p>
                             </a>
                         </li>
+                        <!-- mail box -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon far fa-envelope"></i>
@@ -401,40 +436,62 @@ if (isset($_POST['add_trip'])) {
                             <form action="" method="post" enctype="multipart/form-data">
                                 <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+                                <label for="category" style="margin-bottom:0px;">Trip Name:</label>
                                 <input type="text" name="name" id="" placeholder="Enter Trip Name" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <label for="category" style="margin-bottom:0px;">Trip Price:</label>
                                 <input type="text" name="price" id="" placeholder="Enter Trip price" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <label for="category" style="margin-bottom:0px;">Trip Detail:</label>
                                 <input type="text" name="detail" id="" placeholder="Enter Trip Detail" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                <label for="Categories">Trip Activities</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="go on safari"
-                                        id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        Go On Safari
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="hiking" id="flexCheckChecked"
-                                        checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Hiking
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="hot air ballon"
-                                        id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Hot Air Ballon
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="rafting"
-                                        id="flexCheckChecked" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Rafting
-                                    </label>
+                                <!-- choose distination -->
+                                <label for="category" style="margin-bottom:0px;">Destination:</label>
+                                <select id="destination" name="destination" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                    <?php
+                                    $destination_query = "SELECT id, name FROM destination";
+                                    $destination_result = $conn->query($destination_query);
+                                    if ($destination_result->num_rows > 0) {
+                                        while ($row = $destination_result->fetch_assoc()) {
+                                            echo "<option value='" . $row["id"] . "," . $row["name"] . "'>" . $row["name"] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>No Destination Available</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <!--choose types-->
+                                <label for="category" style="margin-bottom:0px;">Types:</label>
+                                <select id="types" name="types"
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                    <?php
+                                    $types_query = "SELECT id, name FROM types";
+                                    $types_result = $conn->query($types_query);
+                                    // Loop through coupon codes and create an option for each
+                                    if ($types_result->num_rows > 0) {
+                                        while ($row = $types_result->fetch_assoc()) {
+                                            echo "<option value='" . $row["id"] . "," . $row["name"] . "'>" . $row["name"] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>No types Available</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <!-- choose Category option -->
+                                <label for="category" style="margin-bottom:0px;">Categories:</label>
+                                <div id="category" name="categories">
+                                     <?php
+                                        $category_query = "SELECT id, name FROM categories";
+                                        $category_result = $conn->query($category_query);
+                                        if ($category_result->num_rows > 0) {
+                                            while ($row = $category_result->fetch_assoc()) {
+                                                echo "<input type='checkbox' name='categories[]' style='margin-right:10px' value='" . $row["id"] . "'>" . $row["name"] . "<br>";
+                                            }
+                                        } else {
+                                            echo "No Categories Available";
+                                        }
+                                    ?>
                                 </div>
                                 <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
                                     style="margin: 10px auto; padding:10px 0px; width:50%;">
@@ -454,6 +511,9 @@ if (isset($_POST['add_trip'])) {
                                     <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
                                     <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
                                     <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
+                                    <p class="detail">Trip Destination : <?php echo $fetch_trip['destination']; ?></p>
+                                    <p class="detail">Trip TYpes : <?php echo $fetch_trip['types']; ?></p>
+                                    <p class="detail">Trip Categories : <?php echo $fetch_trip['category_names']; ?></p>
                                     <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
                                         class="btn btn-warning">update</a>
                                     <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
