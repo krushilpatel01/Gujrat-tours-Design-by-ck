@@ -10,10 +10,11 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 if (isset($_POST['add_destination'])) {
     $image = $_FILES['image']['name'];
     $image_size = $_FILES['image']['size'];
-    $image_tmp_name = $_FILES['image']['tmp_name'];
+    $image_tmp_name = $_FILES['image']['tmp_name']; 
     $image_folder = 'upload_img/' . $image;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
+
 
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `destination` WHERE name = '$name'") or die('query failed');
 
@@ -418,8 +419,9 @@ if (isset($_POST['add_destination'])) {
                                     <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
                                         <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
                                             style="width:100%; height:100%;">
-                                        <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
+                                        <h2 class="name">Name : <?php echo $fetch_trip['name']; ?></h2>
                                         <h6 class="detail">
+                                            Trip Detail :-
                                             <?php echo $fetch_trip['detail']; ?>
                                         </h6>
                                         <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"

@@ -14,7 +14,8 @@ if (isset($_POST['add_coupen'])) {
     $image_folder = 'upload_img/' . $image;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $code = $_POST['code'];
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
+
 
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `coupen` WHERE name = '$name'") or die('query failed');
 

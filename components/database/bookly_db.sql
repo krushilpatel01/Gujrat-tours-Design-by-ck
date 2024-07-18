@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2024 at 04:18 PM
+-- Generation Time: Jul 12, 2024 at 01:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,9 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `detail`, `image`) VALUES
-(1, 'safari', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '434640551_939914594451063_1420271604648352858_n.jpg');
+(1, 'safari', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '434640551_939914594451063_1420271604648352858_n.jpg'),
+(2, 'beach category', 'SDSKSJNKJS', 'trip-types (5).jpg'),
+(3, 'demo', 'SDSKSJNKJS', 'trip-types (4).jpg');
 
 -- --------------------------------------------------------
 
@@ -95,18 +97,23 @@ CREATE TABLE `trip` (
   `name` varchar(100) NOT NULL,
   `price` int(100) NOT NULL,
   `detail` varchar(100) NOT NULL,
-  `image` varchar(100) NOT NULL
+  `image` varchar(100) NOT NULL,
+  `destination` varchar(255) NOT NULL,
+  `types` varchar(255) NOT NULL,
+  `category_names` varchar(255) NOT NULL,
+  `auther` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `trip`
 --
 
-INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`) VALUES
-(2, 'dmeo', 2930239, 'skdsdklnafdsknfs', 'about-img.jpg'),
-(3, 'demo_trip', 1238748, 'dfnsjkdsbjfsjk', 'about-img.jpg'),
-(4, 'demo-3', 39243924, 'SDSKSJNKJS', 'about-img.jpg'),
-(5, 'DEMO-4', 328928, 'DJNFJKSNF3', 'about-img.jpg');
+INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `destination`, `types`, `category_names`, `auther`) VALUES
+(57, 'With Family', 15000, 'SDSKSJNKJS', 'Los-Angelos-1.jpg', 'eurpo', 'With Family', '', 'demo'),
+(58, 'daa', 1000, 'xsdsdsds', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'beach category', 'demo'),
+(59, 'los angles-1', 15000, 'SDSKSJNKJS', 'Los-Angelos-1.jpg', 'eurpo', 'With Family', 'safari,beach category', 'demo'),
+(60, 'demo', 1223, 'dssdsdkwdsk', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo'),
+(61, 'tornato', 23344, 'wdsdsds', 'toronto-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo');
 
 -- --------------------------------------------------------
 
@@ -199,7 +206,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `coupen`
@@ -217,7 +224,7 @@ ALTER TABLE `destination`
 -- AUTO_INCREMENT for table `trip`
 --
 ALTER TABLE `trip`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `types`

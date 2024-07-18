@@ -7,31 +7,68 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
 }
+
 if (isset($_POST['add_Types'])) {
     $image = $_FILES['image']['name'];
     $image_size = $_FILES['image']['size'];
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = 'upload_img/' . $image;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
 
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `types` WHERE name = '$name'") or die('query failed');
 
     if (mysqli_num_rows($select_trip_name) > 0) {
-        $message[] = 'product name  already addded';
+        $message[] = 'product name already added';
     } else {
         $add_trip_query = mysqli_query($conn, "INSERT INTO `types`(name, detail, image) VALUES('$name', '$detail', '$image')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
-                $message[] = 'image size is to large';
+                $message[] = 'image size is too large';
             } else {
                 move_uploaded_file($image_tmp_name, $image_folder);
-                $message[] = 'product added succesfully';
+                $message[] = 'product added successfully';
             }
         } else {
-            $message[] = 'product coude not be added!';
+            $message[] = 'product could not be added!';
         }
+    }
+}
+if (isset($_POST['update_type'])) {
+    $type_id = $_POST['type_id'];
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
+    $image = $_FILES['image']['name'];
+    $image_tmp_name = $_FILES['image']['tmp_name'];
+    $image_folder = 'upload_img/' . $image;
+
+    if (!empty($image)) {
+        move_uploaded_file($image_tmp_name, $image_folder);
+        $update_query = "UPDATE `types` SET name = '$name', detail = '$detail', image = '$image' WHERE id = $type_id";
+    } else {
+        $update_query = "UPDATE `types` SET name = '$name', detail = '$detail' WHERE id = $type_id";
+    }
+
+    $update_result = mysqli_query($conn, $update_query) or die('query failed');
+
+    if ($update_result) {
+        $message[] = 'Type updated successfully!';
+    } else {
+        $message[] = 'Failed to update type!';
+    }
+}
+
+if (isset($_POST['delete_type'])) {
+    $type_id = $_POST['type_id'];
+
+    $delete_query = "DELETE FROM `types` WHERE id = $type_id";
+    $delete_result = mysqli_query($conn, $delete_query) or die('query failed');
+
+    if ($delete_result) {
+        $message[] = 'Type deleted successfully!';
+    } else {
+        $message[] = 'Failed to delete type!';
     }
 }
 ?>
@@ -421,15 +458,15 @@ if (isset($_POST['add_Types'])) {
                                         style="width:100%; height:100%;">
                                     <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
                                     <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
-                                    <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">update</a>
-                                    <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">delete</a>
+                                    <!-- <button type="submit" name="update_type" class="btn btn-warning">Update</button> -->
+                                    <!-- <button type="submit" name="delete_type" class="btn btn-warning">Delete</button> -->
+                                    <input type="submit" value="Update" name="update_type" class="btn btn-warning">
+                                    <input type="submit" value="Update" name="delete_type" class="btn btn-warning">
                                 </div>
                                 <?php
                             }
                         } else {
-                            echo '<p class="empty">no product added yet!</p>';
+                            echo '<p class="empty">No Trip types added yet!</p>';
                         }
                         ?>
                     </div>
@@ -440,7 +477,6 @@ if (isset($_POST['add_Types'])) {
                 <i class="fas fa-chevron-up"></i>
             </a>
         </div>
-
         <!-- footer link -->
         <?php
         include ('../../../components/header-footer/footer.php');

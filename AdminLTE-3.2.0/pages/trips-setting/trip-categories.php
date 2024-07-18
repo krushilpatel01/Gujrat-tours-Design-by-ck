@@ -13,7 +13,7 @@ if (isset($_POST['add_categories'])) {
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = 'upload_img/' . $image;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
 
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `categories` WHERE name = '$name'") or die('query failed');
 

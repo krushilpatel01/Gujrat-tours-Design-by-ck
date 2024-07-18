@@ -1,7 +1,10 @@
 <?php
 include 'user/config.php';
 
-session_start();
+// Query to retrieve data from the trip table
+$sql = "SELECT * FROM trip";
+$result = $conn->query($sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,61 +12,26 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>home page</title>
+    <title>Trip Package Page</title>
     <!-- include css all files -->
     <?php
     include "components/files/css.php";
     ?>
-</head>
-
+    </head>
 <body>
-<!-- <div id="preloader">
-	<div id="status">&nbsp;</div>
-</div> -->
-    <div class="main">
         <!-- nav start -->
         <?php include ("components\header-footer\header.php"); ?>
         <!-- nav over -->
-         
-        <!-- slider start -->
-         <div class="container">
-        <div class="swiper mySwiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" style="height: 500px;">
-                    <img src="components/slider/banners (4).jpg" alt="" srcset="">
-                </div>
-                <div class="swiper-slide" style="height: 500px;">
-                    <img src="components/slider/banners (6).jpg" alt="" srcset="">
-                </div>
-                <div class="swiper-slide" style="height: 500px;">
-                    <img src="components/slider/banners (5).jpg" alt="" srcset="">
-                </div>  
-            </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-        </div>
-        <!-- slider over -->
-        </div>
-
-
-        <section class="Trip-list">
-            <div class="container">
-                <div class="title" style="text-align:center; margin:50px auto;">
-                    <h2>Our latest Tours</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
-                </div>
-                <div class="row justify-content-between index-trip">
+    <section class="trip-package">
+        <div class="container">
+            <div class="row justinfy-content-between">
+                <!-- <div class="col-12 d-flex"> -->
                     <?php
-                    // Query to retrieve data from the trip table
-                        $sql = "SELECT * FROM trip";
-                        $result = $conn->query($sql);
-
                         if ($result->num_rows > 0) {
                         // Output data of each row
                         while($row = $result->fetch_assoc()) {
-                            echo "<div class='col-12 col-lg-4 trip-card mx-0 px-2'>
+                            echo "<div class='col-3 trip-card'>
                                     <h2>Trip Name : ". htmlspecialchars($row["name"]) . "</h2>
-                                    <p>Price: $" . htmlspecialchars($row["price"]) . "</p>
                                     <p>" . htmlspecialchars($row["detail"]) . "</p>";
 
                             // Check if the image file exists before displaying it
@@ -84,14 +52,21 @@ session_start();
                             echo "<p>No trips found</p>";
                         }
                      ?>
-                </div>
+                <!-- </div> -->
             </div>
-        </section>
-
-
-        <!-- main class -->
+        </div>
     </div>
 
+    <?php
+    // Close the connection
+    $conn->close();
+    ?>
+            </div>
+            <!-- <button type="submit" class="btn btn-success">Show All Trip</button> -->
+        </div>
+    </section>
+
+    <section class="trip"></section>
 </body>
     <!-- include css all files -->
     <?php

@@ -19,14 +19,20 @@ if (isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Header page</title>
+    <title>Trip Coupen Page</title>
+    <!-- include css online files -->
+    <?php
+        include '../components/files/css.php';
+    ?>
+    <!-- custom css -->
+    <link rel="stylesheet" href="components\css\site-css.css">
 </head>
 
 <body>
     <div class="main">
         <nav class="navbar navbar-expand-lg navbar-light bg-light py-1" style="height: 200px;">
             <div class="container">
-                <a class="navbar-brand" href="index.php">Gujrat Tours</a>
+                <a class="navbar-brand" href="../index.php">Gujrat Tours</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -35,27 +41,27 @@ if (isset($_SESSION['username'])) {
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                            <a class="nav-link" aria-current="page" href="../index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="destination.php">Destinations</a>
+                            <a class="nav-link" href="../destination.php">Destinations</a>
                         </li>
                         <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="trip-package.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="../trip-package.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Trips
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="trip-types.php">Trip Types</a>
-                      <a class="dropdown-item" href="trip-coupen.php">Trip Coupen</a>
+                      <a class="dropdown-item" href="../trip-types.php">Trip Types</a>
+                      <a class="dropdown-item" href="../trip-coupen.php">Trip Coupen</a>
                 </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="blog.php">Blogs</a>
+                            <a class="nav-link" href="../blog.php">Blogs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about-us.php">About us</a>
+                            <a class="nav-link" href="../about-us.php">About us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="contact-us.php">Contact us</a>
+                            <a class="nav-link" href="../contact-us.php">Contact us</a>
                         </li>
                     </ul>
                     <form class="d-flex">
@@ -90,6 +96,11 @@ if (isset($_SESSION['username'])) {
         </nav>
         <!-- main class over -->
     </div>
+    
+    <!-- include css online files -->
+    <?php
+        include '../components/files/js.php';
+    ?>
 </body>
 
 </html>

@@ -47,7 +47,7 @@ if (isset($_POST['submit'])) {
 <body>
     <!-- nav start -->
     <?php
-    include ("..\components\header-footer\header.php");
+    include ("..\components\header-footer\header2.php");
     ?>
     <!-- nav over -->
 

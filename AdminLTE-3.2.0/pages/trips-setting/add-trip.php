@@ -15,7 +15,8 @@ if (isset($_POST['add_trip'])) {
     $image_folder = 'upload_img/' . $image;
     $trip_name = mysqli_real_escape_string($conn, $_POST['name']);
     $price = $_POST['price'];
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
+
 
     // destination value get
     $selected_value = $_POST['destination'];
