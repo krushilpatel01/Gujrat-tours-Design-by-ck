@@ -14,6 +14,9 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 // } else {
 //   echo "Session not active or user not logged in.";
 }
+else{
+  header('location:../login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

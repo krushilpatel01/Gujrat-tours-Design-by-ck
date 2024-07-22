@@ -6,7 +6,17 @@ session_start();
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
-}
+  
+    // Print user name and ID
+  //   echo "Welcome, $user_name!<br>";
+  //   echo "Your user ID is: $user_id<br>";
+  //   echo "Session status: Active";
+  // } else {
+  //   echo "Session not active or user not logged in.";
+  }
+  else{
+    header('location:../../login.php');
+  }
 if (isset($_POST['add_categories'])) {
     $image = $_FILES['image']['name'];
     $image_size = $_FILES['image']['size'];
