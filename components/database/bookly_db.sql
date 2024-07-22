@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2024 at 01:15 PM
+-- Generation Time: Jul 19, 2024 at 09:55 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -81,10 +81,16 @@ CREATE TABLE `destination` (
 --
 
 INSERT INTO `destination` (`id`, `name`, `detail`, `image`) VALUES
-(3, 'los angles', 'dfjndsnfdjksnfjsnsknjs', 'Los-Angelos-1.jpg'),
-(6, 'demo', 'SDSKSJNKJS', 'Bryce_Canyon_Utah_Tourism.jpg'),
-(8, 'Demo-4', 'dksadcsfdsakm', 'euro.jpg'),
-(9, 'eurpo', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'euro.jpg');
+(11, 'Andaman', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Andaman-17.jpg'),
+(12, 'Austaliya', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP_brisbane-city.jpg'),
+(13, 'Bali', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bali-2.jpg'),
+(14, 'Kedarnath Yatra', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Summer-Spiritual-Journey---Luxury.jpg'),
+(15, 'Dubai', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bhurj_Khalifa_Dubai.jpg'),
+(16, 'Egypt', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Egypt (2).jpg'),
+(17, 'Europe', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Salzburg-Austria-3.jpg'),
+(18, 'Goa', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 'Goa-1.jpg'),
+(19, 'Gujrat Tours', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Dwarka-Krishna-Temple.jpg'),
+(20, 'Himachal ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Shimla-Manali.jpg');
 
 -- --------------------------------------------------------
 
@@ -113,7 +119,8 @@ INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `destination`, `ty
 (58, 'daa', 1000, 'xsdsdsds', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'beach category', 'demo'),
 (59, 'los angles-1', 15000, 'SDSKSJNKJS', 'Los-Angelos-1.jpg', 'eurpo', 'With Family', 'safari,beach category', 'demo'),
 (60, 'demo', 1223, 'dssdsdkwdsk', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo'),
-(61, 'tornato', 23344, 'wdsdsds', 'toronto-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo');
+(61, 'tornato', 23344, 'wdsdsds', 'toronto-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo'),
+(62, 'Austaliya', 89887, 'dssdsdkwdsk', 'Salzburg-Austria-3.jpg', 'Austaliya', 'Camping Trips', 'safari,beach category', '');
 
 -- --------------------------------------------------------
 
@@ -133,7 +140,15 @@ CREATE TABLE `types` (
 --
 
 INSERT INTO `types` (`id`, `name`, `detail`, `image`) VALUES
-(1, 'With Family', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'activites-img (1).png');
+(3, 'Boating Trips', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Boating.jpg'),
+(4, 'Camping Trips', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Camping.jpg'),
+(5, 'Dog Friendly', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Dog Friendly.jpg'),
+(6, 'Historical Place Trips', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Historycal place.jpg'),
+(7, 'In Mountail Trips', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'In Mountain.jpg'),
+(8, 'Jungle Safari Trips', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Jungle Safari.jpg'),
+(9, 'Best Lack VIew', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'lake view.jpg'),
+(10, 'Sea Bath', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'sea bath.jpg'),
+(11, 'With Family', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'With Family.jpg');
 
 -- --------------------------------------------------------
 
@@ -155,7 +170,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `user_type`) VALUES
 (16, 'krushil', 'krushilchabhadiya600@gmail.com', 'dd0c928bed78ef49993ba96e4bacc1c7', 'User'),
-(17, 'demo', 'demo@gmail.com', 'f702c1502be8e55f4208d69419f50d0a', 'Admin');
+(17, 'demo', 'demo@gmail.com', 'f702c1502be8e55f4208d69419f50d0a', 'Admin'),
+(18, 'ck', 'ck@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User');
 
 --
 -- Indexes for dumped tables
@@ -218,25 +234,25 @@ ALTER TABLE `coupen`
 -- AUTO_INCREMENT for table `destination`
 --
 ALTER TABLE `destination`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `trip`
 --
 ALTER TABLE `trip`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `types`
 --
 ALTER TABLE `types`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

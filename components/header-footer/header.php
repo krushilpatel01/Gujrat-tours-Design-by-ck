@@ -41,13 +41,15 @@ if (isset($_SESSION['username'])) {
                             <a class="nav-link" href="destination.php">Destinations</a>
                         </li>
                         <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="trip-package.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Trips
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="trip-types.php">Trip Types</a>
-                      <a class="dropdown-item" href="trip-coupen.php">Trip Coupen</a>
-                </li>
+                            <a class="nav-link dropdown-toggle" href="trip-package.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Trips
+                              </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="trip-package.php">Trip package</a>
+                              <a class="dropdown-item" href="trip-types.php">Trip Types</a>
+                              <a class="dropdown-item" href="trip-coupen.php">Trip Coupen</a>
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="blog.php">Blogs</a>
                         </li>

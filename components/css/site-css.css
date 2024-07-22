@@ -60,7 +60,7 @@ nav {
     position: relative;
     width: 100%;
     height: 200px;
-    z-index: 0;
+    z-index: 999;
 }
 
 .navbar-expand-lg .navbar-nav {
@@ -117,6 +117,12 @@ h1 {
 }
 
 /* slider */
+.hero-slider {
+    position: relative;
+    z-index: 0;
+    background-color: #6902fa;
+}
+
 .mySwiper {
     width: 100%;
     margin: 0 auto;
@@ -131,11 +137,16 @@ h1 {
     width: 100%;
 }
 
+.col-lg-4 {
+    width: 32%;
+}
+
 .trip-card {
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 15px;
-    margin: 15px;
+    margin: 15px auto;
     text-align: left;
 }
 
@@ -150,6 +161,10 @@ h1 {
 }
 
 .add-trip form {
+    width: 100%;
+}
+
+.add-trip form input {
     width: 100%;
 }
 
@@ -213,4 +228,54 @@ h1 {
 
 .index-trip .trip-card {
     width: 32%;
+}
+
+.destination-card-circle {
+    margin: 10px auto;
+}
+
+.destination-card-circle .Destination-card img {
+    width: 100%;
+    height: 100%;
+}
+
+/* trip types package */
+.trip-types-package {
+    width: 100%;
+}
+
+.trip-types-package .trip-types {
+    width: 100%;
+}
+
+.trip-types-package .trip-types img {
+    width: 100%;
+    height: 100%;
+}
+
+
+.contact-us form label {
+    width: 100%;
+}
+
+.contact-us form input {
+    width: 100%;
+    margin: 20px auto;
+    padding: 10px 0px;
+    border: 1px solid black;
+    text-indent: 20px;
+}
+
+.contact-us form textarea {
+    width: 100%;
+    margin: 10px auto;
+    padding: 10px 0px;
+    border: 1px solid black;
+    text-indent: 20px;
+}
+
+.contact-us form .btn {
+    width: 25%;
+    text-align: center;
+    text-indent: 0px;
 }

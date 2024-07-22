@@ -238,7 +238,6 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                 </p>
               </a>
             </li>
-            <li class="nav-header">TRIPS</li>
             <!-- trip-section start -->
             <li class="nav-header">TRIPS</li>
             <li class="nav-item">
@@ -338,7 +337,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
               </ul>
             </li>
             <li class="nav-item">
-              <a href="../user/logout.php" class="btn btn-success nav-link">
+              <a href="../../user/logout.php" class="btn btn-success nav-link">
                 <p>
                   Logout
                 </p>

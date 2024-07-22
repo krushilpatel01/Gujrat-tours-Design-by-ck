@@ -13,6 +13,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Destination page</title>
+    <!-- include css all files -->
     <?php
     include "components/files/css.php";
     ?>
@@ -48,7 +49,7 @@ $result = $conn->query($sql);
                             }
                         
                             echo "<div class='col-12 destination-card px-0'>
-                                    <h2>Destination Name: " . htmlspecialchars($row['name']) . " - (0)</h2>
+                                    <h2>Destination : " . htmlspecialchars($row['name']) . " - (0)</h2>
                                   </div>
                                 </div>";
                         }

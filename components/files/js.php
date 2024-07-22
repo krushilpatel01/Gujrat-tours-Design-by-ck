@@ -25,6 +25,22 @@
     });
 </script>
 
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper(".mySwiper3", {
+      slidesPerView: 4,
+      spaceBetween: 30,
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+    });
+  </script>
+
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
 <!-- Option 1: Bootstrap Bundle with Popper -->

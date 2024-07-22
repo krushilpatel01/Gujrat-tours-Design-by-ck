@@ -26,10 +26,10 @@ session_start();
         <!-- nav over -->
          
         <!-- slider start -->
-         <div class="container">
-        <div class="swiper mySwiper">
+         <!-- <div class="container"> -->
+        <div class="swiper mySwiper hero-slider">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" style="height: 500px;">
+                <div class="swiper-slide" style="height: 550px;">
                     <img src="components/slider/banners (4).jpg" alt="" srcset="">
                 </div>
                 <div class="swiper-slide" style="height: 500px;">
@@ -43,7 +43,48 @@ session_start();
             <div class="swiper-button-prev"></div>
         </div>
         <!-- slider over -->
-        </div>
+        <!-- </div> -->
+
+
+        <section class="Trip-list">
+            <div class="container">
+                <div class="title" style="text-align:center; margin:50px auto;">
+                    <h2>We Are Provide Destination</h2>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
+                </div>
+                  <!-- Swiper -->
+                    <di v class="swiper mySwiper3">
+                        <div class="swiper-wrapper destination-card-circle">
+                                <?php
+                                // Query to retrieve data from the trip table
+                                $sql = "SELECT * FROM destination";
+                                $result = $conn->query($sql);
+
+                                if ($result->num_rows > 0) {
+                                    // Output data of each row
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<div class='swiper-slide col-12 col-lg-4 Destination-card'>";
+                                        // Check if the image file exists before displaying it
+                                        $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row['image'];
+                                        if (file_exists($imagePath)) {
+                                            echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row['name']) . "'>";
+                                        } else {
+                                            echo "<p>Image not available</p>";
+                                        }
+                                    
+                                        echo "<div class='col-12 destination-card px-0'>
+                                                <h2 class='text-center'>" . htmlspecialchars($row['name']) . "</h2>
+                                              </div>
+                                            </div>";
+                                    }
+                                }
+                                ?>
+                        </div>
+                    <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
         <section class="Trip-list">
@@ -78,6 +119,7 @@ session_start();
                                 <p>Types: " . htmlspecialchars($row["types"]) . "</p>
                                 <p>Categories: " . htmlspecialchars($row["category_names"]) . "</p>
                                 <p>Author: " . htmlspecialchars($row["auther"]) . "</p>
+                                <button class='btn btn-warning'>View More</button>
                                 </div>";
                         }
                         } else {
