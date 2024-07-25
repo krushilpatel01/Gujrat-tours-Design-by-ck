@@ -22,6 +22,10 @@ include 'user/config.php';
     
         <section class="destination-list">
             <div class="container">
+            <div class="title" style="text-align:center; margin:50px auto;">
+                    <h2>We Are Provide Trips Types</h2>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
+                </div>
                 <div class="row justinfy-content-between d-flex flex-wrap">
                 <?php
                     // Query to retrieve data from the trip table

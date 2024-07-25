@@ -27,7 +27,7 @@ $result = $conn->query($sql);
         <section class="destination-list">
             <div class="container">
                 <div class="title" style="text-align:center; margin:50px auto;">
-                    <h2>Our latest Tours</h2>
+                    <h2>Our latest Tours Destination</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
                 </div>
                 <div class="row justinfy-content-between d-flex flex-wrap">

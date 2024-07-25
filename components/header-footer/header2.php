@@ -30,7 +30,7 @@ if (isset($_SESSION['username'])) {
 
 <body>
     <div class="main">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light py-1" style="height: 200px;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light py-1" style="height: 100px;">
             <div class="container">
                 <a class="navbar-brand" href="../index.php">Gujrat Tours</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

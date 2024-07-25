@@ -3,20 +3,13 @@ include '../../../user/config.php';
 
 session_start();
 
-if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
-    $user_id = $_SESSION['admin_id'];
-    $user_name = $_SESSION['admin_name'];
-  
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
-  }
-  else{
+if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
     header('location:../../login.php');
-  }
+    exit();
+}
+
+$user_id = $_SESSION['admin_id'];
+$user_name = $_SESSION['admin_name'];
 
 if (isset($_POST['add_trip'])) {
     $image = $_FILES['image']['name'];
@@ -29,30 +22,22 @@ if (isset($_POST['add_trip'])) {
     $trip_days = $_POST['trip_day'];
     $trip_nights = $_POST['trip_night'];
 
-    // destination value get
-    $selected_value = $_POST['destination'];
-    $selected_values = explode(',', $selected_value);
-
-    if (count($selected_values) == 2) {
-        $destination_id = $conn->real_escape_string($selected_values[0]);
-        $destination = $conn->real_escape_string($selected_values[1]);
+    // Destination handling
+    $destination_id = $conn->real_escape_string($_POST['destination']);
+    $destination_query = "SELECT name FROM destination WHERE id = '$destination_id'";
+    $destination_result = $conn->query($destination_query);
+    if ($destination_result->num_rows > 0) {
+        $destination_name = $destination_result->fetch_assoc()['name'];
+    } else {
+        $destination_name = ''; // Handle case where destination ID is not found
     }
 
-    // types value get
-    $selected_value = $_POST['types'];
-    $selected_values = explode(',', $selected_value);
-
-    if (count($selected_values) == 2) {
-        $types_id = $conn->real_escape_string($selected_values[0]);
-        $types = $conn->real_escape_string($selected_values[1]);
-    }
-
-    // categories option value get
+    // Categories handling
     if (!empty($_POST['categories'])) {
-        // Retrieve the category names based on the selected IDs
-        $id_placeholders = implode(",", array_fill(0, count($_POST['categories']), "?"));
+        $categories = $_POST['categories'];
+        $id_placeholders = implode(",", array_fill(0, count($categories), "?"));
         $stmt = $conn->prepare("SELECT name FROM categories WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($_POST['categories'])), ...$_POST['categories']);
+        $stmt->bind_param(str_repeat("i", count($categories)), ...$categories);
         $stmt->execute();
         $result = $stmt->get_result();
         $category_names = [];
@@ -60,14 +45,36 @@ if (isset($_POST['add_trip'])) {
             $category_names[] = $row['name'];
         }
         $category_names_str = implode(",", $category_names);
+    } else {
+        $category_names_str = ''; // Default if no categories are selected
     }
 
+    // Types handling
+    if (!empty($_POST['types'])) {
+        $types = $_POST['types'];
+        $id_placeholders = implode(",", array_fill(0, count($types), "?"));
+        $stmt = $conn->prepare("SELECT name FROM types WHERE id IN ($id_placeholders)");
+        $stmt->bind_param(str_repeat("i", count($types)), ...$types);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $type_names = [];
+        while ($row = $result->fetch_assoc()) {
+            $type_names[] = $row['name'];
+        }
+        $types_str = implode(",", $type_names);
+    } else {
+        $types_str = ''; // Default if no types are selected
+    }
+
+    // Check if trip name already exists
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `trip` WHERE name = '$trip_name'") or die('query failed');
 
     if (mysqli_num_rows($select_trip_name) > 0) {
         $message[] = 'Trip name already added';
     } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, trip_days, trip_nights, destination, types, category_names, auther) VALUES('$trip_name', '$price', '$detail', '$image', '$trip_days', '$trip_nights', '$destination', '$types', '$category_names_str', '$user_name')") or die('query failed');
+        // Add trip to the database
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, trip_days, trip_nights, destination, types, category_names, auther) 
+        VALUES('$trip_name', '$price', '$detail', '$image', '$trip_days', '$trip_nights', '$destination_name', '$types_str', '$category_names_str', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
@@ -81,25 +88,10 @@ if (isset($_POST['add_trip'])) {
         }
     }   
 }
-if (isset($_POST['destination_id'])) {
-    $destination_id = $_POST['destination_id'];
-
-    // Fetch rooms based on destination_id
-    $query = "SELECT id, location FROM room WHERE destination_id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $destination_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $rooms = [];
-    while ($row = $result->fetch_assoc()) {
-        $rooms[] = $row;
-    }
-
-    echo json_encode($rooms);
-}
-
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -476,86 +468,107 @@ if (isset($_POST['destination_id'])) {
                     <div class="row add-trip">
                         <div class="col-4 mb-5">
                         <form action="" method="post" enctype="multipart/form-data">
-                <!-- File Input -->
-                <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
-                <!-- Trip Name -->
-                <label for="name">Trip Name:</label>
-                <input type="text" name="name" id="name" placeholder="Enter Trip Name" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                <!-- Trip Price -->
-                <label for="price">Trip Price:</label>
-                <input type="text" name="price" id="price" placeholder="Enter Trip Price" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                <!-- Trip Detail -->
-                <label for="detail">Trip Detail:</label>
-                <input type="text" name="detail" id="detail" placeholder="Enter Trip Detail" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                <!-- Days and Nights -->
-                <label for="daysNights">Select Days and Nights:</label>
-                <input type="number" name="trip_day" id="trip_day" placeholder="Enter Days" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                <input type="number" name="trip_night" id="trip_night" placeholder="Enter Nights" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                <!-- Destination -->
-                <label for="destination">Destination:</label>
-                <select id="destination" name="destination" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <!-- File Input -->
+                            <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+                            <!-- Trip Name -->
+                            <label for="name">Trip Name:</label>
+                            <input type="text" name="name" id="name" placeholder="Enter Trip Name" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <!-- Trip Price -->
+                            <label for="price">Trip Price:</label>
+                            <input type="text" name="price" id="price" placeholder="Enter Trip Price" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <!-- Trip Detail -->
+                            <label for="detail">Trip Detail:</label>
+                            <input type="text" name="detail" id="detail" placeholder="Enter Trip Detail" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <!-- Days and Nights -->
+                            <label for="daysNights">Select Days and Nights:</label>
+                            <input type="number" name="trip_day" id="trip_day" placeholder="Enter Days" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <input type="number" name="trip_night" id="trip_night" placeholder="Enter Nights" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <!-- Destination -->
+                            <label for="destination">Destination:</label>
+                            <select id="destination" name="destination" required
+                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <?php
+                                $destination_query = "SELECT id, name FROM destination";
+                                $destination_result = $conn->query($destination_query);
+                                if ($destination_result->num_rows > 0) {
+                                    while ($row = $destination_result->fetch_assoc()) {
+                                        echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>No Destination Available</option>";
+                                }
+                                ?>
+                            </select>
+                            <!-- Room -->
+                            <label for="destination">Trip Types:</label>
+                            <?php
+                                $types_query = "SELECT id, name FROM types";
+                                $types_result = $conn->query($types_query);
+                                if ($types_result->num_rows > 0) {
+                                    while ($row = $types_result->fetch_assoc()) {
+                                        echo "<div><input type='checkbox' id='types" . $row["id"] . "' name='types[]' value='" . $row["id"] . "'>
+                                        <label for='types" . $row["id"] . "'>" . $row["name"] . "</label></div>";
+                                    }
+                                } else {
+                                    echo "<p>No Types Available</p>";
+                                }
+                            ?>
+                            <!-- Categories -->
+                            <label for="categories">Categories:</label>
+                            <?php
+                                $categories_query = "SELECT id, name FROM categories";
+                                $categories_result = $conn->query($categories_query);
+                                if ($categories_result->num_rows > 0) {
+                                    while ($row = $categories_result->fetch_assoc()) {
+                                        echo "<div><input type='checkbox' id='category" . $row["id"] . "' name='categories[]' value='" . $row["id"] . "'>
+                                        <label for='category" . $row["id"] . "'>" . $row["name"] . "</label></div>";
+                                    }
+                                } else {
+                                    echo "<p>No Categories Available</p>";
+                                }
+                            ?>
+                            <!-- Submit Button -->
+                            <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
+                                style="margin: 10px auto; padding:10px 0px; width:50%;">
+                        </form>
+                    </div>
+                </div>
+                <!-- show trip code -->
+                <div class="row d-flex flex-wrap">
                     <?php
-                    $destination_query = "SELECT id, name FROM destination";
-                    $destination_result = $conn->query($destination_query);
-                    if ($destination_result->num_rows > 0) {
-                        while ($row = $destination_result->fetch_assoc()) {
-                            echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
+                    $select_trip = mysqli_query($conn, "SELECT * FROM `trip`") or die('query failed');
+                    if (mysqli_num_rows($select_trip) > 0) {
+                        while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
+                            ?>
+                            <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
+                                <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
+                                    style="width:100%; height:100%;">
+                                <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
+                                <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
+                                <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
+                                <p class="detail">Trip Destination : <?php echo $fetch_trip['destination']; ?></p>
+                                <p class="detail">Trip Types : <?php echo $fetch_trip['types']; ?></p>
+                                <p class="detail">Trip Categories : <?php echo $fetch_trip['category_names']; ?></p>
+                                <p class="detail">Trip Days : <?php echo $fetch_trip['trip_days']; ?>  &  <?php echo $fetch_trip['trip_nights']; ?> Nights</p>
+                                <form method="post" action="your_php_script.php">
+                                <input type="hidden" name="trip_id" value="' . $trip['id'] . '">
+                                <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
+                                <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                </form>
+                            </div>
+                            <?php
                         }
                     } else {
-                        echo "<option value=''>No Destination Available</option>";
+                        echo '<p class="empty">no product added yet!</p>';
                     }
                     ?>
-                </select>
-                <!-- Room -->
-                <label for="room">Choose Hotel Room:</label>
-                <select id="room" name="room" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                    <!-- Options will be populated by JavaScript -->
-                </select>
-                <!-- Submit Button -->
-                <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
-                    style="margin: 10px auto; padding:10px 0px; width:50%;">
-            </form>
-                        </div>
-                    </div>
-                    <!-- show trip code -->
-                    <div class="row d-flex flex-wrap">
-                        <?php
-                        $select_trip = mysqli_query($conn, "SELECT * FROM `trip`") or die('query failed');
-                        if (mysqli_num_rows($select_trip) > 0) {
-                            while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
-                                ?>
-                                <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
-                                    <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
-                                        style="width:100%; height:100%;">
-                                    <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
-                                    <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
-                                    <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
-                                    <p class="detail">Trip Destination : <?php echo $fetch_trip['destination']; ?></p>
-                                    <p class="detail">Trip TYpes : <?php echo $fetch_trip['types']; ?></p>
-                                    <p class="detail">Trip Categories : <?php echo $fetch_trip['category_names']; ?></p>
-                                    <p class="detail">Trip Days : <?php echo $fetch_trip['trip_days']; ?>  &  <?php echo $fetch_trip['trip_nights']; ?> Nights</p>
-
-                                    <form method="post" action="your_php_script.php">
-                                    <input type="hidden" name="trip_id" value="' . $trip['id'] . '">
-                                    <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
-                                    <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
-                                    </form>
-                                </div>
-                                <?php
-                            }
-                        } else {
-                            echo '<p class="empty">no product added yet!</p>';
-                        }
-                        ?>
-                    </div>
+                </div>
                 </div>
             </section>
 

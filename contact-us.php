@@ -33,7 +33,7 @@ include 'user/config.php';
 
         <section class="contact-us">
             <div class="container">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col">
                         <form action="" method="post">
                             <label for="name">Name :</label>

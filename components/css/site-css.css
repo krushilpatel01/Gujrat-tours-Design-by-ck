@@ -279,3 +279,8 @@ h1 {
     text-align: center;
     text-indent: 0px;
 }
+
+.trip-types-intrip {
+    width: 50%;
+    display: contents;
+}
