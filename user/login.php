@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 
 <body>
     <!-- nav start -->
-    <?php include ("..\components\header-footer\header.php"); ?>
+    <?php include ("..\components\header-footer\header2.php"); ?>
     <!-- nav over -->
 
     <div class="container">

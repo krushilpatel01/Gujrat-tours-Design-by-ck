@@ -1,14 +1,10 @@
 <?php
-// include 'user/config.php';
 
-// session_start();
-
-
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['user_name'])) {
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['user_name'];
 } else {
-    // echo $user_name;
+    echo "";
 }
 
 ?>
@@ -72,16 +68,16 @@ if (isset($_SESSION['username'])) {
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index: 999;">
                                 <?php
-                                if (isset($_SESSION['username'])) {
-                                    echo "<li><a class='dropdown-item' href='#'>$user_name</a></li>";
+                                if (isset($_SESSION['user_name'])) {
+                                    echo "<li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li>";
                                 } else {
-                                    echo "<li class='dropdown-item'>Welcome User</li>";
+                                    echo "<li><a class='dropdown-item' href='#'>Welcome User</a></li>";
                                 }
-
-                                if (isset($_SESSION['username'])) {
-                                    echo "<li><a class='dropdown-item' href='#'>$user_name</a></li>";
+                                
+                                if (isset($_SESSION['user_name'])) {
+                                    echo "<li><a class='dropdown-item' href='user/log-out.php'>Logout</a></li>";
                                 } else {
-                                    echo "<li><a class='btn dropdown-item' href='../Gujrat-tours/user/register.php'>Register Here</a></li>";
+                                    echo "<li><a class='btn dropdown-item' href='user/register.php'>Register User</a></li>";
                                 }
                                 ?>
                             </ul>

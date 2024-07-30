@@ -1,5 +1,8 @@
 <?php
 include 'user/config.php';
+session_start();
+
+
 
 // Query to retrieve data from the trip table
 $sql = "SELECT * FROM trip";

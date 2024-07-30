@@ -1,6 +1,7 @@
 <?php
 include 'user/config.php';
 
+
 session_start();
 ?>
 <!DOCTYPE html>
@@ -22,7 +23,7 @@ session_start();
 </div> -->
     <div class="main">
         <!-- nav start -->
-        <?php include ("components\header-footer\header.php"); ?>
+        <?php include ("components/header-footer/header.php"); ?>
         <!-- nav over -->
          
         <!-- slider start -->

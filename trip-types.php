@@ -1,5 +1,7 @@
 <?php
 include 'user/config.php';
+session_start();
+
 
 ?>
 <!DOCTYPE html>
