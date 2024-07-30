@@ -11,131 +11,97 @@ if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
 $user_id = $_SESSION['admin_id'];
 $user_name = $_SESSION['admin_name'];
 
-// add trip all code
-if (isset($_POST['add_trip'])) {
-    $image = $_FILES['image']['name'];
-    $image_size = $_FILES['image']['size'];
-    $image_tmp_name = $_FILES['image']['tmp_name'];
-    $image_folder = 'upload_img/' . $image;
-    $trip_name = mysqli_real_escape_string($conn, $_POST['name']);
-    $price = $_POST['price'];
-    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
-    $trip_days = $_POST['trip_day'];
-    $trip_nights = $_POST['trip_night'];
+if (isset($_GET['trip_id'])) {
+    $trip_id = $_GET['trip_id'];
 
-    // Destination handling
-    $destination_id = $conn->real_escape_string($_POST['destination']);
-    $destination_query = "SELECT name FROM destination WHERE id = '$destination_id'";
-    $destination_result = $conn->query($destination_query);
-    if ($destination_result->num_rows > 0) {
-        $destination_name = $destination_result->fetch_assoc()['name'];
-    } else {
-        $destination_name = ''; // Handle case where destination ID is not found
-    }
+    // Fetch the trip details if needed
+    $query = "SELECT * FROM trip WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $trip_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $trip = $result->fetch_assoc();
 
-    // Categories handling
-    if (!empty($_POST['categories'])) {
-        $categories = $_POST['categories'];
-        $id_placeholders = implode(",", array_fill(0, count($categories), "?"));
-        $stmt = $conn->prepare("SELECT name FROM categories WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($categories)), ...$categories);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $category_names = [];
-        while ($row = $result->fetch_assoc()) {
-            $category_names[] = $row['name'];
-        }
-        $category_names_str = implode(",", $category_names);
-    } else {
-        $category_names_str = ''; // Default if no categories are selected
-    }
+    if ($trip) {
+        $trip_name = $trip['name'];
+        // echo "That's the trip name: " . $trip_name . " (ID: " . $trip_id . ")";
 
-    // Types handling
-    if (!empty($_POST['types'])) {
-        $types = $_POST['types'];
-        $id_placeholders = implode(",", array_fill(0, count($types), "?"));
-        $stmt = $conn->prepare("SELECT name FROM types WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($types)), ...$types);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $type_names = [];
-        while ($row = $result->fetch_assoc()) {
-            $type_names[] = $row['name'];
-        }
-        $types_str = implode(",", $type_names);
-    } else {
-        $types_str = ''; // Default if no types are selected
-    }
+        // Handle form submission for adding services
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_services'])) {
+            $room_id = $_POST['room_id']; // Ensure this input exists in the form
+            $transport_id = $_POST['transport'];
 
-    // Check if trip name already exists
-    $select_trip_name = mysqli_query($conn, "SELECT name FROM `trip` WHERE name = '$trip_name'") or die('query failed');
+            // Fetch the room details from the room table
+            $room_query = "SELECT name, location FROM room WHERE id = ?";
+            $stmt = $conn->prepare($room_query);
+            $stmt->bind_param("i", $room_id);
+            $stmt->execute();
+            $room_result = $stmt->get_result();
 
-    if (mysqli_num_rows($select_trip_name) > 0) {
-        $message[] = 'Trip name already added';
-    } else {
-        // Add trip to the database
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, trip_days, trip_nights, destination, types, category_names, auther) 
-        VALUES('$trip_name', '$price', '$detail', '$image', '$trip_days', '$trip_nights', '$destination_name', '$types_str', '$category_names_str', '$user_name')") or die('query failed');
+            if ($room_result->num_rows > 0) {
+                $room = $room_result->fetch_assoc();
+                $hotel_name = $room['name'];
+                $room_location = $room['location'];
 
-        if ($add_trip_query) {
-            if ($image_size > 2000000) {
-                $message[] = 'Image size is too large';
+                // Fetch transport details from the bus table
+                $transport_query = "SELECT destination, name FROM bus WHERE id = ?";
+                $stmt = $conn->prepare($transport_query);
+                $stmt->bind_param("i", $transport_id);
+                $stmt->execute();
+                $transport_result = $stmt->get_result();
+
+                if ($transport_result->num_rows > 0) {
+                    $transport = $transport_result->fetch_assoc();
+                    $transport_name = $transport['name'];
+                    $transport_destination = $transport['destination'];
+
+                    $hotel_price = $_POST['hotel_price'];
+                    $transport_price = $_POST['transport_price'];
+                    
+                    $upload_dir = 'C:/xampp/htdocs/Gujrat-tours/AdminLTE-3.2.0/pages/trips-setting/uploads/';
+                    
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+
+                    $total_files = count($_FILES['image']['name']);
+                    for ($i = 0; $i < $total_files; $i++) {
+                        $file_name = $_FILES['image']['name'][$i];
+                        $file_tmp = $_FILES['image']['tmp_name'][$i];
+                        $file_destination = $upload_dir . basename($file_name);
+
+                        if (move_uploaded_file($file_tmp, $file_destination)) {
+                            // Prepare the insert statement
+                            $insert_hotel = $conn->prepare("INSERT INTO add_services (trip_id, trip_name, hotel_name, hotel_price, hotel_img, transpot_type, transpot_price) VALUES (?, ?, ?, ?, ?, ?, ?)") or die('query failed');
+                            
+                            // Bind parameters: adjust the format string if needed
+                            $insert_hotel->bind_param('issdsss', $trip_id, $trip_name, $hotel_name, $hotel_price, $file_destination, $transport_name, $transport_price);
+
+                            if ($insert_hotel->execute()) {
+                                echo "<script>alert('Services added successfully!'); window.location.href='add-trip.php';</script>";
+                            } else {
+                                echo "<script>alert('Error executing query: " . $insert_hotel->error . "');</script>";
+                            }
+                        } else {
+                            echo "<script>alert('Failed to upload file: $file_name');</script>";
+                        }
+                    }
+                } else {
+                    echo "<script>alert('Transport not found.');</script>";
+                }
             } else {
-                move_uploaded_file($image_tmp_name, $image_folder);
-                $message[] = 'Trip added successfully';
+                echo "<script>alert('Room not found.');</script>";
             }
-        } else {
-            $message[] = 'Trip could not be added!';
         }
-    }   
+    } else {
+        echo "";
+    }
+} else {
+    echo "<script>alert('Please provide a trip ID.');</script>";
 }
-
-// Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            
-    if (isset($_POST['delete_trip'])) {
-        // Check if trip_id is set
-        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
-            $trip_id = $_POST['trip_id'];
-            
-            // Delete query
-            $delete_query = "DELETE FROM trip WHERE id = ?";
-            $stmt = $conn->prepare($delete_query);
-            $stmt->bind_param('i', $trip_id);
-
-            if ($stmt->execute()) {
-                echo "<script>alert('Trip successfully Delete!'); window.location.href='add-trip.php';</script>";
-            } else {
-                echo "Error deleting trip: " . $stmt->error;
-            }
-            $stmt->close();
-        } else {
-            echo "cant fetch id";
-        }
-    }
-
-    if (isset($_POST['update_trip'])) {
-        $trip_id = $_POST['trip_id'];
-
-        // Redirect to update page (create an update_trip.php page to handle updates)
-        header("Location: update_trip.php?trip_id=$trip_id");
-        exit();
-    }
-
-    if (isset($_POST['add_Services'])) {
-        $trip_id = $_POST['trip_id'];
-
-        // Redirect to add services page (create an add_services.php page to handle adding services)
-        header("Location: add_services.php?trip_id=$trip_id");
-        exit();
-    }
-}
-
-// Close the database connection
-// mysqli_close($conn);
-
-
 ?>
+
+
 
 
 
@@ -146,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Add-Trip</title>
+    <title>AdminLTE 3 | Update Trip</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -159,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 </head>
 
-<body class="hold-transition sidebar-mini">
-    <div class="wrapper">
+<body>
+<div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -481,30 +447,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">All Users</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Site User
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="../mailbox/mailbox.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Admin</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../mailbox/compose.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Users</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                         <li class="nav-item">
                             <a href="../../../user/logout.php" class="btn btn-success nav-link">
                                 <p>
@@ -521,139 +463,129 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Add Trip</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-                                <li class="breadcrumb-item active">ticket-booking</li>
-                            </ol>
-                        </div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Add Services for Trip: <?php echo htmlspecialchars($trip['name']); ?></h1>
                     </div>
-                    <!-- add new trip -->
-                    <div class="row add-trip">
-                        <div class="col-4 mb-5">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            <!-- File Input -->
-                            <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
-                            <!-- Trip Name -->
-                            <label for="name">Trip Name:</label>
-                            <input type="text" name="name" id="name" placeholder="Enter Trip Name" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <!-- Trip Price -->
-                            <label for="price">Trip Price:</label>
-                            <input type="text" name="price" id="price" placeholder="Enter Trip Price" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <!-- Trip Detail -->
-                            <label for="detail">Trip Detail:</label>
-                            <input type="text" name="detail" id="detail" placeholder="Enter Trip Detail" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <!-- Days and Nights -->
-                            <label for="daysNights">Select Days and Nights:</label>
-                            <input type="number" name="trip_day" id="trip_day" placeholder="Enter Days" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <input type="number" name="trip_night" id="trip_night" placeholder="Enter Nights" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+                            <li class="breadcrumb-item active">ticket-booking</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- add new trip -->
+                <div class="row add-trip">
+                    <div class="col-4 mb-5">
+                        <form method="post" action="" enctype="multipart/form-data">
+                            <h2>Hotel Facility</h2>
                             <!-- Destination -->
-                            <label for="destination">Destination:</label>
-                            <select id="destination" name="destination" required
-                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <label for="destination">Hotel Available:</label>
+                            <select id="destination" name="room_id" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
                                 <?php
-                                $destination_query = "SELECT id, name FROM destination";
-                                $destination_result = $conn->query($destination_query);
-                                if ($destination_result->num_rows > 0) {
-                                    while ($row = $destination_result->fetch_assoc()) {
-                                        echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
+                                    // Fetch destinations from the trip table
+                                    $trip_query = "SELECT id, destination FROM trip";
+                                    $trip_result = $conn->query($trip_query);
+
+                                    // Fetch rooms from the room table
+                                    $room_query = "SELECT id, location, name FROM room";
+                                    $room_result = $conn->query($room_query);
+
+                                    if ($trip_result && $trip_result->num_rows > 0 && $room_result && $room_result->num_rows > 0) {
+                                        $destinations = [];
+                                    
+                                        // Store destinations
+                                        while ($trip_row = $trip_result->fetch_assoc()) {
+                                            $destinations[] = $trip_row['destination'];
+                                        }
+                                    
+                                        $has_matching_room = false;
+                                    
+                                        // Generate options for matching rooms
+                                        while ($room_row = $room_result->fetch_assoc()) {
+                                            if (in_array($room_row['location'], $destinations)) {
+                                                echo "<option value='" . $room_row["id"] . "'>" . $room_row["name"] . " - " . $room_row["location"] . "</option>";
+                                                $has_matching_room = true;
+                                            }
+                                        }
+                                    
+                                        if (!$has_matching_room) {
+                                            echo "<option value=''>No Matching Destination Available</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>No Destination or Room Data Available</option>";
                                     }
-                                } else {
-                                    echo "<option value=''>No Destination Available</option>";
-                                }
                                 ?>
                             </select>
-                            <!-- Room -->
-                            <label for="destination" style="color:red;">Trip Types:</label>
-                            <?php
-                                $types_query = "SELECT id, name FROM types";
-                                $types_result = $conn->query($types_query);
-                                if ($types_result->num_rows > 0) {
-                                    while ($row = $types_result->fetch_assoc()) {
-                                        echo "<div><input type='checkbox' id='types" . $row["id"] . "' name='types[]' value='" . $row["id"] . "'>
-                                        <label for='types" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                    }
-                                } else {
-                                    echo "<p>No Types Available</p>";
-                                }
-                            ?>
-                            <!-- Categories -->
-                            <label for="categories" style="color:red;">Categories:</label>
-                            <?php
-                                $categories_query = "SELECT id, name FROM categories";
-                                $categories_result = $conn->query($categories_query);
-                                if ($categories_result->num_rows > 0) {
-                                    while ($row = $categories_result->fetch_assoc()) {
-                                        echo "<div><input type='checkbox' id='category" . $row["id"] . "' name='categories[]' value='" . $row["id"] . "'>
-                                        <label for='category" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                    }
-                                } else {
-                                    echo "<p>No Categories Available</p>";
-                                }
-                            ?>
-                            <!-- Submit Button -->
-                            <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
-                                style="margin: 10px auto; padding:10px 0px; width:50%;">
+
+
+                            <label for="hotel_price">Hotel Price (One Days):</label>
+                            <input type="text" id="hotel_price" name="hotel_price" required
+                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                            <!-- File Input -->
+                            <label for="hotel_price">Hotel Images:</label>
+                            <input type="file" name="image[]" accept="image/jpg, image/jpeg, image/png" multiple required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+
+                            <h2>Transport Services</h2>
+                            <label for="transport_type">Transport Type (Bus/Plane):</label>
+                            <select id="transport_id" name="transport" required
+            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+        <?php
+            // Fetch destinations from the trip table
+            $trip_query = "SELECT destination FROM trip";
+            $trip_result = $conn->query($trip_query);
+
+            // Fetch transportation options from the bus table
+            $bus_query = "SELECT id, destination, name FROM bus";
+            $bus_result = $conn->query($bus_query);
+
+            if ($trip_result && $trip_result->num_rows > 0 && $bus_result && $bus_result->num_rows > 0) {
+                $destinations = [];
+                while ($trip_row = $trip_result->fetch_assoc()) {
+                    $destinations[] = $trip_row['destination'];
+                }
+
+                $has_matching_transport = false;
+                while ($bus_row = $bus_result->fetch_assoc()) {
+                    if (in_array($bus_row['destination'], $destinations)) {
+                        echo "<option value='" . $bus_row["id"] . "'>" . $bus_row["destination"] . " - " . $bus_row["name"] . "</option>";
+                        $has_matching_transport = true;
+                    }
+                }
+
+                if (!$has_matching_transport) {
+                    echo "<option value=''>No Matching Destination Available</option>";
+                }
+            } else {
+                echo "<option value=''>No Destination or Transport Data Available</option>";
+            }
+        ?>
+    </select>
+                            <label for="transport_price">Transport Price:</label>
+                            <input type="text" id="transport_price" name="transport_price" required
+                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                            <input type="submit" name="add_services" value="Add Services" class="btn btn-warning"
+                            style="margin: 10px auto; padding:10px 0px; width:50%;">
+
                         </form>
                     </div>
                 </div>
-                <!-- show trip code -->
-                <div class="row d-flex flex-wrap">
-                    <?php
-                    $select_trip = mysqli_query($conn, "SELECT * FROM `trip`") or die('query failed');
-                    if (mysqli_num_rows($select_trip) > 0) {
-                        while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
-                            ?>
-                            <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
-                                <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
-                                    style="width:100%; height:100%;">
-                                <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
-                                <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
-                                <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
-                                <p class="detail">Trip Destination : <?php echo $fetch_trip['destination']; ?></p>
-                                <p class="detail">Trip Types : <?php echo $fetch_trip['types']; ?></p>
-                                <p class="detail">Trip Categories : <?php echo $fetch_trip['category_names']; ?></p>
-                                <p class="detail">Trip ids : <?php echo $fetch_trip['id']; ?></p>
-                                <p class="detail">Trip Days : <?php echo $fetch_trip['trip_days']; ?>  &  <?php echo $fetch_trip['trip_nights']; ?> Nights</p>
-                                <form method="post" action="">
-                                    <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
-                                    <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
-                                    <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
-                                    <input type="submit" name="add_Services" class="btn btn-warning" value="Add Services">
-                                </form>
-                            </div>
-                            <?php
-                        }
-                    } else {
-                        echo '<p class="empty">no product added yet!</p>';
-                    }
-                    ?>
-                </div>
-                </div>
-            </section>
+            </div>
+        </section>       
+    </div>
 
-            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
-                <i class="fas fa-chevron-up"></i>
-            </a>
-        </div>
-
+    
         <!-- footer link -->
         <?php
-        include ('../../../components/header-footer/footer.php');
-        ?>
+    include ('../../../components/header-footer/footer.php');
+    ?>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">

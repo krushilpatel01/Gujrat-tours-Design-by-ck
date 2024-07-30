@@ -8,7 +8,7 @@ if (isset($_SESSION['username'])) {
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['user_name'];
 } else {
-    echo "";
+    // echo $user_name;
 }
 
 ?>
@@ -93,5 +93,5 @@ if (isset($_SESSION['username'])) {
         <!-- main class over -->
     </div>
 </body>
-
+    
 </html>

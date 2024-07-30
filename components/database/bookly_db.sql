@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2024 at 09:55 AM
+-- Generation Time: Jul 25, 2024 at 08:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `bookly_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bus`
+--
+
+CREATE TABLE `bus` (
+  `id` int(100) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `bus_number` varchar(255) NOT NULL,
+  `driver_number` int(255) NOT NULL,
+  `image` varchar(100) NOT NULL,
+  `destination` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bus`
+--
+
+INSERT INTO `bus` (`id`, `name`, `bus_number`, `driver_number`, `image`, `destination`) VALUES
+(1, '', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman'),
+(2, '', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman'),
+(3, 'demo', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman');
 
 -- --------------------------------------------------------
 
@@ -42,6 +66,27 @@ INSERT INTO `categories` (`id`, `name`, `detail`, `image`) VALUES
 (1, 'safari', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '434640551_939914594451063_1420271604648352858_n.jpg'),
 (2, 'beach category', 'SDSKSJNKJS', 'trip-types (5).jpg'),
 (3, 'demo', 'SDSKSJNKJS', 'trip-types (4).jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact-us-message`
+--
+
+CREATE TABLE `contact-us-message` (
+  `id` int(100) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contact-us-message`
+--
+
+INSERT INTO `contact-us-message` (`id`, `name`, `email`, `message`) VALUES
+(1, 'krushil', 'ck@gmail.com', 'hello how are you'),
+(2, 'krushil', 'ck@gmail.com', 'hello how are you');
 
 -- --------------------------------------------------------
 
@@ -95,6 +140,28 @@ INSERT INTO `destination` (`id`, `name`, `detail`, `image`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `room`
+--
+
+CREATE TABLE `room` (
+  `id` int(100) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `addresss` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `person_contact` int(100) NOT NULL,
+  `image` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room`
+--
+
+INSERT INTO `room` (`id`, `name`, `addresss`, `location`, `person_contact`, `image`) VALUES
+(1, 'cruise', 'lonawala', 'Andaman', 2147483647, 'CordeliaCruises_SRP1.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `trip`
 --
 
@@ -104,6 +171,8 @@ CREATE TABLE `trip` (
   `price` int(100) NOT NULL,
   `detail` varchar(100) NOT NULL,
   `image` varchar(100) NOT NULL,
+  `trip_days` int(100) NOT NULL,
+  `trip_nights` int(100) NOT NULL,
   `destination` varchar(255) NOT NULL,
   `types` varchar(255) NOT NULL,
   `category_names` varchar(255) NOT NULL,
@@ -114,13 +183,9 @@ CREATE TABLE `trip` (
 -- Dumping data for table `trip`
 --
 
-INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `destination`, `types`, `category_names`, `auther`) VALUES
-(57, 'With Family', 15000, 'SDSKSJNKJS', 'Los-Angelos-1.jpg', 'eurpo', 'With Family', '', 'demo'),
-(58, 'daa', 1000, 'xsdsdsds', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'beach category', 'demo'),
-(59, 'los angles-1', 15000, 'SDSKSJNKJS', 'Los-Angelos-1.jpg', 'eurpo', 'With Family', 'safari,beach category', 'demo'),
-(60, 'demo', 1223, 'dssdsdkwdsk', 'Los-Angelos-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo'),
-(61, 'tornato', 23344, 'wdsdsds', 'toronto-1.jpg', 'los angles', 'With Family', 'safari,demo', 'demo'),
-(62, 'Austaliya', 89887, 'dssdsdkwdsk', 'Salzburg-Austria-3.jpg', 'Austaliya', 'Camping Trips', 'safari,beach category', '');
+INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `trip_days`, `trip_nights`, `destination`, `types`, `category_names`, `auther`) VALUES
+(63, 'Laskha Dweep Trip', 40000, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'LaskhaDweep-srp.jpg', 5, 4, 'Austaliya', 'Jungle Safari Trips', 'safari,beach category', 'demo'),
+(69, 'kurandra', 900, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'Kuranda.jpg', 5, 4, 'Goa', 'Camping Trips,Dog Friendly,Jungle Safari Trips,Sea Bath', 'beach category,demo', 'demo');
 
 -- --------------------------------------------------------
 
@@ -171,16 +236,29 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `user_type`) VALUES
 (16, 'krushil', 'krushilchabhadiya600@gmail.com', 'dd0c928bed78ef49993ba96e4bacc1c7', 'User'),
 (17, 'demo', 'demo@gmail.com', 'f702c1502be8e55f4208d69419f50d0a', 'Admin'),
-(18, 'ck', 'ck@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User');
+(18, 'ck', 'ck@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User'),
+(19, 'demo-4', 'demo4@gmail.com', '725d59206ff82f128ee61e8a3068a6b4', 'User');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `bus`
+--
+ALTER TABLE `bus`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `contact-us-message`
+--
+ALTER TABLE `contact-us-message`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -193,6 +271,12 @@ ALTER TABLE `coupen`
 -- Indexes for table `destination`
 --
 ALTER TABLE `destination`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `room`
+--
+ALTER TABLE `room`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -219,10 +303,22 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `bus`
+--
+ALTER TABLE `bus`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `contact-us-message`
+--
+ALTER TABLE `contact-us-message`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `coupen`
@@ -237,10 +333,16 @@ ALTER TABLE `destination`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
+-- AUTO_INCREMENT for table `room`
+--
+ALTER TABLE `room`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `trip`
 --
 ALTER TABLE `trip`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `types`
@@ -252,7 +354,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

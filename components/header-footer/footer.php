@@ -5,4 +5,4 @@
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 8.3.1
       </div>
-    </footer>
+</footer>

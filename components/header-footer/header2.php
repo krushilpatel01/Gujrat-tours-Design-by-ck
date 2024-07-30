@@ -8,7 +8,7 @@ if (isset($_SESSION['username'])) {
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['user_name'];
 } else {
-    echo "";
+    // echo $user_name;
 }
 
 ?>
@@ -96,11 +96,7 @@ if (isset($_SESSION['username'])) {
         </nav>
         <!-- main class over -->
     </div>
-    
-    <!-- include css online files -->
-    <?php
-        include '../components/files/js.php';
-    ?>
+
 </body>
 
 </html>
