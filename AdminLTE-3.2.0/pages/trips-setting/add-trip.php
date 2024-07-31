@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $trip_id = $_POST['trip_id'];
 
         // Redirect to update page (create an update_trip.php page to handle updates)
-        header("Location: update_trip.php?trip_id=$trip_id");
+        header("Location: trip-update/update_trip.php?trip_id=$trip_id");
         exit();
     }
 

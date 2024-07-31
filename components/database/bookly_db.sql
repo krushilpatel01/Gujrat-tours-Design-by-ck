@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2024 at 08:52 PM
+-- Generation Time: Jul 30, 2024 at 01:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `bookly_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `add_services`
+--
+
+CREATE TABLE `add_services` (
+  `id` int(255) NOT NULL,
+  `trip_id` int(255) NOT NULL,
+  `trip_name` varchar(255) NOT NULL,
+  `hotel_name` varchar(255) NOT NULL,
+  `hotel_price` int(255) NOT NULL,
+  `hotel_img` varchar(255) NOT NULL,
+  `transpot_type` varchar(255) NOT NULL,
+  `transpot_price` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `add_services`
+--
+
+INSERT INTO `add_services` (`id`, `trip_id`, `trip_name`, `hotel_name`, `hotel_price`, `hotel_img`, `transpot_type`, `transpot_price`) VALUES
+(159, 63, 'Laskha Dweep Trip', 'cruise', 1000, 'C:/xampp/htdocs/Gujrat-tours/AdminLTE-3.2.0/pages/trips-setting/uploads/Gold-Coast-thum-C.jpg', 'demo', 2928),
+(160, 63, 'Laskha Dweep Trip', 'cruise', 1000, 'C:/xampp/htdocs/Gujrat-tours/AdminLTE-3.2.0/pages/trips-setting/uploads/Gold-Coast-thum-C.jpg', 'demo', 2928),
+(161, 63, 'Laskha Dweep Trip', 'cruise', 1000, 'C:/xampp/htdocs/Gujrat-tours/AdminLTE-3.2.0/pages/trips-setting/uploads/Kuranda.jpg', 'demo', 982727);
 
 -- --------------------------------------------------------
 
@@ -135,7 +161,20 @@ INSERT INTO `destination` (`id`, `name`, `detail`, `image`) VALUES
 (17, 'Europe', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Salzburg-Austria-3.jpg'),
 (18, 'Goa', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 'Goa-1.jpg'),
 (19, 'Gujrat Tours', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Dwarka-Krishna-Temple.jpg'),
-(20, 'Himachal ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Shimla-Manali.jpg');
+(20, 'Himachal ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Shimla-Manali.jpg'),
+(21, 'India', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', 'imdia.jpg'),
+(22, 'Kashmir', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', 'DallakeKashmir.jpg'),
+(23, 'Kerala', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'kerala (3).jpg'),
+(24, 'Laskha Dweep ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'LaskhaDweep-srp.jpg'),
+(25, 'Maldives', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP_Cantara-ras.jpg'),
+(26, 'Mauritius', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP-Oceans-Creek.jpg'),
+(27, 'Rajash-than', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Desert.jpg'),
+(28, 'Sikkim', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'tshangulake-north east.jpg'),
+(29, 'Singapore', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SINGAPORE-2.jpg'),
+(30, 'South Africa', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'SA_Cape-Town-city-Thum-img.jpg'),
+(31, 'Thailand / Bangkok', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bangkok.jpg'),
+(32, 'Turkey', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'images.jpg'),
+(33, 'Vietnam', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Da Nang-thum.jpg');
 
 -- --------------------------------------------------------
 
@@ -157,7 +196,9 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`id`, `name`, `addresss`, `location`, `person_contact`, `image`) VALUES
-(1, 'cruise', 'lonawala', 'Andaman', 2147483647, 'CordeliaCruises_SRP1.jpg');
+(1, 'cruise', 'lonawala', 'Andaman', 2147483647, 'CordeliaCruises_SRP1.jpg'),
+(2, 'burger Villa', 'in the near guhu beach', 'goa', 989898989, 'dsds.jpeg'),
+(3, 'burger Villa', 'in the near guhu beach', 'goa', 989898989, 'dsds.jpeg');
 
 -- --------------------------------------------------------
 
@@ -184,8 +225,7 @@ CREATE TABLE `trip` (
 --
 
 INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `trip_days`, `trip_nights`, `destination`, `types`, `category_names`, `auther`) VALUES
-(63, 'Laskha Dweep Trip', 40000, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'LaskhaDweep-srp.jpg', 5, 4, 'Austaliya', 'Jungle Safari Trips', 'safari,beach category', 'demo'),
-(69, 'kurandra', 900, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'Kuranda.jpg', 5, 4, 'Goa', 'Camping Trips,Dog Friendly,Jungle Safari Trips,Sea Bath', 'beach category,demo', 'demo');
+(69, 'kurandra', 900, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'Kuranda.jpg', 6, 4, 'Andaman', 'With Family', '', 'demo');
 
 -- --------------------------------------------------------
 
@@ -237,11 +277,18 @@ INSERT INTO `user` (`id`, `name`, `email`, `password`, `user_type`) VALUES
 (16, 'krushil', 'krushilchabhadiya600@gmail.com', 'dd0c928bed78ef49993ba96e4bacc1c7', 'User'),
 (17, 'demo', 'demo@gmail.com', 'f702c1502be8e55f4208d69419f50d0a', 'Admin'),
 (18, 'ck', 'ck@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User'),
-(19, 'demo-4', 'demo4@gmail.com', '725d59206ff82f128ee61e8a3068a6b4', 'User');
+(19, 'demo-4', 'demo4@gmail.com', '725d59206ff82f128ee61e8a3068a6b4', 'User'),
+(20, 'demo10', 'demo10@gmail.com', '43514a20c7801ebd4b1e6769939dd95f', 'User');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `add_services`
+--
+ALTER TABLE `add_services`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `bus`
@@ -303,6 +350,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `add_services`
+--
+ALTER TABLE `add_services`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+
+--
 -- AUTO_INCREMENT for table `bus`
 --
 ALTER TABLE `bus`
@@ -330,13 +383,13 @@ ALTER TABLE `coupen`
 -- AUTO_INCREMENT for table `destination`
 --
 ALTER TABLE `destination`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `room`
 --
 ALTER TABLE `room`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `trip`
@@ -354,7 +407,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

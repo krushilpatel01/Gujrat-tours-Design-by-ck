@@ -1,23 +1,22 @@
 <?php
 // Include database connection file
-include '../../../user/config.php';
+include '../../../../user/config.php';
 
 session_start();
 
 if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
-    header('location:../../login.php');
+    header('location:../../../login.php');
     exit();
 }
 
 $user_id = $_SESSION['admin_id'];
 $user_name = $_SESSION['admin_name'];
 
-
 if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
 
     // Fetch the current details of the trip
-    $query = "SELECT * FROM trip WHERE id = ?";
+    $query = "SELECT * FROM destination WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $trip_id);
     $stmt->execute();
@@ -33,67 +32,30 @@ if (isset($_GET['trip_id'])) {
     exit();
 }
 
-// Handle form submission for updating trip
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $trip_name = mysqli_real_escape_string($conn, $_POST['name']);
-    $price = $_POST['price'];
-    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
-    $trip_days = $_POST['trip_day'];
-    $trip_nights = $_POST['trip_night'];
-    $destination_id = $conn->real_escape_string($_POST['destination']);
-    $destination_query = "SELECT name FROM destination WHERE id = '$destination_id'";
-    $destination_result = $conn->query($destination_query);
-    $destination_name = ($destination_result->num_rows > 0) ? $destination_result->fetch_assoc()['name'] : '';
+if (isset($_POST['save_update'])) {
+    $trip_id = $_POST['trip_id'];
+    $name = $_POST['name'];
+    $detail = $_POST['detail'];
 
-    $categories = !empty($_POST['categories']) ? $_POST['categories'] : [];
-    $types = !empty($_POST['types']) ? $_POST['types'] : [];
-
-    // Categories
-    if (!empty($categories)) {
-        $id_placeholders = implode(",", array_fill(0, count($categories), "?"));
-        $stmt = $conn->prepare("SELECT name FROM categories WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($categories)), ...$categories);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $category_names = [];
-        while ($row = $result->fetch_assoc()) {
-            $category_names[] = $row['name'];
-        }
-        $category_names_str = implode(",", $category_names);
+    if (!empty($image)) {
+        move_uploaded_file($image_tmp_name, $image_folder);
+        $query = "UPDATE `destination` SET name = ?, detail = ?, image = ? WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('sssi', $name, $detail, $image, $trip_id);
     } else {
-        $category_names_str = '';
+        $query = "UPDATE `destination` SET name = ?, detail = ? WHERE id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ssi', $name, $detail, $trip_id);
     }
-
-    // Types
-    if (!empty($types)) {
-        $id_placeholders = implode(",", array_fill(0, count($types), "?"));
-        $stmt = $conn->prepare("SELECT name FROM types WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($types)), ...$types);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $type_names = [];
-        while ($row = $result->fetch_assoc()) {
-            $type_names[] = $row['name'];
-        }
-        $types_str = implode(",", $type_names);
-    } else {
-        $types_str = '';
-    }
-
-    // Update the trip in the database
-    $update_query = "UPDATE trip SET name = ?, price = ?, detail = ?, trip_days = ?, trip_nights = ?, destination = ?, types = ?, category_names = ? WHERE id = ?";
-    $stmt = $conn->prepare($update_query);
-    $stmt->bind_param('sissssssi', $trip_name, $price, $detail, $trip_days, $trip_nights, $destination_name, $types_str, $category_names_str, $trip_id);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Trip successfully Update!'); window.location.href='add-trip.php';</script>";
-                header("Location: add-trip.php");
+        header('location: ../destination.php');
     } else {
-        echo "Error updating trip: " . $stmt->error;
+        echo "Failed to update the trip.";
     }
-    $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,17 +63,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Update Trip</title>
+    <title>AdminLTE 3 | Update Destination</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
 </head>
 
 <body>
@@ -124,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../index.php" class="nav-link">Home</a>
+                    <a href="../../../index.php" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -166,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../dist/img/user1-128x128.jpg" alt="User Avatar"
+                                <img src="../../../dist/img/user1-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -183,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../dist/img/user8-128x128.jpg" alt="User Avatar"
+                                <img src="../../../dist/img/user8-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -200,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../dist/img/user3-128x128.jpg" alt="User Avatar"
+                                <img src="../../../dist/img/user3-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -262,8 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="../../index.php" class="brand-link">
-                <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+            <a href="../../../index.php" class="brand-link">
+                <img src="../../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Admin Page</span>
             </a>
@@ -273,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block" style="color:white;">
@@ -308,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a href="../../index.php" class="nav-link">
+                            <a href="../../../index.php" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
@@ -317,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../widgets.php" class="nav-link">
+                            <a href="../../widgets.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Widgets
@@ -337,49 +299,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="destination.php" class="nav-link">
+                                    <a href="../destination.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add Destination</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="add-trip.php" class="nav-link">
+                                    <a href="../add-trip.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Add Trips</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-coupen.php" class="nav-link">
+                                    <a href="../trip-coupen.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips Coupen</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-categories.php" class="nav-link">
+                                    <a href="../trip-categories.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips Categories</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-types.php" class="nav-link">
+                                    <a href="../trip-types.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips Types</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-room.php" class="nav-link">
+                                    <a href="../trip-room.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips Rooms</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-bus.php" class="nav-link">
+                                    <a href="../trip-bus.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips Bus</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="trip-query.php" class="nav-link">
+                                    <a href="../trip-query.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Trips querys</p>
                                     </a>
@@ -387,7 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="../ticket-booking.php" class="nav-link">
+                            <a href="../../ticket-booking.php" class="nav-link">
                                 <i class="nav-icon far fa-calendar-alt"></i>
                                 <p>
                                     Tickets Booking
@@ -398,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <!-- trip-section over -->
                         <li class="nav-header">Extra Section</li>
                         <li class="nav-item">
-                            <a href="../calendar.php" class="nav-link">
+                            <a href="../../calendar.php" class="nav-link">
                                 <i class="nav-icon far fa-calendar-alt"></i>
                                 <p>
                                     Calendar
@@ -417,19 +379,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../mailbox/mailbox.php" class="nav-link">
+                                    <a href="../../mailbox/mailbox.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Inbox</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../mailbox/compose.php" class="nav-link">
+                                    <a href="../../mailbox/compose.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Compose</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../mailbox/read-mail.php" class="nav-link">
+                                    <a href="../../mailbox/read-mail.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Read</p>
                                     </a>
@@ -437,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="../../../user/logout.php" class="btn btn-success nav-link">
+                            <a href="../../../../user/logout.php" class="btn btn-success nav-link">
                                 <p>
                                     Logout
                                 </p>
@@ -457,88 +419,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Update Trip</h1>
+                            <h1>Update Destination</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
+                                <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
                                 <li class="breadcrumb-item active">ticket-booking</li>
                             </ol>
                         </div>
                     </div>
-                    <!-- add new trip -->
-                    <div class="row add-trip">
+                    <div class="row add-destination">
                         <div class="col-4 mb-5">
-                            <form method="post" action="update_trip.php?trip_id=<?php echo htmlspecialchars($trip_id); ?>"
-                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                <label for="name">Trip Name:</label>
-                                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($trip['name']); ?>" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                <label for="price">Price:</label>
-                                <input type="text" id="price" name="price" value="<?php echo htmlspecialchars($trip['price']); ?>" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-
-                                <label for="detail">Detail:</label>
-                                <textarea id="detail" name="detail" required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"><?php echo htmlspecialchars($trip['detail']); ?></textarea>
-                            
-
-                                <label for="trip_day">Trip Days:</label>
-                                <input type="number" id="trip_day" name="trip_day" value="<?php echo htmlspecialchars($trip['trip_days']); ?>" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-
-
-                                <label for="trip_night">Trip Nights:</label>
-                                <input type="number" id="trip_night" name="trip_night" value="<?php echo htmlspecialchars($trip['trip_nights']); ?>" required
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-
-
-                                <label for="destination">Destination:</label>
-                                <select id="destination" name="destination"value="<?php echo htmlspecialchars($trip['destination']); ?>"  required 
-                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                    <?php
-                                    $destination_query = "SELECT id, name FROM destination";
-                                    $destination_result = $conn->query($destination_query);
-                                    if ($destination_result->num_rows > 0) {
-                                        while ($row = $destination_result->fetch_assoc()) {
-                                            echo "<option value='" . $row["id"] . "'>" . $row["name"] . "</option>";
-                                        }
-                                    } else {
-                                        echo "<option value=''>No Destination Available</option>";
-                                    }
-                                    ?>
-                                </select>
-
-                                <!-- Categories -->
-                                <label for="categories">Categories:</label>
-                                <?php
-                                    $categories_query = "SELECT id, name FROM categories";
-                                    $categories_result = $conn->query($categories_query);
-                                    if ($categories_result->num_rows > 0) {
-                                        while ($row = $categories_result->fetch_assoc()) {
-                                            echo "<div><input type='checkbox' id='category" . $row["id"] . "' name='categories[]' value='" . $row["id"] . "'>
-                                            <label for='category" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                        }
-                                    } else {
-                                        echo "<p>No Categories Available</p>";
-                                    }
-                                ?>
-
-                                <label for="destination">Trip Types:</label>
-                                <?php
-                                    $types_query = "SELECT id, name FROM types";
-                                    $types_result = $conn->query($types_query);
-                                    if ($types_result->num_rows > 0) {
-                                        while ($row = $types_result->fetch_assoc()) {
-                                            echo "<div><input type='checkbox' id='types" . $row["id"] . "' name='types[]' value='" . $row["id"] . "'>
-                                            <label for='types" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                        }
-                                    } else {
-                                        echo "<p>No Types Available</p>";
-                                    }
-                                ?>
-                                <input type="submit" name="" value="Update Trip" class="btn btn-warning"
+                        <form method="post" action="" enctype="multipart/form-data">
+                            <input type="hidden" name="trip_id" value="<?php echo $trip['id']; ?>">
+                            <label for="name">Destination Name:</label>
+                            <input type="text" name="name" id="name" value="<?php echo $trip['name']; ?>" 
+                            required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                            <label for="detail">Detail:</label>
+                            <textarea name="detail" id="detail"  required
+                            style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"><?php echo $trip['detail']; ?></textarea>
+                            <input type="submit" name="save_update" value="Update Destination" class="btn btn-warning"
                                     style="margin: 10px auto; padding:10px 0px; width:50%;">
                             </form>
+                        </form>
                         </div>
                     </div>
                 </div>
@@ -547,7 +450,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- footer link -->
     <?php
-    include ('../../../components/header-footer/footer.php');
+    include ('../../../../components/header-footer/footer.php');
     ?>
 
         <!-- Control Sidebar -->
@@ -559,13 +462,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <script src="../../../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../../dist/js/adminlte.min.js"></script>
+    <script src="../../../dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="../../dist/js/demo.js"></script>
+    <script src="../../../dist/js/demo.js"></script>
 </body>
 
 </html>
