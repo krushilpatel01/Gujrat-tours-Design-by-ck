@@ -7,12 +7,6 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
   
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
   }
   else{
     header('location:../../login.php');
@@ -45,40 +39,37 @@ if (isset($_POST['add_Types'])) {
         }
     }
 }
-if (isset($_POST['update_type'])) {
-    $type_id = $_POST['type_id'];
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
-    $image = $_FILES['image']['name'];
-    $image_tmp_name = $_FILES['image']['tmp_name'];
-    $image_folder = 'upload_img/' . $image;
 
-    if (!empty($image)) {
-        move_uploaded_file($image_tmp_name, $image_folder);
-        $update_query = "UPDATE `types` SET name = '$name', detail = '$detail', image = '$image' WHERE id = $type_id";
-    } else {
-        $update_query = "UPDATE `types` SET name = '$name', detail = '$detail' WHERE id = $type_id";
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            
+    if (isset($_POST['delete_trip'])) {
+        // Check if trip_id is set
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = $_POST['trip_id'];
+            
+            // Delete query
+            $delete_query = "DELETE FROM types WHERE id = ?";
+            $stmt = $conn->prepare($delete_query);
+            $stmt->bind_param('i', $trip_id);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('Types successfully Delete!'); window.location.href='trip-types.php';</script>";
+            } else {
+                echo "Error deleting trip: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            echo "cant fetch id";
+        }
     }
 
-    $update_result = mysqli_query($conn, $update_query) or die('query failed');
+    if (isset($_POST['update_trip'])) {
+        $trip_id = $_POST['trip_id'];
 
-    if ($update_result) {
-        $message[] = 'Type updated successfully!';
-    } else {
-        $message[] = 'Failed to update type!';
-    }
-}
-
-if (isset($_POST['delete_type'])) {
-    $type_id = $_POST['type_id'];
-
-    $delete_query = "DELETE FROM `types` WHERE id = $type_id";
-    $delete_result = mysqli_query($conn, $delete_query) or die('query failed');
-
-    if ($delete_result) {
-        $message[] = 'Type deleted successfully!';
-    } else {
-        $message[] = 'Failed to delete type!';
+        // Redirect to update page (create an update_trip.php page to handle updates)
+        header("Location: trip-update/update-types.php?trip_id=$trip_id");
+        exit();
     }
 }
 ?>
@@ -468,10 +459,11 @@ if (isset($_POST['delete_type'])) {
                                         style="width:100%; height:100%;">
                                     <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
                                     <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
-                                    <!-- <button type="submit" name="update_type" class="btn btn-warning">Update</button> -->
-                                    <!-- <button type="submit" name="delete_type" class="btn btn-warning">Delete</button> -->
-                                    <input type="submit" value="Update" name="update_type" class="btn btn-warning">
-                                    <input type="submit" value="Update" name="delete_type" class="btn btn-warning">
+                                    <form method="post" action="">
+                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
+                                            <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
+                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                    </form>
                                 </div>
                                 <?php
                             }

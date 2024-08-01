@@ -7,12 +7,6 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
   
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
   }
   else{
     header('location:../../login.php');
@@ -24,7 +18,6 @@ if (isset($_POST['add_coupen'])) {
     $image_folder = 'upload_img/' . $image;
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $code = $_POST['code'];
-    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
 
 
     $select_trip_name = mysqli_query($conn, "SELECT name FROM `coupen` WHERE name = '$name'") or die('query failed');
@@ -44,6 +37,39 @@ if (isset($_POST['add_coupen'])) {
         } else {
             $message[] = 'product coude not be added!';
         }
+    }
+}
+
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            
+    if (isset($_POST['delete_trip'])) {
+        // Check if trip_id is set
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = $_POST['trip_id'];
+            
+            // Delete query
+            $delete_query = "DELETE FROM coupen WHERE id = ?";
+            $stmt = $conn->prepare($delete_query);
+            $stmt->bind_param('i', $trip_id);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('coupen successfully Delete!'); window.location.href='trip-coupen.php';</script>";
+            } else {
+                echo "Error deleting trip: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            echo "cant fetch id";
+        }
+    }
+
+    if (isset($_POST['update_trip'])) {
+        $trip_id = $_POST['trip_id'];
+
+        // Redirect to update page (create an update_trip.php page to handle updates)
+        header("Location: trip-update/update-coupen.php?trip_id=$trip_id");
+        exit();
     }
 }
 ?>
@@ -435,10 +461,11 @@ if (isset($_POST['add_coupen'])) {
                                         style="width:100%; height:100%;">
                                     <h2 class="name">Coupen : <?php echo $fetch_trip['name']; ?></h2>
                                     <h6 class="code">code : <?php echo $fetch_trip['code']; ?></h6>
-                                    <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">update</a>
-                                    <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">delete</a>
+                                    <form method="post" action="">
+                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
+                                            <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
+                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                    </form>
                                 </div>
                                 <?php
                             }

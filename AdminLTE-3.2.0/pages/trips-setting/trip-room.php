@@ -6,17 +6,10 @@ session_start();
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
-  
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
-  }
-  else{
+}
+else{
     header('location:../../login.php');
-  }
+}
 
 if (isset($_POST['add_trip'])) {
     $image = $_FILES['image']['name'];
@@ -75,7 +68,43 @@ if (isset($_POST['add_trip'])) {
         }
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['delete_trip'])) {
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
+            
+            // Delete query
+            $delete_query = "DELETE FROM room WHERE id = ?";
+            $stmt = $conn->prepare($delete_query);
+            $stmt->bind_param('i', $trip_id);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('Types successfully deleted!'); window.location.href='trip-room.php';</script>";
+            } else {
+                echo "Error deleting trip: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            echo "Can't fetch ID";
+        }
+    }
+
+    if (isset($_POST['update_trip'])) {
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
+            
+            // Redirect to update page
+            header("Location: trip-update/update-room.php?trip_id=" . urlencode($trip_id));
+            exit();
+        } else {
+            echo "Can't fetch ID";
+        }
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -83,7 +112,7 @@ if (isset($_POST['add_trip'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Add-Trip</title>
+    <title>AdminLTE 3 | Add - Room</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -497,11 +526,11 @@ if (isset($_POST['add_trip'])) {
                                     <h5 class="price">Location : <?php echo $fetch_room['addresss']; ?></h5>
                                     <h5 class="price">Destination : <?php echo $fetch_room['location']; ?></h5>
                                     <h5 class="price">Hotel Contact : <?php echo $fetch_room['person_contact']; ?></h5>
-                                    <h5 class="price">Destination : <?php echo $fetch_room['location']; ?></h5>
-                                    <a href="add_trip.php?updete=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">update</a>
-                                    <a href="add_trip.php?del=<?php echo $fetch_trip['id']; ?>"
-                                        class="btn btn-warning">delete</a>
+                                    <form method="post" action="">
+                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_room['id']; ?>">
+                                            <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
+                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                    </form>
                                 </div>
                                 <?php
                             }

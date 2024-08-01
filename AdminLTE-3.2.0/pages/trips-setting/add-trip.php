@@ -492,13 +492,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../mailbox/mailbox.php" class="nav-link">
+                                    <a href="../site-users/admin.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Admin</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../mailbox/compose.php" class="nav-link">
+                                    <a href="../site-users/user.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Users</p>
                                     </a>

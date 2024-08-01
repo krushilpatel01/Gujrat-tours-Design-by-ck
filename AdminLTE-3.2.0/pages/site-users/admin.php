@@ -7,109 +7,11 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
   
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
   }
   else{
     header('location:../../login.php');
   }
 
-if (isset($_POST['add_trip'])) {
-    $image = $_FILES['image']['name'];
-    $image_size = $_FILES['image']['size'];
-    $image_tmp_name = $_FILES['image']['tmp_name'];
-    $image_folder = 'upload_img/' . $image;
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
-    // $bus_name = mysqli_real_escape_string($conn, $_POST['bus_name']);
-    $bus_number = mysqli_real_escape_string($conn, $_POST['bus_number']);
-    $driver_number = mysqli_real_escape_string($conn, $_POST['driver_number']);
-
-    // destination value get
-    $selected_value = $_POST['destination'];
-    $selected_values = explode(',', $selected_value);
-
-    if (count($selected_values) == 2) {
-        $destination_id = $conn->real_escape_string($selected_values[0]);
-        $destination = $conn->real_escape_string($selected_values[1]);
-    }
-
-    if (count($selected_values) == 2) {
-        $types_id = $conn->real_escape_string($selected_values[0]);
-        $types = $conn->real_escape_string($selected_values[1]);
-    }
-
-    // categories option value get
-    if (!empty($_POST['categories'])) {
-        // Retrieve the category names based on the selected IDs
-        $id_placeholders = implode(",", array_fill(0, count($_POST['categories']), "?"));
-        $stmt = $conn->prepare("SELECT name FROM categories WHERE id IN ($id_placeholders)");
-        $stmt->bind_param(str_repeat("i", count($_POST['categories'])), ...$_POST['categories']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $category_names = [];
-        while ($row = $result->fetch_assoc()) {
-            $category_names[] = $row['name'];
-        }
-        $category_names_str = implode(",", $category_names);
-    }
-
-    $select_trip_name = mysqli_query($conn, "SELECT name FROM `bus` WHERE name = '$name'") or die('query failed');
-
-    if (mysqli_num_rows($select_trip_name) > 0) {
-        $message[] = 'Trip name already added';
-    } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `bus` (name, bus_number, driver_number, image, destination) VALUES('$name', '$bus_number', '$driver_number', '$image', '$destination')") or die('query failed');
-
-        if ($add_trip_query) {
-            if ($image_size > 2000000) {
-                $message[] = 'Image size is too large';
-            } else {
-                move_uploaded_file($image_tmp_name, $image_folder);
-                $message[] = 'Trip added successfully';
-            }
-        } else {
-            $message[] = 'Trip could not be added!';
-        }
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['delete_trip'])) {
-        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
-            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
-            
-            // Delete query
-            $delete_query = "DELETE FROM bus WHERE id = ?";
-            $stmt = $conn->prepare($delete_query);
-            $stmt->bind_param('i', $trip_id);
-
-            if ($stmt->execute()) {
-                echo "<script>alert('Bus successfully deleted!'); window.location.href='trip-room.php';</script>";
-            } else {
-                echo "Error deleting trip: " . $stmt->error;
-            }
-            $stmt->close();
-        } else {
-            echo "Can't fetch ID";
-        }
-    }
-
-    if (isset($_POST['update_trip'])) {
-        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
-            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
-            
-            // Redirect to update page
-            header("Location: trip-update/update-bus.php?trip_id=" . urlencode($trip_id));
-            exit();
-        } else {
-            echo "Can't fetch ID";
-        }
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -118,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Bus - Update</title>
+    <title>AdminLTE 3 | Admin List</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -453,6 +355,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-header">All Users</li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-envelope"></i>
+                                <p>
+                                    Site User
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="admin.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Admin</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="user.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Users</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
                             <a href="../../../user/logout.php" class="btn btn-success nav-link">
                                 <p>
@@ -474,7 +400,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Add Bus</h1>
+                            <h1>All Admin List</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
@@ -485,70 +411,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <!-- add new trip -->
                     <div class="row add-trip">
-                        <div class="col-4 mb-5">
-                            <form action="" method="post" enctype="multipart/form-data">
-                                <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
-                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
-
-                                <label for="category" style="margin-bottom:0px;">Bus Name:</label>
-                                <input type="text" name="name" id="" placeholder="Enter Bus Name" required
-                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-
-                                <label for="category" style="margin-bottom:0px;">Bus Number</label>
-                                <input type="number" name="bus_number" id="" placeholder="Enter Bus Number" required
-                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none; ">
-                                    
-                                <label for="category" style="margin-bottom:0px;">Bus Driver Number:</label>
-                                <input type="number" name="driver_number" id="" placeholder="Enter Bus Driver Contact" required
-                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"> 
-                                    
-                                <!-- choose distination -->
-                                <label for="category" style="margin-bottom:0px;">Destination:</label>
-                                <select id="destination" name="destination" required
-                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                    <?php
-                                    $destination_query = "SELECT id, name FROM destination";
-                                    $destination_result = $conn->query($destination_query);
-                                    if ($destination_result->num_rows > 0) {
-                                        while ($row = $destination_result->fetch_assoc()) {
-                                            echo "<option value='" . $row["id"] . "," . $row["name"] . "'>" . $row["name"] . "</option>";
-                                        }
-                                    } else {
-                                        echo "<option value=''>No Destination Available</option>";
-                                    }
-                                    ?>
-                                </select>
-                                <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
-                                    style="margin: 10px auto; padding:10px 0px; width:50%;">
-                            </form>
-                        </div>
-                    </div>
-                    <!-- show trip code -->
-                    <div class="row d-flex flex-wrap">
-                        <?php
-                        $select_bus = mysqli_query($conn, "SELECT * FROM `bus`") or die('query failed');
-                        if (mysqli_num_rows($select_bus) > 0) {
-                            while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
-                                ?>
-                                <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
-                                    <img src="upload_img/<?php echo $fetch_bus['image']; ?>" alt="" srcset=""
-                                        style="width:100%; height:100%;">
-                                    <h2 class="name :">Bus Name : <?php echo $fetch_bus['name']; ?></h2>
-                                    <h5 class="price">Bus Number : <?php echo $fetch_bus['bus_number']; ?></h5>
-                                    <h5 class="price">Driver Number : <?php echo $fetch_bus['driver_number']; ?></h5>
-                                    <h5 class="price">Destination : <?php echo $fetch_bus['destination']; ?></h5>
-                                    <form method="post" action="">
-                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_bus['id']; ?>">
-                                            <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
-                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
-                                    </form>
+                        <div class="col-12 col-md-4 my-5">
+                            <!-- Widget: user widget style 1 -->
+                            <div class="card card-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-info">
+                                    <h3 class="widget-user-username">Alexander Pierce</h3>
+                                    <h5 class="widget-user-desc">Founder & CEO</h5>
                                 </div>
-                                <?php
-                            }
-                        } else {
-                            echo '<p class="empty">no product added yet!</p>';
-                        }
-                        ?>
+                                <div class="widget-user-image">
+                                    <img class="img-circle elevation-2" src="../../dist/img/user1-128x128.jpg"
+                                        alt="User Avatar">
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">3,200</h5>
+                                                <span class="description-text">SALES</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">13,000</h5>
+                                                <span class="description-text">FOLLOWERS</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="description-block">
+                                                <h5 class="description-header">35</h5>
+                                                <span class="description-text">PRODUCTS</span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
                     </div>
                 </div>
             </section>
