@@ -1,22 +1,22 @@
 <?php
-// Include database connection file
-include '../../../../user/config.php';
+include '../../../user/config.php';
 
 session_start();
 
-if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
-    header('location:../../../login.php');
-    exit();
+if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
+    $user_id = $_SESSION['admin_id'];
+    $user_name = $_SESSION['admin_name'];
+  
 }
-
-$user_id = $_SESSION['admin_id'];
-$user_name = $_SESSION['admin_name'];
+else{
+  header('location:../../login.php');
+}
 
 if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
 
     // Fetch the current details of the trip
-    $query = "SELECT * FROM coupen WHERE id = ?";
+    $query = "SELECT * FROM user WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $trip_id);
     $stmt->execute();
@@ -33,29 +33,49 @@ if (isset($_GET['trip_id'])) {
 }
 
 if (isset($_POST['save_update'])) {
-    $trip_id = $_POST['trip_id'];
-    $name = $_POST['name'];
-    $detail = $_POST['code'];
+    // $trip_id = $_POST['id'];
+    $u_name = $_POST['name'];
+    $u_email = $_POST['email-text'];
 
-    if (!empty($image)) {
-        move_uploaded_file($image_tmp_name, $image_folder);
-        $query = "UPDATE `coupen` SET name = ?, detail = ?, image = ? WHERE id = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('sssi', $name, $detail, $image, $trip_id);
+    $pass = mysqli_real_escape_string($conn, $_POST['password']);
+    $hashed_pass = password_hash($pass, PASSWORD_BCRYPT);
+
+    $u_password = $_POST['password'];
+    $u_type = $_POST['user_type'];
+
+    // Check if image is provided
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+        $image_tmp_name = $_FILES['image']['tmp_name'];
+        $image_name = basename($_FILES['image']['name']);
+        $image_folder = 'path/to/upload/folder/' . $image_name;
+
+        if (move_uploaded_file($image_tmp_name, $image_folder)) {
+            // If image is uploaded, include it in the update
+            $query = "UPDATE `user` SET name = ?, email = ?, password = ?, user_type = ?, image = ? WHERE id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param('sssssi', $u_name, $u_email, $u_password, $u_type, $image_name, $trip_id);
+        } else {
+            echo "Failed to upload the image.";
+            exit();
+        }
     } else {
-        $query = "UPDATE `coupen` SET name = ?, code = ? WHERE id = ?";
+        // If no image is uploaded, exclude the image column from the update
+        $query = "UPDATE `user` SET name = ?, email = ?, password = ?, user_type = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('ssi', $name, $detail, $trip_id);
+        $stmt->bind_param('ssssi', $u_name, $u_email, $u_password, $u_type, $trip_id);
     }
 
     if ($stmt->execute()) {
-        header('location: ../trip-coupen.php');
+        header('Location: user.php');
+        exit();
     } else {
-        echo "Failed to update the trip.";
+        echo "Failed to update the trip. Error: " . $stmt->error;
     }
-}
-?>
 
+    $stmt->close();
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,21 +83,21 @@ if (isset($_POST['save_update'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Update Coupen</title>
+    <title>AdminLTE 3 | User List</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../../plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
 </head>
 
-<body>
-<div class="wrapper">
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -86,7 +106,7 @@ if (isset($_POST['save_update'])) {
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../../index.php" class="nav-link">Home</a>
+                    <a href="../../index.php" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -128,7 +148,7 @@ if (isset($_POST['save_update'])) {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../../../dist/img/user1-128x128.jpg" alt="User Avatar"
+                                <img src="../dist/img/user1-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -145,7 +165,7 @@ if (isset($_POST['save_update'])) {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../../../dist/img/user8-128x128.jpg" alt="User Avatar"
+                                <img src="../dist/img/user8-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -162,7 +182,7 @@ if (isset($_POST['save_update'])) {
                         <a href="#" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../../../dist/img/user3-128x128.jpg" alt="User Avatar"
+                                <img src="../dist/img/user3-128x128.jpg" alt="User Avatar"
                                     class="img-size-50 img-circle mr-3">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -224,58 +244,73 @@ if (isset($_POST['save_update'])) {
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="../../../index.php" class="brand-link">
-                <img src="../../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+            <a href="../../index.php" class="brand-link">
+                <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Admin Page</span>
             </a>
 
             <?php
-            include '../../UI/fixed-aside-2.php';
+            include '../UI/fixed-aside.php';
             ?>
             <!-- /.sidebar -->
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
+            <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Update Destination</h1>
+                            <h1>Update User</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="../../../index.php">Home</a></li>
+                                <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
                                 <li class="breadcrumb-item active">ticket-booking</li>
                             </ol>
                         </div>
                     </div>
-                    <div class="row add-destination">
-                        <div class="col-4 mb-5">
-                        <form method="post" action="" enctype="multipart/form-data">
-                            <input type="hidden" name="trip_id" value="<?php echo $trip['id']; ?>">
-                            <label for="name">Destination Name:</label>
-                            <input type="text" name="name" id="name" value="<?php echo $trip['name']; ?>" 
-                            required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <label for="detail">Detail:</label>
-                            <input type="text" name="code" id="name" value="<?php echo $trip['code']; ?>" 
-                            required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <input type="submit" name="save_update" value="Update Destination" class="btn btn-warning"
+                    <!-- add new trip -->
+                    <div class="col-4 my-5">
+                        <form action="" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="trip_id" value="<?php echo $trip['id']; ?>">
+                            
+                                <label for="category" style="margin-bottom:0px;">User Name:</label>
+                                <input type="text" name="name" id="" placeholder="Enter Bus Name" value="<?php echo $trip['name']; ?>" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                                <label for="category" style="margin-bottom:0px;">User Email:</label>
+                                <input type="text" name="email-text" id="" placeholder="Enter Bus Name" value="<?php echo $trip['email']; ?>" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                                    <label for="category" style="margin-bottom:0px;">User Password:</label>
+                                <input type="text" name="password" id="" placeholder="Enter Bus Driver Contact" value="<?php echo $trip['password']; ?>" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"> 
+                                    
+                                <label for="category" style="margin-bottom:0px;">User Types</label>
+                                <input type="text" name="user_type" id="" placeholder="Enter Bus Driver Contact" value="<?php echo $trip['user_type']; ?>" required
+                                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"> 
+                                
+                                <input type="submit" name="save_update" value="Update Bus" class="btn btn-warning"
                                     style="margin: 10px auto; padding:10px 0px; width:50%;">
-                            </form>
                         </form>
                         </div>
-                    </div>
+
+
                 </div>
-            </section>       
+            </section>
+
+            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+                <i class="fas fa-chevron-up"></i>
+            </a>
         </div>
 
-    <!-- footer link -->
-    <?php
-    include ('../../../../components/header-footer/footer.php');
-    ?>
+        <!-- footer link -->
+        <?php
+        include ('../../../components/header-footer/footer.php');
+        ?>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -286,13 +321,13 @@ if (isset($_POST['save_update'])) {
     <!-- ./wrapper -->
 
     <!-- jQuery -->
-    <script src="../../../plugins/jquery/jquery.min.js"></script>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../../../dist/js/adminlte.min.js"></script>
+    <script src="../../dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="../../../dist/js/demo.js"></script>
+    <script src="../../dist/js/demo.js"></script>
 </body>
 
 </html>

@@ -187,209 +187,9 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                 <span class="brand-text font-weight-light">Admin Page</span>
             </a>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block" style="color:white;">
-                            <?php
-                            if (isset($_SESSION['admin_name'])) {
-                                echo "$user_name";
-                            } else {
-                                echo "admin page";
-                            }
-                            ?>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="../../index.php" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                    <!-- <i class="right fas fa-angle-left"></i> -->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../widgets.php" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Widgets
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- trip-section start -->
-                        <li class="nav-header">TRIPS</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Trips Setting
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="destination.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Destination</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="add-trip.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Trips</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-coupen.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Coupen</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-categories.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Categories</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-types.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Types</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-room.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Rooms</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-bus.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Bus</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-query.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips querys</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../ticket-booking.php" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Tickets Booking
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- trip-section over -->
-                        <li class="nav-header">Extra Section</li>
-                        <li class="nav-item">
-                            <a href="../calendar.php" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Calendar
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- mail box -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Mailbox
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="../mailbox/mailbox.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inbox</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../mailbox/compose.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Compose</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../mailbox/read-mail.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Read</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header">All Users</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Site User
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="admin.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Admin</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="user.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Users</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../../../user/logout.php" class="btn btn-success nav-link">
-                                <p>
-                                    Logout
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
+            <?php
+            include '../UI/fixed-aside.php';
+            ?>
             <!-- /.sidebar -->
         </aside>
 
@@ -411,13 +211,18 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                     </div>
                     <!-- add new trip -->
                     <div class="row add-trip">
-                        <div class="col-12 col-md-4 my-5">
                             <!-- Widget: user widget style 1 -->
+                              <?php
+                        $select_bus = mysqli_query($conn, "SELECT * FROM `user`") or die('query failed');
+                        if (mysqli_num_rows($select_bus) > 0) {
+                            while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
+                                ?>
+                        <div class="col-12 col-md-4 my-5">
                             <div class="card card-widget widget-user">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="widget-user-header bg-info">
-                                    <h3 class="widget-user-username">Alexander Pierce</h3>
-                                    <h5 class="widget-user-desc">Founder & CEO</h5>
+                                    <h3 class="widget-user-username"><?php echo $fetch_bus['name']; ?></h3>
+                                    <h5 class="widget-user-desc"><?php echo $fetch_bus['email']; ?></h5>
                                 </div>
                                 <div class="widget-user-image">
                                     <img class="img-circle elevation-2" src="../../dist/img/user1-128x128.jpg"
@@ -453,9 +258,15 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                                     <!-- /.row -->
                                 </div>
                             </div>
-                            <!-- /.widget-user -->
                         </div>
-                    </div>
+                            <?php
+                            }
+                        } else {
+                            echo '<p class="empty">no product added yet!</p>';
+                        }
+                        ?>
+                            <!-- /.widget-user -->
+                        </>
                 </div>
             </section>
 

@@ -283,6 +283,18 @@ else{
                   </a>
                 </li>
                 <li class="nav-item">
+                    <a href="trips-setting/trip-room.php" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Trips Hotels</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="trips-setting/trip-bus.php" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Trips Bus</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                   <a href="trips-setting/trip-query.php" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Trips querys</p>
@@ -339,6 +351,30 @@ else{
                 </li>
               </ul>
             </li>
+            <li class="nav-header">All Users</li>
+              <li class="nav-item">
+                  <a href="#" class="nav-link">
+                      <i class="nav-icon far fa-envelope"></i>
+                      <p>
+                          Site User
+                          <i class="fas fa-angle-left right"></i>
+                      </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                          <a href="site-users/admin.php" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Admin</p>
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="site-users/user.php" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Users</p>
+                          </a>
+                      </li>
+                  </ul>
+              </li>
             <li class="nav-item">
               <a href="../../user/logout.php" class="btn btn-success nav-link">
                 <p>

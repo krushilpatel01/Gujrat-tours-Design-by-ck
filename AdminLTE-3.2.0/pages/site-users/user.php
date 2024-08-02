@@ -7,10 +7,63 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
   
-  }
-  else{
-    header('location:../../login.php');
-  }
+}
+else{
+  header('location:../../login.php');
+}
+// if (isset($_GET['trip_id'])) {
+//     $trip_id = $_GET['trip_id'];
+
+//     // Fetch the current details of the trip
+//     $query = "SELECT * FROM user WHERE id = ?";
+//     $stmt = $conn->prepare($query);
+//     $stmt->bind_param('i', $trip_id);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+//     $trip = $result->fetch_assoc();
+
+//     if (!$trip) {
+//         echo "Trip not found.";
+//         exit();
+//     }
+// } else {
+//     echo "No trip ID provided.";
+//     exit();
+// }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['delete_trip'])) {
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
+            
+            // Delete query
+            $delete_query = "DELETE FROM user WHERE id = ?";
+            $stmt = $conn->prepare($delete_query);
+            $stmt->bind_param('i', $trip_id);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('user successfully deleted!'); window.location.href='user.php';</script>";
+            } else {
+                echo "Error deleting trip: " . $stmt->error;    
+            }
+            $stmt->close();
+        } else {
+            echo "Can't fetch ID";
+        }
+    }
+
+    if (isset($_POST['update_trip'])) {
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = intval($_POST['trip_id']); // Ensure trip_id is an integer
+            
+            // Redirect to update page
+            header("Location:update.php?trip_id=" . urlencode($trip_id));
+            exit();
+        } else {
+            echo "Can't fetch ID";
+        }
+    }
+}
 
 ?>
 
@@ -187,209 +240,9 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                 <span class="brand-text font-weight-light">Admin Page</span>
             </a>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block" style="color:white;">
-                            <?php
-                            if (isset($_SESSION['admin_name'])) {
-                                echo "$user_name";
-                            } else {
-                                echo "admin page";
-                            }
-                            ?>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sidebar Menu -->
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="../../index.php" class="nav-link">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
-                                <p>
-                                    Dashboard
-                                    <!-- <i class="right fas fa-angle-left"></i> -->
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../widgets.php" class="nav-link">
-                                <i class="nav-icon fas fa-th"></i>
-                                <p>
-                                    Widgets
-                                    <span class="right badge badge-danger">New</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- trip-section start -->
-                        <li class="nav-header">TRIPS</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Trips Setting
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="destination.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Destination</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="add-trip.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Trips</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-coupen.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Coupen</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-categories.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Categories</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-types.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Types</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-room.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Rooms</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-bus.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips Bus</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="trip-query.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Trips querys</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../ticket-booking.php" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Tickets Booking
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- trip-section over -->
-                        <li class="nav-header">Extra Section</li>
-                        <li class="nav-item">
-                            <a href="../calendar.php" class="nav-link">
-                                <i class="nav-icon far fa-calendar-alt"></i>
-                                <p>
-                                    Calendar
-                                    <span class="badge badge-info right">2</span>
-                                </p>
-                            </a>
-                        </li>
-                        <!-- mail box -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Mailbox
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="../mailbox/mailbox.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Inbox</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../mailbox/compose.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Compose</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="../mailbox/read-mail.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Read</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header">All Users</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-envelope"></i>
-                                <p>
-                                    Site User
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="admin.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Admin</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="user.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Users</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../../../user/logout.php" class="btn btn-success nav-link">
-                                <p>
-                                    Logout
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
+            <?php
+            include '../UI/fixed-aside.php';
+            ?>
             <!-- /.sidebar -->
         </aside>
 
@@ -411,9 +264,44 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                     </div>
                     <!-- add new trip -->
                     <div class="row add-trip">
-                        <div class="col-4 mb-5">
-
-                            <!-- here print user list -->
+                        <div class="col-12 my-5">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Id</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Password</th>
+                              <th scope="col">Update / Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <?php
+                        $select_user = mysqli_query($conn, "SELECT * FROM `user`") or die('query failed');
+                        if (mysqli_num_rows($select_user) > 0) {
+                            while ($fetch_user = mysqli_fetch_assoc($select_user)) {
+                                ?>
+                            <tr>
+                              <th scope="row"><?php echo $fetch_user['id']; ?></th>
+                              <td><?php echo $fetch_user['name']; ?></td>
+                              <td><?php echo $fetch_user['email']; ?></td>
+                              <td><?php echo $fetch_user['password']; ?></td>
+                              <td>
+                              <form method="post" action="">
+                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
+                                            <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
+                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                    </form>
+                              </td>
+                            </tr>
+                            <?php
+                            }
+                        } else {
+                            echo '<p class="empty">no product added yet!</p>';
+                        }
+                        ?>
+                          </tbody>
+                        </table>
                         </div>
                     </div>
                 </div>
