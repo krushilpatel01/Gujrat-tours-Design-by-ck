@@ -213,7 +213,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                     <div class="row add-trip">
                             <!-- Widget: user widget style 1 -->
                               <?php
-                        $select_bus = mysqli_query($conn, "SELECT * FROM `user`") or die('query failed');
+                        $select_bus = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = 'admin'") or die('query failed');
                         if (mysqli_num_rows($select_bus) > 0) {
                             while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
                                 ?>
@@ -257,6 +257,34 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                                     </div>
                                     <!-- /.row -->
                                 </div>
+                                <div class="col-12">
+                                    <div class="card card-primary collapsed-card">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Contribution</h3>
+
+                                            <div class="card-tools">
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                                                        class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>Trip - (0)</li>
+                                                <li>Destination - (0)</li>
+                                                <li>Types - (0)</li>
+                                                <li>Categories - (0)</li>
+                                                <li>Hotels - (0)</li>
+                                                <li>Bus - (0)</li>
+                                                <li>Coupen - (0)</li>
+                                            </ul>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                    <!-- /.card -->
+                                </div>
                             </div>
                         </div>
                             <?php
@@ -266,7 +294,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                         }
                         ?>
                             <!-- /.widget-user -->
-                        </>
+                    </div>
                 </div>
             </section>
 

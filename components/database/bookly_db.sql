@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2024 at 01:27 PM
+-- Generation Time: Aug 05, 2024 at 07:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,9 +67,9 @@ CREATE TABLE `bus` (
 --
 
 INSERT INTO `bus` (`id`, `name`, `bus_number`, `driver_number`, `image`, `destination`) VALUES
-(1, '', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman'),
-(2, '', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman'),
-(3, 'demo', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Andaman');
+(2, 'Los Angles-2', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Mauritius'),
+(3, 'demo', '9080', 2147483647, 'LaskhaDweep-srp.jpg', 'Maldives'),
+(4, 'ranutsav', '7876', 2147483647, 'Best-Time-to-Visit-Gujarat.jpg', 'Sikkim');
 
 -- --------------------------------------------------------
 
@@ -89,9 +89,7 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `detail`, `image`) VALUES
-(1, 'safari', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', '434640551_939914594451063_1420271604648352858_n.jpg'),
-(2, 'beach category', 'SDSKSJNKJS', 'trip-types (5).jpg'),
-(3, 'demo', 'SDSKSJNKJS', 'trip-types (4).jpg');
+(2, 'beach category', 'SDSKSJNKJS', 'trip-types (5).jpg');
 
 -- --------------------------------------------------------
 
@@ -132,7 +130,7 @@ CREATE TABLE `coupen` (
 --
 
 INSERT INTO `coupen` (`id`, `name`, `code`, `image`) VALUES
-(2, 'demo123', 'demo0-1092', 'activites-img (1).jpg');
+(3, 'Special coupen', 'Ck-010101', '2149153260.jpg');
 
 -- --------------------------------------------------------
 
@@ -152,29 +150,28 @@ CREATE TABLE `destination` (
 --
 
 INSERT INTO `destination` (`id`, `name`, `detail`, `image`) VALUES
-(11, 'Andaman', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Andaman-17.jpg'),
-(12, 'Austaliya', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP_brisbane-city.jpg'),
-(13, 'Bali', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bali-2.jpg'),
-(14, 'Kedarnath Yatra', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Summer-Spiritual-Journey---Luxury.jpg'),
-(15, 'Dubai', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bhurj_Khalifa_Dubai.jpg'),
-(16, 'Egypt', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Egypt (2).jpg'),
-(17, 'Europe', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Salzburg-Austria-3.jpg'),
-(18, 'Goa', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. ', 'Goa-1.jpg'),
-(19, 'Gujrat Tours', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Dwarka-Krishna-Temple.jpg'),
-(20, 'Himachal ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Shimla-Manali.jpg'),
-(21, 'India', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', 'imdia.jpg'),
-(22, 'Kashmir', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.', 'DallakeKashmir.jpg'),
-(23, 'Kerala', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'kerala (3).jpg'),
-(24, 'Laskha Dweep ', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'LaskhaDweep-srp.jpg'),
-(25, 'Maldives', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP_Cantara-ras.jpg'),
-(26, 'Mauritius', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SRP-Oceans-Creek.jpg'),
-(27, 'Rajash-than', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Desert.jpg'),
-(28, 'Sikkim', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'tshangulake-north east.jpg'),
-(29, 'Singapore', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'SINGAPORE-2.jpg'),
-(30, 'South Africa', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'SA_Cape-Town-city-Thum-img.jpg'),
-(31, 'Thailand / Bangkok', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Bangkok.jpg'),
-(32, 'Turkey', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'images.jpg'),
-(33, 'Vietnam', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has su', 'Da Nang-thum.jpg');
+(11, 'Andaman', 'About Andaman Holidays: Andaman and Nicobar Islands are one of India’s two island union territories in the Bay of Bengal. In\r\nlate 2018, the Government of India renamed Havelock Island as Swaraj Dweep, Neil Island as Shaheed Dweep, and Ross Island as Neta', 'Andaman-17.jpg'),
+(12, 'Austaliya', 'Australia is a land of dreams. From the Aboriginal culture, coral reefs, rainforests, and scorched, red deserts, it\r\nhas all, with some quirkiest wildlife on the planet. Australia is also a land of staggering contrast and spectacular beauty. Along the coa', 'SRP_brisbane-city.jpg'),
+(13, 'Bali', 'Bali is the crown jewel of tourism in Indonesia. It is also one of the most sought-after holiday destinations in all of Southeast Asia. It is a\r\nplace where culture meets nature and spirituality, making it a perfect choice for those seeking Bali tour pack', 'Bali-2.jpg'),
+(14, 'Kedarnath Yatra', 'Kedarnath is a town and Nagar Panchayat in Rudraprayag district of Uttarakhand, India, known primarily for the Kedarnath Temple. It is approximately 86 kilometres from Rudraprayag, the district headquarter. Kedarnath is the most remote of the four Chota C', 'Summer-Spiritual-Journey---Luxury.jpg'),
+(15, 'Dubai', 'Dubai is the most populous city in the United Arab Emirates (UAE). It used to be a small fishing village back in the 18th century but has now\r\nbecome one of the most developed and luxurious places in the world. Dubai ranks among the top lavish tourist des', 'Bhurj_Khalifa_Dubai.jpg'),
+(16, 'Egypt', 'There is more to Egypt than just pyramids. This country welcomes every tourist with its magnificent mountains, the\r\ndeserts, long and historical past and not to forget the mighty river Nile. You are bound to fall in love with this sandy country the time y', 'Egypt (2).jpg'),
+(17, 'Europe', '\r\nAsk anyone with wanderlust about the best continent to travel to in the world and the probability of Europe being the answer is quite high.\r\nBlessed with some of the most picturesque countries, Europe is a delight for tourists. Europe is the most visite', 'Salzburg-Austria-3.jpg'),
+(18, 'Goa', 'Planning a Goa Trip Has Never Been This Easy: Whether you are looking to kick back and relax by the beach, or are a\r\nparty-lover who wants to go club-hopping and dancing, Goa is your ultimate destination. Goa holidays are simply the best! This place has i', 'Goa-1.jpg'),
+(20, 'Himachal ', 'The picturesque state of Himachal Pradesh is nestled between the snow-topped Himalayan ranges in North India. Known for its panoramic\r\nlandscapes, this spectacular paradise is blessed with lofty snow peaks, deep gorges, verdant valleys, thundering rivers,', 'Shimla-Manali.jpg'),
+(21, 'India', 'India is a popular tourist destination with a rich heritage and diverse geography, including ancient monuments, vibrant festivals, and stunning landscapes. It offers a variety of tourist attractions to cater to different kinds of travelers, including:\r\nCu', 'imdia.jpg'),
+(22, 'Kashmir', 'Jammu and Kashmir, also known as Kashmir, is a popular tourist destination in India known for its natural beauty, culture, and festivals. Some major tourist attractions include:\r\n\r\nSrinagar\r\nHome to Dal Lake and Mughal Gardens\r\n\r\nGulmarg\r\nA valley known a', 'DallakeKashmir.jpg'),
+(23, 'Kerala', 'The Indian state of Kerala is located on the Malabar Coast and is bordered by Tamil Nadu, Karnataka and the Lakshadweep Sea. It has developed\r\ninto a major tourist destination in recent years, thanks to its beautiful collection of lakes, backwaters, beach', 'kerala (3).jpg'),
+(24, 'Laskha Dweep ', 'Exploring the serene archipelago of Lakshadweep is a dream for many, and SOTC unveils a myriad of captivating opportunities through its\r\nmeticulously crafted Lakshadweep tour packages. With a year of immersion in the travel content domain, delving into th', 'LaskhaDweep-srp.jpg'),
+(25, 'Maldives', 'The archipelagic state of Maldives is a part of South Asia and is among the most popular international holiday destinations in the world.\r\nOfficially called the Republic of Maldives, this island country is situated in the Indian Ocean, geographically sout', 'SRP_Cantara-ras.jpg'),
+(26, 'Mauritius', 'Mauritius, a heavenly island country located in the Indian Ocean is home to some of the most beautiful landscapes\r\nand reefs in the world. The beautiful coral reefs that surround the island give this tourist destination the perfect setting while the islan', 'SRP-Oceans-Creek.jpg'),
+(27, 'Rajash-than', 'the world go on a trip to Rajasthan every year to enjoy its diverse tourism experience. Apart from its rich history, Rajasthan is known for its colourful and vibrant culture and traditions, delicious cuisine, beautiful cities, jaw-dropping natural beauty,', 'Desert.jpg'),
+(28, 'Sikkim', 'The paradise located amongst the high soaring Eastern Himalayas, Sikkim is a magnificent destination and has become one of the most desired\r\nvacation spots in the country. It is known for its natural beauty, panoramic views, and vibrant meadows. It also s', 'tshangulake-north east.jpg'),
+(29, 'Singapore', 'Singapore, located in maritime southeast Asia, is a city-state and an island country. Its entire territory is made\r\nup of a main island, one outlying islets and about 63 satellite islands and islets. It is popularly described as a quintessential cosmopoli', 'SINGAPORE-2.jpg'),
+(30, 'South Africa', 'One of the dream destinations for many people across the world, South Africa has always been known for its\r\nunmatched natural beauty and wildlife. The southernmost part of Africa has a rich history and equally rich biodiversity making South Africa tourism', 'SA_Cape-Town-city-Thum-img.jpg'),
+(31, 'Thailand / Bangkok', 'The beautiful tropical country of Thailand is world-renowned for its natural and manmade tourist attractions. From pristine beaches to bustling\r\nmarkets, and majestic Buddhist temples to urban havens, the South-East Asian country has a sublime concoction ', 'Bangkok.jpg'),
+(32, 'Turkey', 'Those wanting to see all the amazing sights without having to worry about the logistics should look no further than the SOTC Turkey packages.\r\nOur Turkey tours are designed to help travellers make the most of their time in the country. We’ll take care of ', 'images.jpg'),
+(33, 'Vietnam', 'Vietnam, officially called the Socialist Republic of Vietnam (SRV), is a country in the eastern region of Southeast Asia’s mainland. It is\r\npopularly referred to as a crown jewel of tourism in the continent for a wide number of reasons. The country has be', 'Da Nang-thum.jpg');
 
 -- --------------------------------------------------------
 
@@ -196,9 +193,8 @@ CREATE TABLE `room` (
 --
 
 INSERT INTO `room` (`id`, `name`, `addresss`, `location`, `person_contact`, `image`) VALUES
-(1, 'cruise', 'lonawala', 'Andaman', 2147483647, 'CordeliaCruises_SRP1.jpg'),
-(2, 'burger Villa', 'in the near guhu beach', 'goa', 989898989, 'dsds.jpeg'),
-(3, 'burger Villa', 'in the near guhu beach', 'goa', 989898989, 'dsds.jpeg');
+(1, 'cruise-01', 'lonawala', 'Sikkim', 2147483647, 'CordeliaCruises_SRP1.jpg'),
+(4, 'demo-01', 'jetpur', 'Laskha Dweep ', 938348, 'GettyImages-1432005421-5c0bc8d84cedfd0001fa5acb.jpg');
 
 -- --------------------------------------------------------
 
@@ -225,7 +221,7 @@ CREATE TABLE `trip` (
 --
 
 INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `trip_days`, `trip_nights`, `destination`, `types`, `category_names`, `auther`) VALUES
-(69, 'kurandra', 900, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'Kuranda.jpg', 6, 4, 'Andaman', 'With Family', '', 'demo');
+(69, 'kurandra', 1000, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ', 'Kuranda.jpg', 11, 10, 'Andaman', '', '', 'demo');
 
 -- --------------------------------------------------------
 
@@ -276,9 +272,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `email`, `password`, `user_type`) VALUES
 (16, 'krushil', 'krushilchabhadiya600@gmail.com', 'dd0c928bed78ef49993ba96e4bacc1c7', 'User'),
 (17, 'demo', 'demo@gmail.com', 'f702c1502be8e55f4208d69419f50d0a', 'Admin'),
-(18, 'ck', 'ck@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User'),
-(19, 'demo-4', 'demo4@gmail.com', '725d59206ff82f128ee61e8a3068a6b4', 'User'),
-(20, 'demo10', 'demo10@gmail.com', '43514a20c7801ebd4b1e6769939dd95f', 'User');
+(18, 'ck', 'ck600@gmail.com', '1f737fb6f9bd06c9a153daf0d1ec0b89', 'User');
 
 --
 -- Indexes for dumped tables
@@ -359,7 +353,7 @@ ALTER TABLE `add_services`
 -- AUTO_INCREMENT for table `bus`
 --
 ALTER TABLE `bus`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -377,19 +371,19 @@ ALTER TABLE `contact-us-message`
 -- AUTO_INCREMENT for table `coupen`
 --
 ALTER TABLE `coupen`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `destination`
 --
 ALTER TABLE `destination`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `room`
 --
 ALTER TABLE `room`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `trip`
@@ -401,7 +395,7 @@ ALTER TABLE `trip`
 -- AUTO_INCREMENT for table `types`
 --
 ALTER TABLE `types`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `user`

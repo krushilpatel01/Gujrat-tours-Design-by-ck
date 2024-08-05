@@ -137,7 +137,7 @@ if (isset($_POST['submit'])) {
                      quae odio tenetur est, quis reprehenderit. Vel hic expedita recusandae 
                      modi laboriosam?</p>
                 <ul>
-                   <li>Here You Can Add Trip - Destination - Hotel - Translpot.</li>
+                   <li>Here You Can Add Trip - Destination - Hotel - Transpot.</li>
                    <li>Also Check Booking Detail Of Client.</li>
                    <li>Get Othenitication Of Your Site.</li>
                    <li>We Can Access Your Website Home Page.</li>

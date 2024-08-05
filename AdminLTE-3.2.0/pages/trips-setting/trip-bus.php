@@ -62,7 +62,7 @@ if (isset($_POST['add_trip'])) {
     if (mysqli_num_rows($select_trip_name) > 0) {
         $message[] = 'Trip name already added';
     } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `bus` (name, bus_number, driver_number, image, destination) VALUES('$name', '$bus_number', '$driver_number', '$image', '$destination')") or die('query failed');
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `bus` (name, bus_number, driver_number, image, destination, auther) VALUES('$name', '$bus_number', '$driver_number', '$image', '$destination', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('i', $trip_id);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Bus successfully deleted!'); window.location.href='trip-room.php';</script>";
+                echo "<script>alert('Bus successfully deleted!'); window.location.href='trip-bus.php';</script>";
             } else {
                 echo "Error deleting trip: " . $stmt->error;
             }

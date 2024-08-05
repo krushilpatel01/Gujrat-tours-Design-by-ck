@@ -11,25 +11,6 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 else{
   header('location:../../login.php');
 }
-// if (isset($_GET['trip_id'])) {
-//     $trip_id = $_GET['trip_id'];
-
-//     // Fetch the current details of the trip
-//     $query = "SELECT * FROM user WHERE id = ?";
-//     $stmt = $conn->prepare($query);
-//     $stmt->bind_param('i', $trip_id);
-//     $stmt->execute();
-//     $result = $stmt->get_result();
-//     $trip = $result->fetch_assoc();
-
-//     if (!$trip) {
-//         echo "Trip not found.";
-//         exit();
-//     }
-// } else {
-//     echo "No trip ID provided.";
-//     exit();
-// }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete_trip'])) {
@@ -277,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           </thead>
                           <tbody>
                           <?php
-                        $select_user = mysqli_query($conn, "SELECT * FROM `user`") or die('query failed');
+                        $select_user = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = 'user'") or die('query failed');
                         if (mysqli_num_rows($select_user) > 0) {
                             while ($fetch_user = mysqli_fetch_assoc($select_user)) {
                                 ?>

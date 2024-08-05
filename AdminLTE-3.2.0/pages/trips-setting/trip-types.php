@@ -25,7 +25,7 @@ if (isset($_POST['add_Types'])) {
     if (mysqli_num_rows($select_trip_name) > 0) {
         $message[] = 'product name already added';
     } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `types`(name, detail, image) VALUES('$name', '$detail', '$image')") or die('query failed');
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `types`(name, detail, image, auther) VALUES('$name', '$detail', '$image', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {

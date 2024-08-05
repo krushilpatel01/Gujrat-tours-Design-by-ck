@@ -54,7 +54,7 @@ session_start();
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
                 </div>
                   <!-- Swiper -->
-                    <di v class="swiper mySwiper3">
+                    <div class="swiper mySwiper3">
                         <div class="swiper-wrapper destination-card-circle">
                                 <?php
                                 // Query to retrieve data from the trip table

@@ -8,7 +8,7 @@ session_start();
         $email = mysqli_real_escape_string($conn, $_POST['email']);
         $message = mysqli_real_escape_string($conn, $_POST['message']);
 
-         $add_trip_query = mysqli_query($conn, "INSERT INTO `contact-us-message`(name, email, message) VALUES('$name', '$email', '$message')") or die('query failed');
+         $add_trip_query = mysqli_query($conn, "INSERT INTO `contact_us_message`(name, email, message) VALUES('$name', '$email', '$message')") or die('query failed');
     }
     else {
         $message[] = 'Message not sent';

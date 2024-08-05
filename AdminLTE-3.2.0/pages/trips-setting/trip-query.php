@@ -1,22 +1,50 @@
 <?php
-// include '../user/config.php';
+include '../../../user/config.php';
+
 
 session_start();
 
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
-  
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
-  }
-  else{
+}
+else{
     header('location:../../login.php');
   }
+
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            
+    if (isset($_POST['delete_trip'])) {
+        // Check if trip_id is set
+        if (isset($_POST['trip_id']) && !empty($_POST['trip_id'])) {
+            $trip_id = $_POST['trip_id'];
+            
+            // Delete query
+            $delete_query = "DELETE FROM contact_us_message WHERE id = ?";
+            $stmt = $conn->prepare($delete_query);
+            $stmt->bind_param('i', $trip_id);
+
+            if ($stmt->execute()) {
+                echo "<script>alert('coupen successfully Delete!'); window.location.href='trip-query.php';</script>";
+            } else {
+                echo "Error deleting trip: " . $stmt->error;
+            }
+            $stmt->close();
+        } else {
+            echo "cant fetch id";
+        }
+    }
+
+    if (isset($_POST['update_trip'])) {
+        $trip_id = $_POST['trip_id'];
+
+        // Redirect to update page (create an update_trip.php page to handle updates)
+        header("Location: trip-update/update-coupen.php?trip_id=$trip_id");
+        exit();
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -213,6 +241,62 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                             </ol>
                         </div>
                     </div>
+                    <div class="container-fluid">
+                    <!-- add new trip -->
+                    <div class="row add-trip">
+                        <div class="col-12 my-5">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Id</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Email</th>
+                              <th scope="col">Password</th>
+                              <th scope="col">Update / Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          <?php
+                        $select_user = mysqli_query($conn, "SELECT * FROM `contact_us_message`") or die('query failed');
+                        if (mysqli_num_rows($select_user) > 0) {
+                            while ($fetch_user = mysqli_fetch_assoc($select_user)) {
+                                ?>
+                            <tr>
+                              <th scope="row"><?php echo $fetch_user['id']; ?></th>
+                              <td><?php echo $fetch_user['name']; ?></td>
+                              <td><?php echo $fetch_user['email']; ?></td>
+                              <td><?php echo $fetch_user['message']; ?></td>
+                              <td>
+                              <form method="post" action="">
+                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
+                                            <!-- <input type="submit" name="update_trip" class="btn btn-warning" value="Update"> -->
+                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                    </form>
+                              </td>
+                            </tr>
+                            <?php
+                            }
+                        } else {
+                            echo '<p class="empty">no Trip Query yet!</p>';
+                        }
+                        ?>
+                          </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+                <i class="fas fa-chevron-up"></i>
+            </a>
+        </div>
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+
             </section>
 
             <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">

@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 include '../../../user/config.php';
 
 session_start();
@@ -24,7 +27,6 @@ if (isset($_GET['trip_id'])) {
 
     if ($trip) {
         $trip_name = $trip['name'];
-        // echo "That's the trip name: " . $trip_name . " (ID: " . $trip_id . ")";
 
         // Handle form submission for adding services
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_services'])) {
@@ -72,10 +74,10 @@ if (isset($_GET['trip_id'])) {
 
                         if (move_uploaded_file($file_tmp, $file_destination)) {
                             // Prepare the insert statement
-                            $insert_hotel = $conn->prepare("INSERT INTO add_services (trip_id, trip_name, hotel_name, hotel_price, hotel_img, transpot_type, transpot_price) VALUES (?, ?, ?, ?, ?, ?, ?)") or die('query failed');
+                            $insert_hotel = $conn->prepare("INSERT INTO add_services (trip_id, trip_name, hotel_name, hotel_price, hotel_img, transpot_type, transpot_price, auther) VALUES (?, ?, ?, ?, ?, ?, ?, ?)") or die('query failed');
                             
                             // Bind parameters: adjust the format string if needed
-                            $insert_hotel->bind_param('issdsss', $trip_id, $trip_name, $hotel_name, $hotel_price, $file_destination, $transport_name, $transport_price);
+                            $insert_hotel->bind_param('issdssss', $trip_id, $trip_name, $hotel_name, $hotel_price, $file_destination, $transport_name, $transport_price, $user_name);
 
                             if ($insert_hotel->execute()) {
                                 echo "<script>alert('Services added successfully!'); window.location.href='add-trip.php';</script>";
@@ -94,12 +96,13 @@ if (isset($_GET['trip_id'])) {
             }
         }
     } else {
-        echo "";
+        echo "<script>alert('Trip not found.');</script>";
     }
 } else {
     echo "<script>alert('Please provide a trip ID.');</script>";
 }
 ?>
+
 
 
 

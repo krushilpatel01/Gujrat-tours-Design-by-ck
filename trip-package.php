@@ -27,10 +27,10 @@ $result = $conn->query($sql);
         <!-- nav over -->
     <section class="trip-package">
         <div class="container">
-        <div class="title" style="text-align:center; margin:50px auto;">
+            <div class="title" style="text-align:center; margin:50px auto;">
                     <h2>Our latest Trips</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
-                </div>
+            </div>
             <div class="row justinfy-content-between">
                 <!-- <div class="col-12 d-flex"> -->
                     <?php

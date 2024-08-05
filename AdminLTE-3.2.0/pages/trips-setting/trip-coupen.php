@@ -25,7 +25,7 @@ if (isset($_POST['add_coupen'])) {
     if (mysqli_num_rows($select_trip_name) > 0) {
         $message[] = 'product name  already addded';
     } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `coupen`(name, code, image) VALUES('$name', '$code', '$image')") or die('query failed');
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `coupen`(name, code, image, auther) VALUES('$name', '$code', '$image', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {

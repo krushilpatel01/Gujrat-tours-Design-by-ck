@@ -59,6 +59,7 @@ $result = $conn->query($sql);
                         echo "<p>No Destination found</p>";
                     }
                     ?>
+                </div>
             </div>
         </section>
 
