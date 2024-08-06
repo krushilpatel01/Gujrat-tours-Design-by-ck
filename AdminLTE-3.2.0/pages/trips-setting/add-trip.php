@@ -129,6 +129,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: add_services.php?trip_id=$trip_id");
         exit();
     }
+
+    if(isset($_POST['add_Itinerary'])){
+        $trip_id = $_POST['trip_id'];
+        
+        header("Location: trip-update/trip_secudle.php?trip_id=$trip_id");
+        exit();
+    }
 }
 
 // Close the database connection
@@ -433,6 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
                                     <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
                                     <input type="submit" name="add_Services" class="btn btn-warning" value="Add Services">
+                                    <input type="submit" name="add_Itinerary" class="btn btn-warning mt-1" value="Add Days schedule">
                                 </form>
                             </div>
                             <?php
