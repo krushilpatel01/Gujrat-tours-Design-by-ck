@@ -284,3 +284,17 @@ h1 {
     width: 50%;
     display: contents;
 }
+
+.trip2-card {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px auto;
+    text-align: left;
+}
+
+.trip2-card img {
+    width: 100%;
+    height: 100%;
+}

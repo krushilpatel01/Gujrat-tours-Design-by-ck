@@ -290,12 +290,6 @@ else{
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/trips-setting/trip-types.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Trips Types</p>
-                  </a>
-                </li>
-                <li class="nav-item">
                     <a href="pages/trips-setting/trip-room.php" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Trips Hotels</p>

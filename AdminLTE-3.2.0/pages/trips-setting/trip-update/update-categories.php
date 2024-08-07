@@ -1,3 +1,4 @@
+<!-- this file contain all about the types page and database  -->
 <?php
 // Include database connection file
 include '../../../../user/config.php';
@@ -16,7 +17,7 @@ if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
 
     // Fetch the current details of the trip
-    $query = "SELECT * FROM categories WHERE id = ?";
+    $query = "SELECT * FROM types WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $trip_id);
     $stmt->execute();
@@ -39,11 +40,11 @@ if (isset($_POST['save_update'])) {
 
     if (!empty($image)) {
         move_uploaded_file($image_tmp_name, $image_folder);
-        $query = "UPDATE `categories` SET name = ?, detail = ?, image = ? WHERE id = ?";
+        $query = "UPDATE `types` SET name = ?, detail = ?, image = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('sssi', $name, $detail, $image, $trip_id);
     } else {
-        $query = "UPDATE `categories` SET name = ?, detail = ? WHERE id = ?";
+        $query = "UPDATE `types` SET name = ?, detail = ? WHERE id = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('ssi', $name, $detail, $trip_id);
     }
@@ -256,13 +257,13 @@ if (isset($_POST['save_update'])) {
                         <div class="col-4 mb-5">
                         <form method="post" action="" enctype="multipart/form-data">
                             <input type="hidden" name="trip_id" value="<?php echo $trip['id']; ?>">
-                            <label for="name">Destination Name:</label>
+                            <label for="name">Categories Name:</label>
                             <input type="text" name="name" id="name" value="<?php echo $trip['name']; ?>" 
                             required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
                             <label for="detail">Detail:</label>
                             <input type="text" name="code" id="name" value="<?php echo $trip['detail']; ?>" 
                             required style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <input type="submit" name="save_update" value="Update Destination" class="btn btn-warning"
+                            <input type="submit" name="save_update" value="Update Categories" class="btn btn-warning"
                                     style="margin: 10px auto; padding:10px 0px; width:50%;">
                             </form>
                         </form>

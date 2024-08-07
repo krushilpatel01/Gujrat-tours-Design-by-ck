@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $categories = !empty($_POST['categories']) ? $_POST['categories'] : [];
     $types = !empty($_POST['types']) ? $_POST['types'] : [];
+    $featured = isset($_POST['featured']) ? $_POST['featured'] : ''; 
 
     // Categories
     if (!empty($categories)) {
@@ -81,9 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Update the trip in the database
-    $update_query = "UPDATE trip SET name = ?, price = ?, detail = ?, trip_days = ?, trip_nights = ?, destination = ?, types = ?, category_names = ? WHERE id = ?";
+    $update_query = "UPDATE trip SET name = ?, price = ?, detail = ?, trip_days = ?, trip_nights = ?, destination = ?, types = ?, featured = ? WHERE id = ?";
     $stmt = $conn->prepare($update_query);
-    $stmt->bind_param('sissssssi', $trip_name, $price, $detail, $trip_days, $trip_nights, $destination_name, $types_str, $category_names_str, $trip_id);
+    $stmt->bind_param('sissssssi', $trip_name, $price, $detail, $trip_days, $trip_nights, $destination_name, $types_str, $featured, $trip_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Trip successfully Update!'); window.location.href='../add-trip.php';</script>";
@@ -332,21 +333,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     ?>
                                 </select>
 
-                                <!-- Categories -->
-                                <label for="categories">Categories:</label>
-                                <?php
-                                    $categories_query = "SELECT id, name FROM categories";
-                                    $categories_result = $conn->query($categories_query);
-                                    if ($categories_result->num_rows > 0) {
-                                        while ($row = $categories_result->fetch_assoc()) {
-                                            echo "<div><input type='checkbox' id='category" . $row["id"] . "' name='categories[]' value='" . $row["id"] . "'>
-                                            <label for='category" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                        }
-                                    } else {
-                                        echo "<p>No Categories Available</p>";
-                                    }
-                                ?>
-
                                 <label for="destination">Trip Types:</label>
                                 <?php
                                     $types_query = "SELECT id, name FROM types";
@@ -360,6 +346,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         echo "<p>No Types Available</p>";
                                     }
                                 ?>
+                                <label for="destination" style="color:red;">Trip Featured:</label>
+                                <select name="featured" id="featured" style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                    <option value="Featured">Featured</option>
+                                    <option value="Special">Special</option>
+                                    <option value="Demo">Demo</option>
+                                </select>
                                 <input type="submit" name="" value="Update Trip" class="btn btn-warning"
                                     style="margin: 10px auto; padding:10px 0px; width:50%;">
                             </form>

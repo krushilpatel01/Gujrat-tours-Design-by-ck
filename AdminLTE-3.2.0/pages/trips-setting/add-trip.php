@@ -22,6 +22,7 @@ if (isset($_POST['add_trip'])) {
     $detail = mysqli_real_escape_string($conn, $_POST['detail']);
     $trip_days = $_POST['trip_day'];
     $trip_nights = $_POST['trip_night'];
+    $featured = isset($_POST['featured']) ? $_POST['featured'] : '';  // Check if 'featured' key exists
 
     // Destination handling
     $destination_id = $conn->real_escape_string($_POST['destination']);
@@ -74,8 +75,8 @@ if (isset($_POST['add_trip'])) {
         $message[] = 'Trip name already added';
     } else {
         // Add trip to the database
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, trip_days, trip_nights, destination, types, category_names, auther) 
-        VALUES('$trip_name', '$price', '$detail', '$image', '$trip_days', '$trip_nights', '$destination_name', '$types_str', '$category_names_str', '$user_name')") or die('query failed');
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `trip`(name, price, detail, image, trip_days, trip_nights, destination, types, featured, auther) 
+        VALUES('$trip_name', '$price', '$detail', '$image', '$trip_days', '$trip_nights', '$destination_name', '$types_str', '$featured', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
@@ -141,8 +142,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Close the database connection
 // mysqli_close($conn);
 
-
 ?>
+
 
 
 
@@ -384,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 ?>
                             </select>
                             <!-- Room -->
-                            <label for="destination" style="color:red;">Trip Types:</label>
+                            <label for="destination" style="color:red;">Trip Categories:</label>
                             <?php
                                 $types_query = "SELECT id, name FROM types";
                                 $types_result = $conn->query($types_query);
@@ -397,20 +398,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     echo "<p>No Types Available</p>";
                                 }
                             ?>
-                            <!-- Categories -->
-                            <label for="categories" style="color:red;">Categories:</label>
-                            <?php
-                                $categories_query = "SELECT id, name FROM categories";
-                                $categories_result = $conn->query($categories_query);
-                                if ($categories_result->num_rows > 0) {
-                                    while ($row = $categories_result->fetch_assoc()) {
-                                        echo "<div><input type='checkbox' id='category" . $row["id"] . "' name='categories[]' value='" . $row["id"] . "'>
-                                        <label for='category" . $row["id"] . "'>" . $row["name"] . "</label></div>";
-                                    }
-                                } else {
-                                    echo "<p>No Categories Available</p>";
-                                }
-                            ?>
+                            <label for="destination" style="color:red;">Trip Featured:</label>
+                            <select name="featured" id="featured" style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                <option value="Featured">Featured</option>
+                                <option value="Special">Special</option>
+                                <option value="Demo">Demo</option>
+                            </select>
                             <!-- Submit Button -->
                             <input type="submit" name="add_trip" value="Add Trip Package" class="btn btn-warning"
                                 style="margin: 10px auto; padding:10px 0px; width:50%;">
@@ -427,14 +420,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-3 px-2 d-block" style="height:100%; margin:20px 0px">
                                 <img src="upload_img/<?php echo $fetch_trip['image']; ?>" alt="" srcset=""
                                     style="width:100%; height:100%;">
-                                <h2 class="name"><?php echo $fetch_trip['name']; ?></h2>
+                                <p class="detail">Trip ids : <?php echo $fetch_trip['id']; ?></p>
+                                <h4 class="name"><?php echo $fetch_trip['name']; ?></h3>
                                 <h5 class="price">Price : <?php echo $fetch_trip['price']; ?></h5>
                                 <p class="detail">Trip Details : <?php echo $fetch_trip['detail']; ?></p>
                                 <p class="detail">Trip Destination : <?php echo $fetch_trip['destination']; ?></p>
-                                <p class="detail">Trip Types : <?php echo $fetch_trip['types']; ?></p>
-                                <p class="detail">Trip Categories : <?php echo $fetch_trip['category_names']; ?></p>
-                                <p class="detail">Trip ids : <?php echo $fetch_trip['id']; ?></p>
+                                <p class="detail">Trip Categories : <?php echo $fetch_trip['types']; ?></p>
                                 <p class="detail">Trip Days : <?php echo $fetch_trip['trip_days']; ?>  &  <?php echo $fetch_trip['trip_nights']; ?> Nights</p>
+                                <p class="detail">Trip Featured : <?php echo $fetch_trip['featured']; ?></p>
                                 <form method="post" action="">
                                     <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
                                     <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">

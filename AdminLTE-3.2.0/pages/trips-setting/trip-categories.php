@@ -1,3 +1,4 @@
+<!-- this file contain all about the types page and database  -->
 <?php
 include '../../../user/config.php';
 
@@ -10,7 +11,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
   else{
     header('location:../../login.php');
   }
-if (isset($_POST['add_categories'])) {
+if (isset($_POST['add_Types'])) {
     $image = $_FILES['image']['name'];
     $image_size = $_FILES['image']['size'];
     $image_tmp_name = $_FILES['image']['tmp_name'];
@@ -18,22 +19,22 @@ if (isset($_POST['add_categories'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $detail = mysqli_real_escape_string($conn, $_POST['detail']);
 
-    $select_trip_name = mysqli_query($conn, "SELECT name FROM `categories` WHERE name = '$name'") or die('query failed');
+    $select_trip_name = mysqli_query($conn, "SELECT name FROM `types` WHERE name = '$name'") or die('query failed');
 
     if (mysqli_num_rows($select_trip_name) > 0) {
-        $message[] = 'product name  already addded';
+        $message[] = 'product name already added';
     } else {
-        $add_trip_query = mysqli_query($conn, "INSERT INTO `categories`(name, detail, image, auther) VALUES('$name', '$detail', '$image', '$user_name')") or die('query failed');
+        $add_trip_query = mysqli_query($conn, "INSERT INTO `types`(name, detail, image, auther) VALUES('$name', '$detail', '$image', '$user_name')") or die('query failed');
 
         if ($add_trip_query) {
             if ($image_size > 2000000) {
-                $message[] = 'image size is to large';
+                $message[] = 'image size is too large';
             } else {
                 move_uploaded_file($image_tmp_name, $image_folder);
-                $message[] = 'product added succesfully';
+                $message[] = 'product added successfully';
             }
         } else {
-            $message[] = 'product coude not be added!';
+            $message[] = 'product could not be added!';
         }
     }
 }
@@ -47,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $trip_id = $_POST['trip_id'];
             
             // Delete query
-            $delete_query = "DELETE FROM categories WHERE id = ?";
+            $delete_query = "DELETE FROM types WHERE id = ?";
             $stmt = $conn->prepare($delete_query);
             $stmt->bind_param('i', $trip_id);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Categories successfully Delete!'); window.location.href='trip-categories.php';</script>";
+                echo "<script>alert('Types successfully Delete!'); window.location.href='trip-types.php';</script>";
             } else {
                 echo "Error deleting trip: " . $stmt->error;
             }
@@ -78,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Ticket-Categories</title>
+    <title>AdminLTE 3 | Trip - Categories </title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -273,19 +274,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <form action="" method="post" enctype="multipart/form-data">
                                 <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
-                                <input type="text" name="name" id="" placeholder="Enter categories Name" required
+                                <input type="text" name="name" id="" placeholder="Enter Types Name" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                <input type="text" name="detail" id="" placeholder="Enter Categories Detail" required
+                                <input type="text" name="detail" id="" placeholder="Enter Types Detail" required
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                                <input type="submit" name="add_categories" value="Add Categories"
-                                    class="btn btn-warning" style="margin: 10px auto; padding:10px 0px; width:50%;">
+                                <input type="submit" name="add_Types" value="Add Categories" class="btn btn-warning"
+                                    style="margin: 10px auto; padding:10px 0px; width:50%;">
                             </form>
                         </div>
                     </div>
                     <!-- show trip code -->
                     <div class="row d-flex flex-wrap">
                         <?php
-                        $select_trip = mysqli_query($conn, "SELECT * FROM `categories`") or die('query failed');
+                        $select_trip = mysqli_query($conn, "SELECT * FROM `types`") or die('query failed');
                         if (mysqli_num_rows($select_trip) > 0) {
                             while ($fetch_trip = mysqli_fetch_assoc($select_trip)) {
                                 ?>
@@ -303,7 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <?php
                             }
                         } else {
-                            echo '<p class="empty">no product added yet!</p>';
+                            echo '<p class="empty">No Trip types added yet!</p>';
                         }
                         ?>
                     </div>
@@ -314,7 +315,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <i class="fas fa-chevron-up"></i>
             </a>
         </div>
-
         <!-- footer link -->
         <?php
         include ('../../../components/header-footer/footer.php');
