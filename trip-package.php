@@ -2,13 +2,23 @@
 include 'user/config.php';
 session_start();
 
-
-
 // Query to retrieve data from the trip table
 $sql = "SELECT * FROM trip";
 $result = $conn->query($sql);
 
-?>
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['show_trip'])) {
+        $trip_id = $_POST['trip_id'];
+
+        // Redirect to update page (create an update_trip.php page to handle updates)
+        header("Location: trip-show.php?trip_id=$trip_id");
+        exit();
+    }
+}
+?> 
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,33 +43,38 @@ $result = $conn->query($sql);
             </div>
             <div class="row justinfy-content-between">
                 <!-- <div class="col-12 d-flex"> -->
-                    <?php
-                        if ($result->num_rows > 0) {
-                        // Output data of each row
-                        while($row = $result->fetch_assoc()) {
-                            echo "<div class='col-12 col-lg-4 trip-card'>
-                                    <h2>Trip Name : ". htmlspecialchars($row["name"]) . "</h2>
-                                    <p>" . htmlspecialchars($row["detail"]) . "</p>";
+                <?php
+if ($result->num_rows > 0) {
+    // Output data of each row
+    while ($row = $result->fetch_assoc()) {
+        echo "<div class='col-12 col-lg-4 trip-card'>
+                <h5>Trip Name : " . htmlspecialchars($row["name"]) . "</h5>
+                <p>" . htmlspecialchars($row["detail"]) . "</p>";
 
-                            // Check if the image file exists before displaying it
-                            $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];
-                            if (file_exists($imagePath)) {
-                                echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
-                            } else {
-                                echo "<p>Image not available</p>";
-                            }
+        // Check if the image file exists before displaying it
+        $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];
+        if (file_exists($imagePath)) {
+            echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
+        } else {
+            echo "<p>Image not available</p>";
+        }
 
-                            echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>
-                                <p>Types: " . htmlspecialchars($row["types"]) . "</p>
-                                <p>Categories: " . htmlspecialchars($row["category_names"]) . "</p>
-                                <p>Trip Days : " . htmlspecialchars($row["trip_days"]) . " Days & " . htmlspecialchars($row["trip_nights"]) . " Nights</p>
-                                <p>Author: " . htmlspecialchars($row["auther"]) . "</p>
-                                </div>";
-                        }
-                        } else {
-                            echo "<p>No trips found</p>";
-                        }
-                     ?>
+        echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>
+              <p>Types: " . htmlspecialchars($row["types"]) . "</p>
+              <p>Trip Days : " . htmlspecialchars($row["trip_days"]) . " Days & " . htmlspecialchars($row["trip_nights"]) . " Nights</p>
+              <p>Author: " . htmlspecialchars($row["auther"]) . "</p>";
+
+        // Correctly embed the PHP variable inside the input's value attribute
+        echo "<form method='post' action=''>
+                <input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>
+                <input type='submit' name='show_trip' class='btn btn-warning' value='Check Trip'>
+              </form>";
+        echo "</div>";
+    }
+} else {
+    echo "<p>No trips found</p>";
+}
+?>
                 <!-- </div> -->
             </div>
         </div>

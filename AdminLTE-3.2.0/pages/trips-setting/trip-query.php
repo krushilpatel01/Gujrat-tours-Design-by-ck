@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                               <th scope="col">Id</th>
                               <th scope="col">Name</th>
                               <th scope="col">Email</th>
-                              <th scope="col">Password</th>
+                              <th scope="col">Message</th>
                               <th scope="col">Update / Delete</th>
                             </tr>
                           </thead>

@@ -300,7 +300,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <?php echo $fetch_trip['detail']; ?>
                                         </h6>
                                         <form method="post" action="">
-                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
+                                            <input type="hidden" name="trip_id" value="<?php echo $fetch_trip['id']; ?>">
                                             <input type="submit" name="update_trip" class="btn btn-warning" value="Update">
                                             <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
                                         </form>
