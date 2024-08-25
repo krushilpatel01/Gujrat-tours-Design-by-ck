@@ -3,9 +3,6 @@ include 'user/config.php';
 
 session_start();
 
-// Query to retrieve data from the trip table
-$sql = "SELECT * FROM trip";
-$result = $conn->query($sql);
 
 ?>
 <!DOCTYPE html>
@@ -27,41 +24,51 @@ $result = $conn->query($sql);
         <!-- nav over -->
 
         <section class="destination-list">
-            <div class="container">
-                <div class="title" style="text-align:center; margin:50px auto;">
-                    <h2>Our latest Tours Destination</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
-                </div>
-                <div class="row justinfy-content-between d-flex flex-wrap">
-                <?php
-                    // Query to retrieve data from the trip table
-                    $sql = "SELECT * FROM destination";
-                    $result = $conn->query($sql);
+    <div class="container">
+        <div class="title" style="text-align:center; margin:50px auto;">
+            <h2>Our latest Tours Destination</h2>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
+        </div>
+        <div class="row justify-content-between d-flex flex-wrap">
+            <?php
+            // Query to retrieve data from the destination table
+            $sql = "SELECT * FROM destination";
+            $result = $conn->query($sql);
 
-                    if ($result->num_rows > 0) {
-                        // Output data of each row
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<div class='col-12 col-lg-4 Destination-card'>";
-                            // Check if the image file exists before displaying it
-                            $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row['image'];
-                            if (file_exists($imagePath)) {
-                                echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row['name']) . "'>";
-                            } else {
-                                echo "<p>Image not available</p>";
-                            }
-                        
-                            echo "<div class='col-12 destination-card px-0'>
-                                    <h2>Destination : " . htmlspecialchars($row['name']) . " - (0)</h2>
-                                  </div>
-                                </div>";
-                        }
+            if ($result->num_rows > 0) {
+                while ($destination = $result->fetch_assoc()) {
+                    $destinationName = $destination['name'];
+                    $destinationImage = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $destination['image'];
+
+                    // Query to count the number of trips for this destination
+                    $sql1 = "SELECT COUNT(*) as trip_count FROM trip WHERE destination = '" . $conn->real_escape_string($destinationName) . "'";
+                    $result1 = $conn->query($sql1);
+                    $tripCountRow = $result1->fetch_assoc();
+                    $tripCount = isset($tripCountRow['trip_count']) ? $tripCountRow['trip_count'] : 0;
+
+                    // Output data of each destination
+                    echo "<div class='col-12 col-lg-4 Destination-card'>";
+
+                    // Check if the image file exists before displaying it
+                    if (file_exists($destinationImage)) {
+                        echo "<img src='" . htmlspecialchars($destinationImage) . "' alt='" . htmlspecialchars($destinationName) . "'>";
                     } else {
-                        echo "<p>No Destination found</p>";
+                        echo "<p>Image not available</p>";
                     }
-                    ?>
-                </div>
-            </div>
-        </section>
+
+                    echo "<div class='col-12 destination-card px-0'>
+                            <h2 class='destination-h2'>Destination: " . htmlspecialchars($destinationName) . " - (" . $tripCount . " trips)</h2>
+                          </div>
+                        </div>";
+                }
+            } else {
+                echo "<p>No destinations found</p>";
+            }
+            ?>
+        </div>
+    </div>
+</section>
+
 
 </body>
     <!-- include css all files -->

@@ -5,10 +5,6 @@ session_start();
 if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
     
-    // If you expect $types_id to come from somewhere, assign it a value before using it
-    // For example, you can fetch it based on the $trip_id or any other logic
-    // $types_id = <some logic to retrieve types_id>;
-
     // Fetch the current details of the trip
     $query = "SELECT * FROM trip WHERE id = ?";
     $stmt = $conn->prepare($query);
@@ -24,7 +20,8 @@ if (isset($_GET['trip_id'])) {
 
 // Query to retrieve data from the trip table
 $sql = "SELECT * FROM trip WHERE id = '$trip_id'";
-$result = $conn->query($sql);
+$result2 = $conn->query($sql);
+$row2 = $result2->fetch_assoc();
 ?>
 
 
@@ -33,7 +30,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trip - Trip Show</title>
+    <title>Trip - <?php echo htmlspecialchars($row2['name']); ?></title>
     <!-- include css all files -->
     <?php
     include "components/files/css.php";
@@ -56,13 +53,16 @@ $result = $conn->query($sql);
 
         <div class="container">
             <div class="row page-section my-5">  
-                <div class="col-12 pages"><span class="px-1"><a href="index.php">Home</a></span><span>/</span><span class="px-1"><a href="destination.php">Destination</a></span><span>/</span><span class="px-1"><a href="trip-package.php">Trip</a></span></div>
+                <div class="col-12 pages"><span class="px-1"><a href="index.php">Home</a></span><span>/</span><span class="px-1"><a href="trip-package.php">All Trips</a></span><span>/</span><span class="px-1"><a href="trip-package.php">Trip</a></span></div>
             </div>
             <!-- show trip -->
              <div class="row trip-section">
              <?php
                 if ($result->num_rows > 0) {
                 // Output data of each row
+                // Query to retrieve data from the trip table
+                $sql = "SELECT * FROM trip WHERE id = '$trip_id'";
+                $result = $conn->query($sql);
                 while($row = $result->fetch_assoc()) {
                 echo "<div class='col-12 trip-image'>";
                             $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];

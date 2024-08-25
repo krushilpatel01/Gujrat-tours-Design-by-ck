@@ -1,6 +1,16 @@
 <?php
 include 'user/config.php';
 
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['show_trip'])) {
+        $trip_id = $_POST['trip_id'];
+
+        // Redirect to update page (create an update_trip.php page to handle updates)
+        header("Location: trip-show.php?trip_id=$trip_id");
+        exit();
+    }
+}
 
 session_start();
 ?>
@@ -46,7 +56,7 @@ session_start();
         <!-- slider over -->
         <!-- </div> -->
 
-
+<!-- destinations list slider's -->
         <section class="destiantion-list">
             <div class="container">
                 <div class="title" style="text-align:center; margin:50px auto;">
@@ -86,6 +96,7 @@ session_start();
                 </div>
             </div>
         </section>
+        <!-- destinations list slider's over -->
 
         <section class="featured-trip">
             <div class="container">
@@ -126,7 +137,8 @@ session_start();
                                     echo "<div class='col-4 trip-desc'>";
 
                                     echo "<form action='' method='post'>";
-                                    echo "<input type='submit' value='Check Trip' class='btn btn-warning' style='width:100%';>";
+                                    echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
+                                    echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:100%';>";
                                     echo "</form>";
                                     echo "</div>";
                                 echo "</div>";    
@@ -156,7 +168,7 @@ session_start();
                         while($row = $result->fetch_assoc()) {
                             echo "<div class='col-12 col-lg-4 trip-card mx-0 px-2'>
                                     <h5>Trip Name : ". htmlspecialchars($row["name"]) . "</h5>
-                                    <p>Price: $" . htmlspecialchars($row["price"]) . "</p>
+                                    <p>Price: ₹" . htmlspecialchars($row["price"]) . "</p>
                                     <p>" . htmlspecialchars($row["detail"]) . "</p>";
 
                             // Check if the image file exists before displaying it
@@ -169,9 +181,12 @@ session_start();
 
                             echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>
                                 <p>Types: " . htmlspecialchars($row["types"]) . "</p>
-                                <p>Author: " . htmlspecialchars($row["auther"]) . "</p>
-                                <button class='btn btn-warning'>View More</button>
-                                </div>";
+                                <p>Author: " . htmlspecialchars($row["auther"]) . "</p>";
+                                echo "<form action='' method='post'>";
+                                echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
+                                echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:50%';>";
+                                echo "</form>";
+                            echo "</div>";
                         }
                         } else {
                             echo "<p>No trips found</p>";

@@ -2,97 +2,181 @@
 include 'user/config.php';
 session_start();
 
-// Query to retrieve data from the trip table
-$sql = "SELECT * FROM trip";
-$result = $conn->query($sql);
+// Initialize query to retrieve data from the trip table
+$sql = "SELECT * FROM trip WHERE 1=1"; // `WHERE 1=1` makes it easier to append conditions
 
-// Check if form is submitted
+// Apply filters if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['show_trip'])) {
-        $trip_id = $_POST['trip_id'];
+    // Price filter
+    if (!empty($_POST['price_range'])) {
+        $price_range = (int)$_POST['price_range']; // Cast to int for safety
+        $sql .= " AND price <= $price_range";
+    }
 
-        // Redirect to update page (create an update_trip.php page to handle updates)
-        header("Location: trip-show.php?trip_id=$trip_id");
-        exit();
+
+    // Destination filter
+    if (!empty($_POST['destination'])) {
+        $destination = (int)$_POST['destination']; // Cast to int for safety
+        $sql .= " AND destination = $destination";
+    }
+
+    // Trip category filter (handling multiple categories)
+    if (!empty($_POST['types'])) {
+        $trip_categories = $_POST['types']; // This is now an array
+        $trip_categories_str = implode(',', array_map('intval', $trip_categories)); // Convert array to comma-separated string
+        $sql .= " AND types IN ($trip_categories_str)";
     }
 }
-?> 
 
+if (isset($_POST['show_trip'])) {
+    $trip_id = (int)$_POST['trip_id'];
+    header("Location: trip-show.php?trip_id=$trip_id");
+    exit();
+}
+
+$result = $conn->query($sql);
+
+if (!$result) {
+    die("Error executing query: " . $conn->error);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip Package Page</title>
-    <!-- include css all files -->
-    <?php
-    include "components/files/css.php";
-    ?>
-    </head>
+    <!-- Include CSS files -->
+    <?php include "components/files/css.php"; ?>
+</head>
 <body>
-        <!-- nav start -->
-        <?php include ("components\header-footer\header.php"); ?>
-        <!-- nav over -->
+    <!-- Navigation -->
+    <?php include("components/header-footer/header.php"); ?>
+
     <section class="trip-package">
         <div class="container">
             <div class="title" style="text-align:center; margin:50px auto;">
-                    <h2>Our latest Trips</h2>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
+                <h2>Our Latest Trips</h2>
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
             </div>
-            <div class="row justinfy-content-between">
-                <!-- <div class="col-12 d-flex"> -->
-                <?php
-if ($result->num_rows > 0) {
-    // Output data of each row
-    while ($row = $result->fetch_assoc()) {
-        echo "<div class='col-12 col-lg-4 trip-card'>
-                <h5>Trip Name : " . htmlspecialchars($row["name"]) . "</h5>
-                <p>" . htmlspecialchars($row["detail"]) . "</p>";
+            <div class="row justify-content-between">
+                <!-- Sidebar for Filters -->
+                <aside class="col-lg-3">
+                    <form method="POST" action="">
+                        <h4>Filter Trips</h4>
 
-        // Check if the image file exists before displaying it
-        $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];
-        if (file_exists($imagePath)) {
-            echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
-        } else {
-            echo "<p>Image not available</p>";
-        }
+                        <!-- Price Range Slider -->
+                        <div class="form-group">
+                            <label for="price_range">Price Range :
+                            <?php 
+                            if($price_range = "null"){
+                                
+                                echo "All Trip";
+                            }
+                            else{
+                            echo $price_range;
+                            }
+                            ?></label>
+                            <input type="number" class="form-control" name="price_range" id="price_range" placeholder="Enter max price">
+                        </div>
 
-        echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>
-              <p>Types: " . htmlspecialchars($row["types"]) . "</p>
-              <p>Trip Days : " . htmlspecialchars($row["trip_days"]) . " Days & " . htmlspecialchars($row["trip_nights"]) . " Nights</p>
-              <p>Author: " . htmlspecialchars($row["auther"]) . "</p>";
+                        <!-- Destination Dropdown -->
+                        <div class="form-group">
+                            <label for="destination">Destination:</label>
+                            <select class="form-control" name="destination" id="destination">
+                                <option value="">Select Destination</option>
+                                <?php
+                                $destination_query = "SELECT id, name FROM destination";
+                                $destination_result = $conn->query($destination_query);
+                                if ($destination_result->num_rows > 0) {
+                                    while ($row = $destination_result->fetch_assoc()) {
+                                        echo "<option value='" . $row["id"] . "'>" . htmlspecialchars($row["name"]) . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>No Destination Available</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                            
+                        <!-- Trip Category Dropdown -->
+                        <div class="form-group">
+                            <label for="trip_category">Trip Category:</label>
+                            <?php
+                            $types_query = "SELECT id, name FROM types";
+                            $types_result = $conn->query($types_query);
+                            if ($types_result->num_rows > 0) {
+                                while ($row = $types_result->fetch_assoc()) {
+                                    echo "<div><input type='checkbox' id='types" . htmlspecialchars($row["id"]) . "' name='types[]' value='" . htmlspecialchars($row["id"]) . "'>
+                                    <label for='types" . htmlspecialchars($row["id"]) . "'>" . htmlspecialchars($row["name"]) . "</label></div>";
+                                }
+                            } else {
+                                echo "<p>No Types Available</p>";
+                            }
+                            ?>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        <button type="reset" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+                    </form>
+                </aside>
+                        
+                <!-- Trip Listings -->
+                <div class="col-lg-9">
+                    <div class="row">
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<div class='col-12 col-lg-6 col-xl-4 trip-card'>
+                                        <h5>Trip: " . htmlspecialchars($row['name']) . "</h5>
+                                        <p>" . htmlspecialchars($row['detail']) . "</p>
+                                        <h2>Price : " . htmlspecialchars($row['price']) . "</h2>";
 
-        // Correctly embed the PHP variable inside the input's value attribute
-        echo "<form method='post' action=''>
-                <input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>
-                <input type='submit' name='show_trip' class='btn btn-warning' value='Check Trip'>
-              </form>";
-        echo "</div>";
-    }
-} else {
-    echo "<p>No trips found</p>";
-}
-?>
-                <!-- </div> -->
+                                $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row['image'];
+                                if (file_exists($imagePath)) {
+                                    echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row['name']) . "'>";
+                                } else {
+                                    echo "<p>Image not available</p>";
+                                }
+
+                                echo "<p>Destination: " . htmlspecialchars($row['destination']) . "</p>
+                                      <p>Types: " . htmlspecialchars($row['types']) . "</p>
+                                      <p>Trip Days: " . htmlspecialchars($row['trip_days']) . " Days & " . htmlspecialchars($row['trip_nights']) . " Nights</p>";
+
+                                echo "<form method='post' action=''>
+                                        <input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>
+                                        <input type='submit' name='show_trip' class='btn btn-warning' value='Check Trip'>
+                                      </form>";
+                                echo "</div>";
+                            }
+                        } else {
+                            echo "<p>No trips found</p>";
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <?php
-    // Close the connection
-    $conn->close();
-    ?>
-            </div>
-            <!-- <button type="submit" class="btn btn-success">Show All Trip</button> -->
         </div>
     </section>
 
-    <section class="trip"></section>
+    <!-- Include JS files -->
+    <?php include "components/files/js.php"; ?>
+
+    <script>
+function clearFilters() {
+    // Reset the price range input value
+    document.getElementById('price_range').value = '';
+
+    // Reset the destination dropdown to its default option
+    document.getElementById('destination').selectedIndex = 0;
+
+    // Uncheck all the trip category checkboxes
+    const checkboxes = document.querySelectorAll("input[name='types[]']");
+    checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+    });
+}
+</script>
 </body>
-    <!-- include css all files -->
-    <?php
-    include "components/files/js.php";
-    ?>
 </html>

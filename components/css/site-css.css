@@ -155,6 +155,16 @@ h1 {
     height: auto;
 }
 
+.trip-card h5{
+    height: 100px;
+    overflow: hidden;
+}
+
+.trip-card p{
+    height: 70px;
+    overflow: hidden;
+}
+
 /* admin side css */
 .add-trip {
     width: 100%;
@@ -170,7 +180,7 @@ h1 {
 
 .Destination-card {
     width: 100%;
-    margin: 30px auto;
+    margin: 40px auto;
 }
 
 .Destination-card img {
@@ -183,8 +193,10 @@ h1 {
 }
 
 .destination-card h2 {
-    font-size: 20px;
-    margin-top: 10px;
+    font-size: 18px;
+    background-color: #f2f2f2;
+    padding: 15px 15px;
+    border-radius: 0px 0px 10px 10px;
 }
 
 .destination-card p {
@@ -299,9 +311,16 @@ h1 {
     height: 100%;
 }
 
-
-input {
+.trip-image{
     width: 100%;
-    margin: 10px auto;
-    padding: 10px 0px;
+}
+
+.trip-image img{
+    width: 100%;
+    height: 100%;
+}
+
+.destination-h2{
+    padding: 5px 0px;
+    background-color: antiquewhite;
 }
