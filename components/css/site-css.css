@@ -236,6 +236,7 @@ h1 {
 
 .index-trip {
     width: 100%;
+    /* display: flex; */
 }
 
 .index-trip .trip-card {

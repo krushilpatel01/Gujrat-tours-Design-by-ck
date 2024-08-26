@@ -24,19 +24,38 @@ session_start();
     
         <section class="destination-list">
             <div class="container">
-            <div class="title" style="text-align:center; margin:50px auto;">
+                <div class="title" style="text-align:center; margin:50px auto;">
                     <h2>We Are Provide Trips Types</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
                 </div>
+                <!-- trip type show -->
                 <div class="row justinfy-content-between d-flex flex-wrap">
                 <?php
-                    // Query to retrieve data from the trip table
+                    // Query to retrieve data from the types table
                     $sql = "SELECT * FROM types";
                     $result = $conn->query($sql);
 
                     if ($result->num_rows > 0) {
                         // Output data of each row
                         while ($row = $result->fetch_assoc()) {
+                            $typeId = $row['id']; // Assuming there's an 'id' column
+                            $typeName = $row['name'];
+                            
+                            // Assuming you're fetching the type ID and name like this:
+                            $typeId = $row['id']; // Assuming there's an 'id' column in types
+                            $typeName = $row['name'];
+                            
+                            // Query to count the number of trips for this type using FIND_IN_SET
+                            $sql1 = "SELECT COUNT(*) as trip_count FROM trip WHERE FIND_IN_SET('$typeName', types)";
+                            $result1 = $conn->query($sql1);
+                            if (!$result1) {
+                                echo "Error in count query: " . $conn->error;
+                            } else {
+                                $tripCountRow = $result1->fetch_assoc();
+                                $tripCount = isset($tripCountRow['trip_count']) ? $tripCountRow['trip_count'] : 0;
+                            }
+                            
+                            
                             echo "<div class='col-12 col-lg-4 Destination-card'>";
                             // Check if the image file exists before displaying it
                             $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row['image'];
@@ -47,14 +66,15 @@ session_start();
                             }
                         
                             echo "<div class='col-12 destination-card px-0'>
-                                    <h2>" . htmlspecialchars($row['name']) . " - (0)</h2>
+                                    <h2>" . htmlspecialchars($typeName) . " - (" . $tripCount . " trips)</h2>
                                   </div>
                                 </div>";
                         }
                     } else {
-                        echo "<p>No Destination found</p>";
+                        echo "<p>No types found</p>";
                     }
                     ?>
+                </div>
             </div>
         </section>
 

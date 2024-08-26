@@ -98,103 +98,107 @@ session_start();
         </section>
         <!-- destinations list slider's over -->
 
+
+        <!-- SHOW ALL THE FEATURED TRIP AVAILABLE IN THE DATABSE -->
         <section class="featured-trip">
             <div class="container">
             <div class="title" style="text-align:center; margin:50px auto;">
                     <h2>Our Featured Tours</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
-                </div>
-                <div class="row" style="width:100%">
-                    <?php
-                    $sql = "SELECT * FROM trip WHERE featured = 'featured'";
-                    $result = $conn->query($sql);
-
-                    if($result->num_rows > 0){
-                        while($row = $result->fetch_assoc()){
-                            echo '<div class="col-12 col-lg-4 trip2-card mx-0 px-2">';
-                                echo '<div class="image">';
-                                    $imagePath = "AdminLTE-3.2.0/pages/trips-setting/upload_img/" . $row["image"];
-                                    if (file_exists($imagePath)) {
-                                        echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
-                                    } else {
-                                        echo "<p>Image not available</p>";
-                                    }
-                                echo '</div>';
+            </div>
+            <div class="row" style="width:100%">
+                <?php
+                $sql = "SELECT * FROM trip WHERE featured = 'featured'";
+                $result = $conn->query($sql);
+                if($result->num_rows > 0){
+                    while($row = $result->fetch_assoc()){
+                        echo '<div class="col-12 col-lg-4 trip2-card mx-0 px-2">';
+                            echo '<div class="image">';
+                                $imagePath = "AdminLTE-3.2.0/pages/trips-setting/upload_img/" . $row["image"];
+                                if (file_exists($imagePath)) {
+                                    echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
+                                } else {
+                                    echo "<p>Image not available</p>";
+                                }
                             echo '</div>';
-                            echo "<div class='col-8 py-5'>";
-                                echo "<div class='name'><h5>". htmlspecialchars($row["name"]) . "</h5></div>";
-                                echo "<div class='row trip-detail align-items-center py-1'>";
-                                    echo "<div class='col-8'>";
-                                        echo "<div class='categories py-1'><i class='fa-solid fa-suitcase-rolling px-2'></i>" . htmlspecialchars($row["types"]) . "</div>";
-                                        echo "<div class='destination py-1' style='color:red;'><i class='fa-solid fa-plane px-2' style='color:black;'></i>" . htmlspecialchars($row["destination"]) . " - Destination</div>";
-                                    echo "</div>";
-                                    echo "<div class='col-4'>";
-                                        echo "<div class='trip-price' style='font-size:35px'>Only " . htmlspecialchars($row["price"]) . "/-</div>";
-                                    echo "</div>";
+                        echo '</div>';
+                        echo "<div class='col-8 py-5'>";
+                            echo "<div class='name'><h5>". htmlspecialchars($row["name"]) . "</h5></div>";
+                            echo "<div class='row trip-detail align-items-center py-1'>";
+                                echo "<div class='col-8'>";
+                                    echo "<div class='categories py-1'><i class='fa-solid fa-suitcase-rolling px-2'></i>" . htmlspecialchars($row["types"]) . "</div>";
+                                    echo "<div class='destination py-1' style='color:red;'><i class='fa-solid fa-plane px-2' style='color:black;'></i>" . htmlspecialchars($row["destination"]) . " - Destination</div>";
                                 echo "</div>";
-                                echo "<div class='row desc-btn'>";
-                                    echo "<div class='col-8 trip-desc'><b>Details : </b>" . htmlspecialchars($row["detail"]) . "</div>";
-                                    echo "<div class='col-4 trip-desc'>";
-
-                                    echo "<form action='' method='post'>";
-                                    echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
-                                    echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:100%';>";
-                                    echo "</form>";
-                                    echo "</div>";
-                                echo "</div>";    
+                                echo "<div class='col-4'>";
+                                    echo "<div class='trip-price' style='font-size:35px'>Only " . htmlspecialchars($row["price"]) . "/-</div>";
+                                echo "</div>";
                             echo "</div>";
-                        }
+                            echo "<div class='row desc-btn'>";
+                                echo "<div class='col-8 trip-desc'><b>Details : </b>" . htmlspecialchars($row["detail"]) . "</div>";
+                                echo "<div class='col-4 trip-desc'>";
+                                echo "<form action='' method='post'>";
+                                echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
+                                echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:100%';>";
+                                echo "</form>";
+                                echo "</div>";
+                            echo "</div>";    
+                        echo "</div>";
                     }
-                    ?>
-                </div>
+                }
+                ?>
+            </div>
             </div>
         </section>
+        <!-- featured trip over -->
 
-
+        <!-- show all the trip -->
         <section class="Trip-list">
             <div class="container">
                 <div class="title" style="text-align:center; margin:50px auto;">
                     <h2>Our latest Tours</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
                 </div>
-                <div class="row justify-content-between index-trip">
-                    <?php
-                    // Query to retrieve data from the trip table
+                <div class="swiper mySwiper4">
+                    <div class="swiper-wrapper">
+                        <?php
+                        // Query to retrieve data from the trip table
                         $sql = "SELECT * FROM trip";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
-                        // Output data of each row
-                        while($row = $result->fetch_assoc()) {
-                            echo "<div class='col-12 col-lg-4 trip-card mx-0 px-2'>
-                                    <h5>Trip Name : ". htmlspecialchars($row["name"]) . "</h5>
-                                    <p>Price: ₹" . htmlspecialchars($row["price"]) . "</p>
-                                    <p>" . htmlspecialchars($row["detail"]) . "</p>";
-
-                            // Check if the image file exists before displaying it
-                            $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];
-                            if (file_exists($imagePath)) {
-                                echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
-                            } else {
-                                echo "<p>Image not available</p>";
-                            }
-
-                            echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>
-                                <p>Types: " . htmlspecialchars($row["types"]) . "</p>
-                                <p>Author: " . htmlspecialchars($row["auther"]) . "</p>";
+                            // Output data of each row
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<div class='trip-card swiper-slide'>";
+                                echo "<h5>Trip Name : ". htmlspecialchars($row["name"]) . "</h5>";
+                                echo "<p>Price: ₹" . htmlspecialchars($row["price"]) . "</p>";
+                                echo "<p>" . htmlspecialchars($row["detail"]) . "</p>";
+                            
+                                // Check if the image file exists before displaying it
+                                $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row["image"];
+                                if (file_exists($imagePath)) {
+                                    echo "<img src='" . htmlspecialchars($imagePath) . "' alt='" . htmlspecialchars($row["name"]) . "'>";
+                                } else {
+                                    echo "<p>Image not available</p>";
+                                }
+                            
+                                echo "<p>Destination: " . htmlspecialchars($row["destination"]) . "</p>";
+                                echo "<p>Types: " . htmlspecialchars($row["types"]) . "</p>";
+                                echo "<p>Author: " . htmlspecialchars($row["auther"]) . "</p>";
                                 echo "<form action='' method='post'>";
                                 echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
-                                echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:50%';>";
+                                echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:50%;'>";
                                 echo "</form>";
-                            echo "</div>";
-                        }
+                                echo "</div>";
+                            }
                         } else {
                             echo "<p>No trips found</p>";
                         }
-                     ?>
+                        ?>
+                    </div>
                 </div>
             </div>
         </section>
+        <!-- show trip close -->
 
 
         <!-- main class -->
