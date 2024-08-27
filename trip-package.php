@@ -21,34 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql .= " AND destination.name = '$destination_name'";
     }
 
-    // Trip type filter
     if (!empty($_POST['types'])) {
-        $trip_types = $_POST['types']; // This is now an array
-
-        // Fetch type names
-        $type_ids = implode(',', array_map('intval', $trip_types));
-        $type_query = "SELECT id, name FROM types WHERE id IN ($type_ids)";
-        $type_result = $conn->query($type_query);
-        
-        $type_names = [];
-        if ($type_result->num_rows > 0) {
-            while ($type_row = $type_result->fetch_assoc()) {
-                $type_names[$type_row['id']] = $type_row['name'];
-            }
+        $categories = array_map([$conn, 'real_escape_string'], $_POST['types']);
+        $conditions = [];
+    
+        foreach ($categories as $category_name) {
+            $conditions[] = "FIND_IN_SET('$category_name', trip.types)";
         }
-
-        // Add conditions to SQL query
-        $type_conditions = [];
-        foreach ($trip_types as $type_id) {
-            $type_conditions[] = "FIND_IN_SET('$type_id', trip.types)";
-        }
-
-        $sql .= " AND (" . implode(' OR ', $type_conditions) . ")";
+    
+        // Append conditions to the SQL query
+        $sql .= " AND (" . implode(' OR ', $conditions) . ")";
     }
 }
-
-// Debug: Print the SQL query to check
-echo "SQL Query: $sql<br>";
 
 // Execute the query
 $result = $conn->query($sql);
@@ -57,16 +41,6 @@ if (!$result) {
     die("Error executing query: " . $conn->error);
 }
 
-// Display results for debugging
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<pre>";
-        print_r($row);
-        echo "</pre>";
-    }
-} else {
-    echo "No trips found.";
-}
 
 // this code show specific trip in new page
 if (isset($_POST['show_trip'])) {
@@ -143,23 +117,23 @@ if (!$result) {
                             </select>
                         </div>
                             
-                            <!-- Trip Category Filter -->
-                            <div class="form-group">
-                                <label for="trip_category">Trip Category:</label>
-                                <?php
-                                $types_query = "SELECT id, name FROM types";
-                                $types_result = $conn->query($types_query);
-                                if ($types_result->num_rows > 0) {
-                                    while ($row = $types_result->fetch_assoc()) {
-                                        echo "<div><input type='checkbox' id='types" . htmlspecialchars($row["id"]) . "' name='types[]' value='" . htmlspecialchars($row["id"]) . "'>
-                                        <label for='types" . htmlspecialchars($row["id"]) . "'>" . htmlspecialchars($row["name"]) . "</label></div>";
-                                    }
-                                } else {
-                                    echo "<p>No Types Available</p>";
+                        <!-- category checkboxes -->
+                        <div class="form-group">
+                            <label for="trip_category">Trip Category:</label>
+                            <?php
+                            $types_query = "SELECT id, name FROM types";
+                            $types_result = $conn->query($types_query);
+                            if ($types_result->num_rows > 0) {
+                                while ($row = $types_result->fetch_assoc()) {
+                                    echo "<div><input type='checkbox' id='types" . htmlspecialchars($row["id"]) . "' name='types[]' value='" . htmlspecialchars($row["name"]) . "'>
+                                    <label for='types" . htmlspecialchars($row["id"]) . "'>" . htmlspecialchars($row["name"]) . "</label></div>";
                                 }
-                                ?>
-                            </div>
-                        
+                            } else {
+                                echo "<p>No Types Available</p>";
+                            }
+                            ?>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Apply Filters</button>
                         <button type="reset" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
                     </form>

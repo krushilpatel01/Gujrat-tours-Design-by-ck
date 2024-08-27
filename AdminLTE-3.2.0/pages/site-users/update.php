@@ -94,6 +94,15 @@ if (isset($_POST['save_update'])) {
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <style>
+        input[type=email] {
+            width:100%; 
+            margin:10px auto; 
+            padding:10px 0px;
+             text-indent:10px; 
+             outline: none;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -282,7 +291,7 @@ if (isset($_POST['save_update'])) {
                                     style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
 
                                 <label for="category" style="margin-bottom:0px;">User Email:</label>
-                                <input type="text" name="email-text" id="" placeholder="Enter Bus Name" value="<?php echo $trip['email']; ?>" required
+                                <input type="email" name="email-text" id="" placeholder="Enter Bus Name" value="<?php echo $trip['email']; ?>" required
                                 style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
 
                                     <label for="category" style="margin-bottom:0px;">User Password:</label>

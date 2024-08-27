@@ -5,14 +5,67 @@ session_start();
 
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
-    $user_name = $_SESSION['admin_name'];
-  
-  }
-  else{
+    $user_name = $_SESSION['admin_name'];  
+} else {
     header('location:../../login.php');
-  }
+    exit();
+}
 
+if (isset($_POST['admin_crete'])) {
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $pass = mysqli_real_escape_string($conn, $_POST['pass']);
+    $cpass = mysqli_real_escape_string($conn, $_POST['cpass']);
+    $user_type = mysqli_real_escape_string($conn, $_POST['user-roll']);
+
+    // Handle file upload
+    $image = $_FILES['image']['name'];
+    $image_size = $_FILES['image']['size'];
+    $image_tmp_name = $_FILES['image']['tmp_name'];
+    $image_folder = 'user_img/' . $image; // Updated to 'user-img' folder
+
+    if ($pass != $cpass) {
+        $message[] = 'Confirm password does not match!';
+    } else {
+        // Validate file upload
+        $allowed_types = ['image/jpg', 'image/jpeg', 'image/png'];
+        $image_type = $_FILES['image']['type'];
+        
+        if (in_array($image_type, $allowed_types)) {
+            if ($image_size <= 5000000) { // Limit file size to 5MB
+                if (move_uploaded_file($image_tmp_name, $image_folder)) {
+                    $pass = md5($pass); // Hash password
+
+                    // Check if user already exists
+                    $select_users = mysqli_query($conn, "SELECT * FROM `user` WHERE email = '$email'") or die('Query failed');
+                    if (mysqli_num_rows($select_users) > 0) {
+                        $message[] = 'User already exists!';
+                    } else {
+                        // Insert new user
+                        $result = mysqli_query($conn, "INSERT INTO `user`(image, name, email, password, user_type) VALUES('$image', '$name', '$email', '$pass', '$user_type')") or die('Query failed');
+                        if ($result) {
+                            $message[] = 'Registered successfully!';
+                            header('location:login.php');
+                            exit();
+                        } else {
+                            $message[] = 'Error registering user!';
+                        }
+                    }
+                } else {
+                    $message[] = 'Failed to upload image.';
+                }
+            } else {
+                $message[] = 'Image size is too large.';
+            }
+        } else {
+            $message[] = 'Invalid image type.';
+        }
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +84,15 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <style>
+        input[type=email] {
+            width:100%; 
+            margin:10px auto; 
+            padding:10px 0px;
+             text-indent:10px; 
+             outline: none;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -212,21 +274,50 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                     <!-- add new trip -->
                     <div class="row add-trip">
                             <!-- Widget: user widget style 1 -->
-                              <?php
+                        <div class="col-12 col-md-4 my-5">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                <input type="text" name="name"placeholder="Enter Admin Name" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                                <input type="email" name="email" placeholder="Enter Admin Email" required>
+
+                                <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+
+                                <input type="text" name="pass" placeholder="Enter Password" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                                <input type="password" name="cpass" placeholder="Enter confirm Password" required
+                                style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+
+                                <select name="user-roll" id="" style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                                    <option value="admin">Admin</option>
+                                    <option value="contributer">Contributer</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="writer">Writer</option>
+                                </select>
+
+                                <input type="submit" name="admin_crete" value="Create Admin User" class="btn btn-warning"
+                                style="margin: 10px auto; padding:10px 0px; width:50%;">
+                            </form>
+                        </div>
+                        <?php
                         $select_bus = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = 'admin'") or die('query failed');
                         if (mysqli_num_rows($select_bus) > 0) {
                             while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
-                                ?>
+                        ?>
                         <div class="col-12 col-md-4 my-5">
                             <div class="card card-widget widget-user">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
-                                <div class="widget-user-header bg-info">
-                                    <h3 class="widget-user-username"><?php echo $fetch_bus['name']; ?></h3>
-                                    <h5 class="widget-user-desc"><?php echo $fetch_bus['email']; ?></h5>
-                                </div>
-                                <div class="widget-user-image">
-                                    <img class="img-circle elevation-2" src="../../dist/img/user1-128x128.jpg"
-                                        alt="User Avatar">
+                                <div class="row widget-user-header bg-info d-flex align-items-center" style="overflow:hidden">
+                                    <div class="col-4 user-image" style="background-color: white;">
+                                        <img class="" style="width:100%; height: 100%;" src="user_img/<?php echo $fetch_bus['image']; ?>"
+                                            alt="User Avatar">
+                                    </div>
+                                    <div class="col-8 user-identity">
+                                        <h3 class="widget-user-username"><?php echo $fetch_bus['name']; ?></h3>
+                                        <h5 class="widget-user-desc"><?php echo $fetch_bus['email']; ?></h5>
+                                    </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="row">
@@ -287,7 +378,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                                 </div>
                             </div>
                         </div>
-                            <?php
+                        <?php
                             }
                         } else {
                             echo '<p class="empty">no product added yet!</p>';

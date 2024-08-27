@@ -34,7 +34,7 @@ session_start();
                     // Query to retrieve data from the types table
                     $sql = "SELECT * FROM types";
                     $result = $conn->query($sql);
-
+                    
                     if ($result->num_rows > 0) {
                         // Output data of each row
                         while ($row = $result->fetch_assoc()) {
@@ -55,8 +55,8 @@ session_start();
                                 $tripCount = isset($tripCountRow['trip_count']) ? $tripCountRow['trip_count'] : 0;
                             }
                             
-                            
-                            echo "<div class='col-12 col-lg-4 Destination-card'>";
+                            echo "<a href='type-showtrip.php?typeId=" . urlencode($typeId) . "' class='col-12 col-lg-4 trip-types-package my-3' style='text-decoration:none;'>";
+                            echo "<div class='col-12 types-card'>";
                             // Check if the image file exists before displaying it
                             $imagePath = 'AdminLTE-3.2.0/pages/trips-setting/upload_img/' . $row['image'];
                             if (file_exists($imagePath)) {
@@ -68,7 +68,8 @@ session_start();
                             echo "<div class='col-12 destination-card px-0'>
                                     <h2>" . htmlspecialchars($typeName) . " - (" . $tripCount . " trips)</h2>
                                   </div>
-                                </div>";
+                                </div>
+                            </a>";
                         }
                     } else {
                         echo "<p>No types found</p>";
