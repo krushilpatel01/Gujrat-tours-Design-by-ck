@@ -11,6 +11,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     exit();
 }
 
+// code for the admin data store
 if (isset($_POST['admin_crete'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['name']);
@@ -46,7 +47,7 @@ if (isset($_POST['admin_crete'])) {
                         $result = mysqli_query($conn, "INSERT INTO `user`(image, name, email, password, user_type) VALUES('$image', '$name', '$email', '$pass', '$user_type')") or die('Query failed');
                         if ($result) {
                             $message[] = 'Registered successfully!';
-                            header('location:login.php');
+                            header('location:admin.php');
                             exit();
                         } else {
                             $message[] = 'Error registering user!';
@@ -63,6 +64,33 @@ if (isset($_POST['admin_crete'])) {
         }
     }
 }
+
+if (isset($_POST['delete_user'])) {
+        $user_id = intval($_POST['user_id']); // Ensure trip_id is an integer
+        
+        // Delete query
+        $delete_query = "DELETE FROM user WHERE id = ?";
+        $stmt = $conn->prepare($delete_query);
+        $stmt->bind_param('i', $user_id);
+        if ($stmt->execute()) {
+            echo "<script>alert('Bus successfully deleted!'); window.location.href='admin.php';</script>";
+        } else {
+            echo "Error deleting trip: " . $stmt->error;
+        }
+        $stmt->close();
+}
+
+if (isset($_POST['update_user'])) {
+    if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
+        $user_id = intval($_POST['user_id']); // Ensure trip_id is an integer
+        
+        // Redirect to update page
+        header("Location: update-admin.php?user_id=" . urlencode($user_id));
+        exit();
+    } else {
+        echo "Can't fetch ID";
+    }
+} 
 ?>
 
 
@@ -302,21 +330,29 @@ if (isset($_POST['admin_crete'])) {
                             </form>
                         </div>
                         <?php
-                        $select_bus = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = 'admin'") or die('query failed');
-                        if (mysqli_num_rows($select_bus) > 0) {
-                            while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
+                        $roles = ['admin', 'contributer', 'manager', 'writer'];
+
+                        foreach ($roles as $role) {
+                            // Display the role heading
+                        
+                            // Query the database for users of the current role
+                            $select_bus = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = '$role'") or die('Query failed');
+                        
+                            // Check if any users exist for this role
+                            if (mysqli_num_rows($select_bus) > 0) {
+                                while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
                         ?>
                         <div class="col-12 col-md-4 my-5">
                             <div class="card card-widget widget-user">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
-                                <div class="row widget-user-header bg-info d-flex align-items-center" style="overflow:hidden">
+                                <div class="row widget-user-header bg-info d-flex align-items-center mx-0 p-0" style="overflow:hidden">
                                     <div class="col-4 user-image" style="background-color: white;">
-                                        <img class="" style="width:100%; height: 100%;" src="user_img/<?php echo $fetch_bus['image']; ?>"
-                                            alt="User Avatar">
+                                        <img style="width:100%; height: 100%;" src="user_img/<?php echo $fetch_bus['image']; ?>" alt="User Avatar">
                                     </div>
-                                    <div class="col-8 user-identity">
-                                        <h3 class="widget-user-username"><?php echo $fetch_bus['name']; ?></h3>
-                                        <h5 class="widget-user-desc"><?php echo $fetch_bus['email']; ?></h5>
+                                    <div class="col-8 user-identity" style="text-align:start;">
+                                        <h5 class="widget-user-username" style="font-weight:500;">Name : <?php echo $fetch_bus['name']; ?></h5>
+                                        <h5 class="widget-user-desc">Email : <?php echo $fetch_bus['email']; ?></h5>
+                                        <h5 class="widget-user-role">Role : <?php echo $fetch_bus['user_type']; ?></h5>
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -326,27 +362,20 @@ if (isset($_POST['admin_crete'])) {
                                                 <h5 class="description-header">3,200</h5>
                                                 <span class="description-text">SALES</span>
                                             </div>
-                                            <!-- /.description-block -->
                                         </div>
-                                        <!-- /.col -->
                                         <div class="col-sm-4 border-right">
                                             <div class="description-block">
                                                 <h5 class="description-header">13,000</h5>
                                                 <span class="description-text">FOLLOWERS</span>
                                             </div>
-                                            <!-- /.description-block -->
                                         </div>
-                                        <!-- /.col -->
                                         <div class="col-sm-4">
                                             <div class="description-block">
                                                 <h5 class="description-header">35</h5>
                                                 <span class="description-text">PRODUCTS</span>
                                             </div>
-                                            <!-- /.description-block -->
                                         </div>
-                                        <!-- /.col -->
                                     </div>
-                                    <!-- /.row -->
                                 </div>
                                 <div class="col-12">
                                     <div class="card card-primary collapsed-card">
@@ -354,13 +383,10 @@ if (isset($_POST['admin_crete'])) {
                                             <h3 class="card-title">Contribution</h3>
 
                                             <div class="card-tools">
-                                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                                        class="fas fa-plus"></i>
+                                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
-                                            <!-- /.card-tools -->
                                         </div>
-                                        <!-- /.card-header -->
                                         <div class="card-body">
                                             <ul>
                                                 <li>Trip - (0)</li>
@@ -372,19 +398,27 @@ if (isset($_POST['admin_crete'])) {
                                                 <li>Coupen - (0)</li>
                                             </ul>
                                         </div>
-                                        <!-- /.card-body -->
+                                        <form action="" method="post">
+                                            <input type="hidden" name="user_id" value="<?php echo $fetch_bus['id']; ?>">
+                                            <div class="row user-actions d-flex my-3">
+                                                <div class="col-12 col-lg-6 update-btn">
+                                                    <input type="submit" name="update_user" class="btn btn-warning" value="Update User" style="width: 100%;">
+                                                </div>  
+                                                <div class="col-12 col-lg-6 delete-btn">
+                                                    <input type="submit" name="delete_user" class="btn btn-warning" value="Delete User" style="width: 100%;">
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <!-- /.card -->
                                 </div>
                             </div>
                         </div>
                         <?php
+                                }
                             }
-                        } else {
-                            echo '<p class="empty">no product added yet!</p>';
                         }
                         ?>
-                            <!-- /.widget-user -->
+                        <!-- /.widget-user -->
                     </div>
                 </div>
             </section>

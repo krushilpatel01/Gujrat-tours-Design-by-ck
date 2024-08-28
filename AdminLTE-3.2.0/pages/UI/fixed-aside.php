@@ -1,3 +1,13 @@
+<?php
+if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
+    $user_id = $_SESSION['admin_id'];
+    $user_name = $_SESSION['admin_name'];  
+} else {
+    header('location:../../login.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +33,7 @@
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
+                <div class="image">
                         <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
