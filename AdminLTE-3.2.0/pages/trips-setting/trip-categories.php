@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('i', $trip_id);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Types successfully Delete!'); window.location.href='trip-types.php';</script>";
+                echo "<script>alert('Types successfully Delete!'); window.location.href='trip-categories.php';</script>";
             } else {
                 echo "Error deleting trip: " . $stmt->error;
             }

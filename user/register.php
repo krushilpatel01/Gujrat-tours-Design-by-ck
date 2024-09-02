@@ -6,20 +6,23 @@ if (isset($_POST['submit'])) {
 
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $pass = mysqli_real_escape_string($conn, md5($_POST['password']));
-    $cpass = mysqli_real_escape_string($conn, md5($_POST['cp-password']));
+    $pass = mysqli_real_escape_string($conn, md5($_POST['password'])); // Hash the password
+    $cpass = mysqli_real_escape_string($conn, $_POST['cp_password']);  // Store the confirm password without hashing
+
     $user_type = $_POST['user-roll'];
 
-    $select_users = mysqli_query($conn, "SELECT * FROM `user` WHERE email = '$email' AND password = '$pass'") or die('query failed');
+    // Check if the user already exists based on the email only
+    $select_users = mysqli_query($conn, "SELECT * FROM `user` WHERE email = '$email'") or die('query failed');
 
     if (mysqli_num_rows($select_users) > 0) {
-        $message[] = 'user already exist!';
+        $message[] = 'User already exists!';
     } else {
-        if ($pass != $cpass) {
-            $message[] = 'confirm password not matched!';
+        if ($pass != md5($cpass)) { // Compare hashed password with hashed confirm password
+            $message[] = 'Confirm password does not match!';
         } else {
-            $result = mysqli_query($conn, "INSERT INTO `user`(name, email, password, user_type) VALUES('$name', '$email', '$cpass', '$user_type')") or die('query failed');
-            $message[] = 'registered successfully!';
+            // Insert the new user into the database
+            $result = mysqli_query($conn, "INSERT INTO `user` (name, email, password, confirm_pw, user_type) VALUES ('$name', '$email', '$pass', '$cpass', '$user_type')") or die('Query failed');
+            $message[] = 'Registered successfully!';
             header('location:login.php');
         }
     }
@@ -27,6 +30,8 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +63,7 @@ if (isset($_POST['submit'])) {
                 <input type="text" name="name" placeholder="enter your name" id="" class="box">
                 <input type="email" name="email" placeholder="enter your em" id="" class="box">
                 <input type="password" name="password" placeholder="enter your password" id="" class="box">
-                <input type="password" name="cp-password" placeholder="re-enter your password" id="" class="box">
+                <input type="text" name="cp_password" placeholder="re-enter your password" id="" class="box">
                 <select name="user-roll" id="">
                     <option value="User">user</option>
                     <option value="Admin">admin</option>

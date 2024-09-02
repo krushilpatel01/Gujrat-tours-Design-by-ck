@@ -44,19 +44,37 @@
 
   <!-- Initialize Swiper -->
   <script>
-    var swiper = new Swiper(".mySwiper4", {
-      slidesPerView: 3,
-      spaceBetween: 30,
-      autoplay: {
-        delay: 2500,
-        disableOnInteraction: false,
+  var swiper = new Swiper(".mySwiper4", {
+    spaceBetween: 30,
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      // When the window width is <= 1024px (commonly tablets)
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 20,
       },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
+      // When the window width is <= 768px (commonly small tablets and large phones)
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 10,
       },
-    });
-  </script>
+      // When the window width is <= 480px (commonly mobile phones)
+      480: {
+        slidesPerView: 1,
+        spaceBetween: 5,
+      },
+    },
+  });
+</script>
+
+
 
 
 <!-- Option 1: Bootstrap Bundle with Popper -->

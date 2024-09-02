@@ -50,8 +50,7 @@ if (isset($_POST['update_admin'])) {
     if (in_array($image_type, $allowed_types)) {
         if ($image_size <= 5000000) { // Limit file size to 5MB
             if (move_uploaded_file($image_tmp_name, $image_folder)) {
-                $pass = md5($pass); // Hash password
-
+                // No more password hashing
                 // Update existing user
                 $query = "UPDATE `user` SET image = ?, name = ?, email = ?, password = ?, user_type = ? WHERE id = ?";
                 $stmt = $conn->prepare($query);
@@ -74,6 +73,7 @@ if (isset($_POST['update_admin'])) {
         $message[] = 'Invalid image type.';
     }
 }
+
 
 ?>
 
@@ -271,33 +271,40 @@ if (isset($_POST['update_admin'])) {
                 <div class="col-12 title mt-4">
                     <h1>Update Admin - <?php echo $user['name']; ?></h1>
                  </div>
-                <div class="col-12 col-md-4 mb-5">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <label for="name">Name :</label>
-                        <input type="text" name="name"placeholder="Enter Admin Name" value="<?php echo $user['name']; ?>" required
-                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                        <label for="email">Email :</label>
-                        <input type="email" name="email" placeholder="Enter Admin Email" value="<?php echo $user['email']; ?>" required>
-                        <label for="image">Image : "<?php echo $user['image']; ?>"</label>
-                        <input type="file" name="image" accept="image/jpg, image/jpeg, image/png"  value="<?php echo $user['image']; ?>" required
-                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
-                        <label for="pass">Password :</label>
-                        <input type="text" name="pass" placeholder="Enter Password" required  value="<?php echo $user['password']; ?>"
-                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                        <label for="cpass">Confirm Password :</label>
-                        <input type="text" name="cpass" placeholder="Enter Password" required  value="<?php echo $user['password']; ?>"
-                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                        <label for="admin role" style="color:red;">By Default Role : <?php echo $user['user_type']; ?></label>
-                        <select name="user-roll" id="" style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
-                            <option value="admin">Admin</option>
-                            <option value="contributer">Contributer</option>
-                            <option value="manager">Manager</option>
-                            <option value="writer">Writer</option>
-                        </select>
-                        <input type="submit" name="update_admin" value="Create Admin User" class="btn btn-warning"
-                        style="margin: 10px auto; padding:10px 0px; width:50%;">
-                    </form>
-                </div>
+                 <div class="col-12 col-md-4 mb-5">
+    <form action="" method="post" enctype="multipart/form-data">
+        <label for="name">Name :</label>
+        <input type="text" name="name" placeholder="Enter Admin Name" value="<?php echo $user['name']; ?>" required
+        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+        
+        <label for="email">Email :</label>
+        <input type="email" name="email" placeholder="Enter Admin Email" value="<?php echo $user['email']; ?>" required>
+        
+        <label for="image">Image :</label>
+        <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" value="<?php echo $user['image']; ?>" required
+        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: 1px solid black; background-color:white; padding: 10px 0px;">
+        
+        <label for="pass">Password :</label>
+        <input type="text" name="pass" placeholder="Enter Password" required value="<?php echo $user['password']; ?>"
+        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+        
+        <label for="cpass">Confirm Password :</label>
+        <input type="text" name="cpass" placeholder="Enter Password" required value="<?php echo $user['password']; ?>"
+        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+        
+        <label for="admin role" style="color:red;">By Default Role : <?php echo $user['user_type']; ?></label>
+        <select name="user-roll" id="" style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+            <option value="Admin">Admin</option>
+            <option value="contributer">Contributer</option>
+            <option value="manager">Manager</option>
+            <option value="writer">Writer</option>
+        </select>
+        
+        <input type="submit" name="update_admin" value="Create Admin User" class="btn btn-warning"
+        style="margin: 10px auto; padding:10px 0px; width:50%;">
+    </form>
+</div>
+
                 <!-- header content over -->
             </div>
         </div>

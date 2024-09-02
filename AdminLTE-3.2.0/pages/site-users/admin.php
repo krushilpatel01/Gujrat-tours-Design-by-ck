@@ -36,15 +36,15 @@ if (isset($_POST['admin_crete'])) {
         if (in_array($image_type, $allowed_types)) {
             if ($image_size <= 5000000) { // Limit file size to 5MB
                 if (move_uploaded_file($image_tmp_name, $image_folder)) {
-                    $pass = md5($pass); // Hash password
-
+                    $hashed_pass = password_hash($pass, PASSWORD_BCRYPT); // Securely hash the password
+        
                     // Check if user already exists
                     $select_users = mysqli_query($conn, "SELECT * FROM `user` WHERE email = '$email'") or die('Query failed');
                     if (mysqli_num_rows($select_users) > 0) {
                         $message[] = 'User already exists!';
                     } else {
-                        // Insert new user
-                        $result = mysqli_query($conn, "INSERT INTO `user`(image, name, email, password, user_type) VALUES('$image', '$name', '$email', '$pass', '$user_type')") or die('Query failed');
+                        // Insert new user with the hashed password
+                        $result = mysqli_query($conn, "INSERT INTO `user`(image, name, email, password, confirm_pw, user_type) VALUES('$image', '$name', '$email', '$hashed_pass', '$cpass', '$user_type')") or die('Query failed');
                         if ($result) {
                             $message[] = 'Registered successfully!';
                             header('location:admin.php');
@@ -59,7 +59,8 @@ if (isset($_POST['admin_crete'])) {
             } else {
                 $message[] = 'Image size is too large.';
             }
-        } else {
+        }
+         else {
             $message[] = 'Invalid image type.';
         }
     }
@@ -73,7 +74,7 @@ if (isset($_POST['delete_user'])) {
         $stmt = $conn->prepare($delete_query);
         $stmt->bind_param('i', $user_id);
         if ($stmt->execute()) {
-            echo "<script>alert('Bus successfully deleted!'); window.location.href='admin.php';</script>";
+            echo "<script>alert('User successfully deleted!'); window.location.href='admin.php';</script>";
         } else {
             echo "Error deleting trip: " . $stmt->error;
         }
@@ -336,23 +337,23 @@ if (isset($_POST['update_user'])) {
                             // Display the role heading
                         
                             // Query the database for users of the current role
-                            $select_bus = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = '$role'") or die('Query failed');
+                            $select_user = mysqli_query($conn, "SELECT * FROM `user` WHERE user_type = '$role'") or die('Query failed');
                         
                             // Check if any users exist for this role
-                            if (mysqli_num_rows($select_bus) > 0) {
-                                while ($fetch_bus = mysqli_fetch_assoc($select_bus)) {
+                            if (mysqli_num_rows($select_user) > 0) {
+                                while ($fetch_user = mysqli_fetch_assoc($select_user)) {
                         ?>
                         <div class="col-12 col-md-4 my-5">
                             <div class="card card-widget widget-user">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
                                 <div class="row widget-user-header bg-info d-flex align-items-center mx-0 p-0" style="overflow:hidden">
                                     <div class="col-4 user-image" style="background-color: white;">
-                                        <img style="width:100%; height: 100%;" src="user_img/<?php echo $fetch_bus['image']; ?>" alt="User Avatar">
+                                        <img style="width:100%; height: 100%;" src="user_img/<?php echo $fetch_user['image']; ?>" alt="User Avatar">
                                     </div>
                                     <div class="col-8 user-identity" style="text-align:start;">
-                                        <h5 class="widget-user-username" style="font-weight:500;">Name : <?php echo $fetch_bus['name']; ?></h5>
-                                        <h5 class="widget-user-desc">Email : <?php echo $fetch_bus['email']; ?></h5>
-                                        <h5 class="widget-user-role">Role : <?php echo $fetch_bus['user_type']; ?></h5>
+                                        <h5 class="widget-user-username" style="font-weight:500;">Name : <?php echo $fetch_user['name']; ?></h5>
+                                        <h5 class="widget-user-desc">Email : <?php echo $fetch_user['email']; ?></h5>
+                                        <h5 class="widget-user-role">Role : <?php echo $fetch_user['user_type']; ?></h5>
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -388,18 +389,43 @@ if (isset($_POST['update_user'])) {
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <ul>
-                                                <li>Trip - (0)</li>
-                                                <li>Destination - (0)</li>
-                                                <li>Types - (0)</li>
-                                                <li>Categories - (0)</li>
-                                                <li>Hotels - (0)</li>
-                                                <li>Bus - (0)</li>
-                                                <li>Coupen - (0)</li>
+                                            <ul>           
+                                                <?php
+                                                // for trip
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM trip WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/add-trip.php'>Trips - ($tripCount)</a></li>";
+                                                // for destination
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM destination WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/destination.php'>Destination - ($tripCount)</a></li>";
+                                                // for categories
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM types WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/trip-categories.php'>Categories - ($tripCount)</a></li>";
+                                                // for hotels
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM room WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/trip-room.php'>Hotels - ($tripCount)</a></li>";
+                                                // for bus
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM bus WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/trip-bus.php'>Bus - ($tripCount)</a></li>";
+                                                // for coupen
+                                                $sql1 = "SELECT COUNT(*) as trip_count FROM coupen WHERE auther = '{$fetch_user['name']}'";
+                                                $result1 = $conn->query($sql1);
+                                                $tripCount = ($result1->fetch_assoc()['trip_count']) ?? 0;
+                                                echo "<li><a href='../trips-setting/trip-coupen.php'>Coupen - ($tripCount)</a></li>";
+                                                ?>
                                             </ul>
                                         </div>
                                         <form action="" method="post">
-                                            <input type="hidden" name="user_id" value="<?php echo $fetch_bus['id']; ?>">
+                                            <input type="hidden" name="user_id" value="<?php echo $fetch_user['id']; ?>">
                                             <div class="row user-actions d-flex my-3">
                                                 <div class="col-12 col-lg-6 update-btn">
                                                     <input type="submit" name="update_user" class="btn btn-warning" value="Update User" style="width: 100%;">

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-session_start();
+session_start();    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +56,7 @@ session_start();
         <!-- slider over -->
         <!-- </div> -->
 
-<!-- destinations list slider's -->
+        <!-- destinations list slider's -->
         <section class="destiantion-list">
             <div class="container">
                 <div class="title" style="text-align:center; margin:50px auto;">
@@ -91,9 +91,8 @@ session_start();
                                 }
                                 ?>
                         </div>
-                    <div class="swiper-pagination"></div>
+                        <div class="swiper-pagination"></div>
                     </div>
-                </div>
             </div>
         </section>
         <!-- destinations list slider's over -->
@@ -106,12 +105,13 @@ session_start();
                     <h2>Our Featured Tours</h2>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Labore, nostrum illum. Voluptas.</p>
             </div>
-            <div class="row" style="width:100%">
+            <div class="row mx-auto" style="width:100%">
                 <?php
                 $sql = "SELECT * FROM trip WHERE featured = 'featured'";
                 $result = $conn->query($sql);
                 if($result->num_rows > 0){
                     while($row = $result->fetch_assoc()){
+                        // this is for image 
                         echo '<div class="col-12 col-lg-4 trip2-card mx-0 px-2">';
                             echo '<div class="image">';
                                 $imagePath = "AdminLTE-3.2.0/pages/trips-setting/upload_img/" . $row["image"];
@@ -122,20 +122,21 @@ session_start();
                                 }
                             echo '</div>';
                         echo '</div>';
-                        echo "<div class='col-8 py-5'>";
+                        // this trip details
+                        echo "<div class='col-12 col-lg-8 py-5'>";
                             echo "<div class='name'><h5>". htmlspecialchars($row["name"]) . "</h5></div>";
                             echo "<div class='row trip-detail align-items-center py-1'>";
-                                echo "<div class='col-8'>";
+                                echo "<div class='col-12 col-lg-8'>";
                                     echo "<div class='categories py-1'><i class='fa-solid fa-suitcase-rolling px-2'></i>" . htmlspecialchars($row["types"]) . "</div>";
                                     echo "<div class='destination py-1' style='color:red;'><i class='fa-solid fa-plane px-2' style='color:black;'></i>" . htmlspecialchars($row["destination"]) . " - Destination</div>";
                                 echo "</div>";
-                                echo "<div class='col-4'>";
+                                echo "<div class='col-12 col-lg-4'>";
                                     echo "<div class='trip-price' style='font-size:35px'>Only " . htmlspecialchars($row["price"]) . "/-</div>";
                                 echo "</div>";
                             echo "</div>";
                             echo "<div class='row desc-btn'>";
-                                echo "<div class='col-8 trip-desc'><b>Details : </b>" . htmlspecialchars($row["detail"]) . "</div>";
-                                echo "<div class='col-4 trip-desc'>";
+                                echo "<div class='col-12 col-lg-8 trip-desc'><b>Details : </b>" . htmlspecialchars($row["detail"]) . "</div>";
+                                echo "<div class='col-12 col-lg-4 trip-desc'>";
                                 echo "<form action='' method='post'>";
                                 echo "<input type='hidden' name='trip_id' value='" . htmlspecialchars($row['id']) . "'>";
                                 echo "<input type='submit' name='show_trip' value='Check Trip' class='btn btn-warning' style='width:100%';>";
@@ -199,11 +200,100 @@ session_start();
             </div>
         </section>
         <!-- show trip close -->
+        
+        <!-- company details -->
+        <section class="company-detail">
+            <div class="container">
+                <div class="col-12 blog-header text-center my-3">
+                    <h2>Know More About Us</h2>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima hic animi unde architecto
+                        cumque
+                        illo fuga necessitatibus debitis facilis nobis?</p>
+                </div>
+                <div class="row align-items-center mt-3">
+                    <div class="col-12 col-lg-7 detail-box">
+                        <h2>Discover Special Deals!</h2>
+                        <h4>Make sure to check out these special promotions, We Are provide many types of Trips.</h4>
+                        <input type="submit" value="See Trips" class="btn btn-warning">
+                    </div>  
+                    <div class="col-12 col-lg-5 mail-box my-5">
+                        <h4>Don’t miss a thing About</h4>
+                        <span style="color: red; font-size: 50px; font-weight:600;">'GUJRAT TOURS'</span>
+                        <h4>Get update to special deals and exclusive offers.
+                            Sign up to our newsletter!</h4>
+                        <div class="mail">
+                            <input type="email" name="email" placeholder="Enter Your Email" id="">
+                            <input type="submit" value="Send Mail" class="btn btn-success send-mail-btn">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- company  details close -->
 
+        <!-- company blogs -->
+        <section class="content-blog">
+            <div class="container">
+                <div class="row content-header-blog">
+                    <div class="col-12 blog-header text-center my-3">
+                        <h2>Travel Blog</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima hic animi unde architecto
+                            cumque
+                            illo fuga necessitatibus debitis facilis nobis?</p>
+                    </div>
+                    <div class="col-12 contenttype-blog-list mb-5">
+                        <div class="row blog-list">
+                            <div class="col-12 col-lg-6 latest-blog">
+                                <img class="blog-img"
+                                    src="https://travel.nicdark.com/travel-agency-wordpress-theme/wp-content/uploads/sites/9/2023/05/i-parallax-11-1024x683.jpeg"
+                                    alt="" srcset="">
+                                <div class="date">Aug 1,2024</div>
+                                <div class="blog-title">Plan For the Perfect Vacation.</div>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque aliquid provident
+                                    totam
+                                    delectus? Eaque natus unde doloremque libero culpa tenetur!Lorem ipsum dolor sit
+                                    amet,
+                                    consectetur adipisicing elit. Neque aliquid provident totam
+                                    delectus?</p>
+                                <div class="blog-btn"><input type="submit" value="Read More" class="btn btn-success">
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 aside-blog-list mt-4">
+                                <div class="row blogs mb-3">
+                                    <div class="col-12 col-md-6 col-lg-4 img">
+                                        <img class="blog-img"
+                                            src="https://travel.nicdark.com/travel-agency-wordpress-theme/wp-content/uploads/sites/9/2023/05/i-parallax-11-1024x683.jpeg"
+                                            alt="" srcset="">
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-8 blog-detail">
+                                        <div class="date">Aug 1,2024</div>
+                                        <div class="blog-title" style="font-size: 22px; font-weight: 500;">Plan For the
+                                            Perfect Vacation.</div>
+                                        <p style="font-size: 12px;">Lorem ipsum dolor
+                                            sit amet,
+                                            consectetur adipisicing elit. Neque aliquid provident
+                                            totam
+                                            delectus? Eaque natus unde doloremque libero culpa tenetur!Lorem ipsum dolor
+                                            sit
+                                            amet,
+                                            consectetur adipisicing elit. Neque aliquid provident totam
+                                            delectus?</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+         <!-- company blogs end -->
+
+        <!-- footer start -->
+        <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
 
         <!-- main class -->
     </div>
-
 </body>
     <!-- include css all files -->
     <?php
