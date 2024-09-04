@@ -57,8 +57,8 @@ if (isset($_POST['submit'])) {
     <!-- nav over -->
 
     <div class="container">
-        <section class="form-container">
-            <form action="" method="post">
+        <section class="row form-container mx-auto">
+            <form class="col-sm-12 col-lg-6 mt-5 mx-auto" action="" method="post">
                 <h3>Regestation Form</h3>
                 <input type="text" name="name" placeholder="enter your name" id="" class="box">
                 <input type="email" name="email" placeholder="enter your em" id="" class="box">

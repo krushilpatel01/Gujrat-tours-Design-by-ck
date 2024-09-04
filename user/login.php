@@ -73,8 +73,8 @@ if (isset($_POST['submit'])) {
     <!-- nav over -->
 
     <div class="container">
-        <section class="form-container">
-            <form action="" method="post">
+        <section class="row form-container mx-auto">
+            <form class="col-sm-12 col-lg-6 my-5" action="" method="post">
                 <h3>Login Form</h3>
                 <input type="email" name="email" placeholder="Enter your email" id="" class="box" required>
                 <input type="password" name="password" placeholder="Enter your password" id="" class="box" required>

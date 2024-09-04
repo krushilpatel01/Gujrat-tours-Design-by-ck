@@ -300,22 +300,25 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
                         <p>Trips Bus</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                  <a href="trips-setting/trip-query.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Trips querys</p>
-                  </a>
-                </li>
               </ul>
             </li>
             <li class="nav-item">
-              <a href="ticket-booking.php" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                  Tickets Booking
-                  <span class="badge badge-info right">2</span>
-                </p>
-              </a>
+            <a href="trips-setting/trip-query.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Trips querys
+                        <span class="badge badge-info right">2</span>
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="../ticket-booking.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Tickets Booking
+                        <span class="badge badge-info right">2</span>
+                    </p>
+                </a>
             </li>
             <!-- trip-section over -->
             <li class="nav-header">EXAMPLES</li>

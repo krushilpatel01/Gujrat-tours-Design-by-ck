@@ -294,62 +294,54 @@ else{
                         <p>Trips Bus</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                  <a href="trips-setting/trip-query.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Trips querys</p>
-                  </a>
-                </li>
               </ul>
             </li>
             <li class="nav-item">
-              <a href="ticket-booking.php" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                  Tickets Booking
-                  <span class="badge badge-info right">2</span>
-                </p>
-              </a>
+            <a href="trips-setting/trip-query.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Trips querys
+                        <span class="badge badge-info right">2</span>
+                    </p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="ticket-booking.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Tickets Booking
+                        <span class="badge badge-info right">2</span>
+                    </p>
+                </a>
             </li>
             <!-- trip-section over -->
-            <li class="nav-header">EXAMPLES</li>
+            <li class="nav-header">Extra Section</li>
+            <!-- blog -->
             <li class="nav-item">
-              <a href="calendar.php" class="nav-link">
-                <i class="nav-icon far fa-calendar-alt"></i>
-                <p>
-                  Calendar
-                  <span class="badge badge-info right">2</span>
-                </p>
-              </a>
+                <a href="blog.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Blog
+                    </p>
+                </a>
             </li>
+            <!-- calender -->
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon far fa-envelope"></i>
-                <p>
-                  Mailbox
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="mailbox/mailbox.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Inbox</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="mailbox/compose.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Compose</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="mailbox/read-mail.php" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Read</p>
-                  </a>
-                </li>
-              </ul>
+                <a href="calendar.php" class="nav-link">
+                    <i class="nav-icon far fa-calendar-alt"></i>
+                    <p>
+                        Calendar
+                        <span class="badge badge-info right">2</span>
+                    </p>
+                </a>
+            </li>
+            <!-- mail box -->
+            <li class="nav-item">
+                <a href="mailbox/mailbox.php" class="nav-link">
+                    <i class="nav-icon far fa-envelope"></i>
+                    <p>Mail Box</p>
+                    <span class="badge badge-info right">2</span>
+                </a>
             </li>
             <li class="nav-header">All Users</li>
               <li class="nav-item">

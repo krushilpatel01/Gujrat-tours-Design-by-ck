@@ -21,10 +21,68 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>home page</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- include css all files -->
     <?php
     include "components/files/css.php";
     ?>
+    <style>
+        /* slider */
+        .hero-slider {
+            position: relative;
+            height: 800px;
+            z-index: 0;
+            background-image: url(https://images.unsplash.com/photo-1461237439866-5a557710c921?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0px;
+        }
+        .hero-slider nav{
+            position: absolute;
+        }
+
+        .hero-slider .black-box{
+            width: 100%;
+            height: 100%;
+            padding: 450px 400px 00px 200px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            z-index: 99;
+        }
+        @media only screen and (min-width:1030px) {
+            .hero-slider .black-box{
+                padding: 450px 400px 00px 200px;
+            }
+        }
+
+        @media only screen and (min-width:768px) and (max-width:1029px){
+            .hero-slider .black-box{
+                padding: 450px 50px 0px 50px;
+            }   
+        }
+        @media only screen and (max-width:767px){
+            .hero-slider{
+                height: 600px;
+            }
+            .hero-slider .black-box{
+                padding: 250px 50px 0px 50px;
+            }   
+
+            .navbar-dark .navbar-nav .nav-link{
+                color: black;
+                background-color: white;
+                margin: 2px auto;
+            }
+            .search-box{
+                display: none;
+            }
+            .navbar-icon .navbar-icon{
+                color: black;
+                background-color: white;
+                margin: 2px auto;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -33,28 +91,85 @@ session_start();
 </div> -->
     <div class="main">
         <!-- nav start -->
-        <?php include ("components/header-footer/header.php"); ?>
         <!-- nav over -->
          
         <!-- slider start -->
          <!-- <div class="container"> -->
-        <div class="swiper mySwiper hero-slider">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" style="height: 550px;">
-                    <img src="components/slider/banners (4).jpg" alt="" srcset="">
+        <div class="hero-slider">
+        <nav class="navbar navbar-expand-lg navbar-dark py-1" style="height: 100px;">
+            <div class="container">
+                <a class="navbar-brand text-white" href="index.php">Gujrat Tours</a>
+                <button class="navbar-toggler" style="border:1px solid white" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center pe-0">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="destination.php">Destinations</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="trip-package.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Trips
+                              </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item text-black" href="trip-package.php">Trip package</a>
+                              <a class="dropdown-item text-black" href="trip-types.php">Trip Types</a>
+                              <a class="dropdown-item text-black" href="trip-coupen.php">Trip Coupen</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="blog.php">Blogs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about-us.php">About us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact-us.php">Contact us</a>
+                        </li>
+                    </ul>
+                    <form class="search-box d-flex col-sm-d-none">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success bg-light" type="submit">Search</button>
+                    </form>
+                    <ul class="navbar-icon mb-2 mb-lg-0 text-center d-flex" style="list-style-type:none;">
+                        <li class="nav-icon dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user" style="color:white;"></i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index: 999;">
+                                <?php
+                                if (isset($_SESSION['user_name'])) {
+                                    echo "<li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li>";
+                                } else {
+                                    echo "<li><a class='dropdown-item' href='#'>Welcome User</a></li>";
+                                }
+                                
+                                if (isset($_SESSION['user_name'])) {
+                                    echo "<li><a class='dropdown-item' href='user/log-out.php'>Logout</a></li>";
+                                } else {
+                                    echo "<li><a class='btn dropdown-item' href='user/register.php'>Register User</a></li>";
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-                <div class="swiper-slide" style="height: 500px;">
-                    <img src="components/slider/banners (6).jpg" alt="" srcset="">
-                </div>
-                <div class="swiper-slide" style="height: 500px;">
-                    <img src="components/slider/banners (5).jpg" alt="" srcset="">
-                </div>  
             </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+        </nav>
+        <div class="black-box">
+            <h6 style="color:white;" data-aos="fade-up" data-aos-duration="500">Who We Are'</h6>
+            <h1 style="color:white;" data-aos="fade-up" data-aos-duration="800">Gujrat Tours</h1>
+            <p data-aos="fade-up" data-aos-duration="1000">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cumque sint numquam voluptate aperiam tempora? Sit, voluptates rerum ratione expedita, nisi tenetur itaque quam excepturi deleniti, obcaecati rem adipisci alias quo.</p>
+            <input  data-aos="fade-up" data-aos-duration="1000" type="submit" value="Know More About Us" class="btn btn-warning">
         </div>
-        <!-- slider over -->
-        <!-- </div> -->
+        </div>
+        <!-- her slider over -->
 
         <!-- destinations list slider's -->
         <section class="destiantion-list">
@@ -299,4 +414,8 @@ session_start();
     <?php
     include "components/files/js.php";
     ?>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
 </html>

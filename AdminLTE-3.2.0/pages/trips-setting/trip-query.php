@@ -21,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $trip_id = $_POST['trip_id'];
             
             // Delete query
-            $delete_query = "DELETE FROM contact_us_message WHERE id = ?";
+            $delete_query = "DELETE FROM trip_query WHERE id = ?";
             $stmt = $conn->prepare($delete_query);
             $stmt->bind_param('i', $trip_id);
 
             if ($stmt->execute()) {
-                echo "<script>alert('coupen successfully Delete!'); window.location.href='trip-query.php';</script>";
+                echo "<script>alert('Query successfully Delete!'); window.location.href='trip-query.php';</script>";
             } else {
                 echo "Error deleting trip: " . $stmt->error;
             }
@@ -237,72 +237,132 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="../../index.php">Home</a></li>
-                                <li class="breadcrumb-item active">ticket-booking</li>
+                                <li class="breadcrumb-item active">Trip Query</li>
                             </ol>
                         </div>
                     </div>
                     <div class="container-fluid">
-                    <!-- add new trip -->
-                    <div class="row add-trip">
-                        <div class="col-12 my-5">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Id</th>
-                              <th scope="col">Name</th>
-                              <th scope="col">Email</th>
-                              <th scope="col">Message</th>
-                              <th scope="col">Update / Delete</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          <?php
-                        $select_user = mysqli_query($conn, "SELECT * FROM `contact_us_message`") or die('query failed');
-                        if (mysqli_num_rows($select_user) > 0) {
-                            while ($fetch_user = mysqli_fetch_assoc($select_user)) {
+                        <!-- add new trip -->
+                        <div class="row add-trip">
+                            <div class="col-12 my-5">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Trip-Id</th>
+                                            <th scope="col">Trip-Name</th>
+                                            <th scope="col">User Name</th>
+                                            <th scope="col">User Email</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Message</th>
+                                            <th scope="col">Update / Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // Pagination variables
+                                        $limit = 10; // Number of entries to show per page
+                                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                        $start = ($page - 1) * $limit;
+
+                                        // Query to select data with pagination and ordering by latest first
+                                        $select_user = mysqli_query($conn, "SELECT * FROM `trip_query` ORDER BY `id` DESC LIMIT $start, $limit") or die('Query failed');
+
+                                        if (mysqli_num_rows($select_user) > 0) {
+                                            while ($fetch_user = mysqli_fetch_assoc($select_user)) {
+                                                ?>
+                                                <tr>
+                                                    <th scope="row"><?php echo $fetch_user['id']; ?></th>
+                                                    <th scope="row"><?php echo $fetch_user['trip_id']; ?></th>
+                                                    <th scope="row"><?php echo $fetch_user['trip_name']; ?></th>
+                                                    <td><?php echo $fetch_user['name']; ?></td>
+                                                    <td><?php echo $fetch_user['email']; ?></td>
+                                                    <td><?php echo $fetch_user['subject']; ?></td>
+                                                    <td><?php echo $fetch_user['message']; ?></td>
+                                                    <td>
+                                                        <form method="post" action="">
+                                                            <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
+                                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        } else {
+                                            echo '<p class="empty">No Trip Queries yet!</p>';
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                    
+                                <!-- Pagination -->
+                                <?php
+                                // Get the total number of records
+                                $result_db = mysqli_query($conn, "SELECT COUNT(id) FROM `trip_query`");
+                                $row_db = mysqli_fetch_row($result_db);
+                                $total_records = $row_db[0];
+                                $total_pages = ceil($total_records / $limit);
+                                    
+                                if ($total_pages > 1) {
+                                    echo '<nav aria-label="Page navigation example">';
+                                    echo '<ul class="pagination justify-content-start">';
+                                
+                                    // Previous button
+                                    if ($page > 1) {
+                                        echo sprintf(
+                                            '<li class="page-item"><a class="page-link" href="trip-query.php?page=%d">Previous</a></li>',
+                                            $page - 1
+                                        );
+                                    } else {
+                                        echo '<li class="page-item disabled"><a class="page-link">Previous</a></li>';
+                                    }
+                                
+                                    // Page numbers
+                                    for ($i = 1; $i <= $total_pages; $i++) {
+                                        $active = ($i == $page) ? 'active' : '';
+                                        echo sprintf(
+                                            '<li class="page-item %s"><a class="page-link" href="trip-query.php?page=%d">%d</a></li>',
+                                            $active,
+                                            $i,
+                                            $i
+                                        );
+                                    }
+                                
+                                    // Next button
+                                    if ($page < $total_pages) {
+                                        echo sprintf(
+                                            '<li class="page-item"><a class="page-link" href="trip-query.php?page=%d">Next</a></li>',
+                                            $page + 1
+                                        );
+                                    } else {
+                                        echo '<li class="page-item disabled"><a class="page-link">Next</a></li>';
+                                    }
+                                
+                                    echo '</ul>';
+                                    echo '</nav>';
+                                }
+                                
                                 ?>
-                            <tr>
-                              <th scope="row"><?php echo $fetch_user['id']; ?></th>
-                              <td><?php echo $fetch_user['name']; ?></td>
-                              <td><?php echo $fetch_user['email']; ?></td>
-                              <td><?php echo $fetch_user['message']; ?></td>
-                              <td>
-                              <form method="post" action="">
-                                        <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
-                                            <!-- <input type="submit" name="update_trip" class="btn btn-warning" value="Update"> -->
-                                            <input type="submit" name="delete_trip" class="btn btn-warning" value="Delete">
-                                    </form>
-                              </td>
-                            </tr>
-                            <?php
-                            }
-                        } else {
-                            echo '<p class="empty">no Trip Query yet!</p>';
-                        }
-                        ?>
-                          </tbody>
-                        </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-
+                            
             <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
                 <i class="fas fa-chevron-up"></i>
             </a>
         </div>
 
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+        <!-- Content Wrapper. Contains page content -->
+        <!-- <div class="content-wrapper"> -->
             <!-- Content Header (Page header) -->
-            <section class="content-header">
-
+            <!-- <section class="content-header">
             </section>
-
             <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
                 <i class="fas fa-chevron-up"></i>
-            </a>
-        </div>
+            </a> -->
+        <!-- </div> -->
 
         <!-- footer link -->
         <?php
