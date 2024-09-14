@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bookly_db";
+$dbname = "gujrat_tour-database";
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 
 if (!$conn) {

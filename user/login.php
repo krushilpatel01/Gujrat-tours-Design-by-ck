@@ -28,7 +28,13 @@ if (isset($_POST['submit'])) {
             $_SESSION['admin_name'] = $row['name'];
             $_SESSION['admin_email'] = $row['email'];
             $_SESSION['admin_id'] = $row['id'];
-            header('Location:..\AdminLTE-3.2.0\index.php');
+
+            // Check for a redirect query parameter
+            if (isset($_GET['redirect'])) {
+                header('Location: ' . $_GET['redirect']);
+            } else {
+                header('Location: ..\AdminLTE-3.2.0\index.php');
+            }
             ob_end_flush(); // End output buffering and send headers
             exit;
 
@@ -36,7 +42,13 @@ if (isset($_POST['submit'])) {
             $_SESSION['user_name'] = $row['name'];
             $_SESSION['user_email'] = $row['email'];
             $_SESSION['user_id'] = $row['id'];
-            header('Location:..\index.php');
+
+            // Check for a redirect query parameter
+            if (isset($_GET['redirect'])) {
+                header('Location: ' . $_GET['redirect']);
+            } else {
+                header('Location: ..\index.php');
+            }
             ob_end_flush(); // End output buffering and send headers
             exit;
 
@@ -50,6 +62,7 @@ if (isset($_POST['submit'])) {
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

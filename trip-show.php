@@ -1,6 +1,6 @@
 <?php
 include 'user/config.php';
-session_start();
+// session_start();
 
 if (isset($_GET['trip_id'])) {
     $trip_id = $_GET['trip_id'];
@@ -43,6 +43,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['trip_query'])) {
     }
 }
 
+// this code show specific trip in new page
+if (isset($_POST['book_trip'])) {
+    $trip_id = (int)$_POST['trip_id'];
+    header("Location: book-trip.php?trip_id=$trip_id");
+    exit();
+}
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['trip_query'])) {
+}
+
 // this below code show title of page using this code
 // Query to retrieve data from the trip table
 $sql = "SELECT * FROM trip WHERE id = '$trip_id'";
@@ -78,7 +87,7 @@ $row2 = $result2->fetch_assoc();
     </style>
 </head>
 <body>
-    <div class="main">
+    <!-- <div class="main"> -->
         <!-- nav start -->
         <?php include ("components/header-footer/header.php"); ?>
         <!-- nav over -->
@@ -180,7 +189,11 @@ $row2 = $result2->fetch_assoc();
                             <h3 class='price'>" . htmlspecialchars($row["price"]) . "/-</h3>
                             <hr>
                             <h6>Pay Per Person</h6>
-                            <input type='submit' value='Book Trip' class='btn btn-warning mt-2' style='width:100%;'>
+                            <form action='' method='post'>
+                                <input type='hidden' name='trip_id' value='$row[id]'>
+                                <input type='hidden' name='trip_name' value='$row[name]'>
+                                <input type='submit' name='book_trip' value='Book Trip' class='btn btn-warning mt-2' style='width:100%;'>
+                            </form>
                           </div>";
                 } else {
                     echo "<p>No trips found</p>";
@@ -236,7 +249,7 @@ $row2 = $result2->fetch_assoc();
         </div>
 
         <!-- main clsas over -->
-    </div> 
+    <!-- </div>  -->
 
     <?php
     // Close the connection
