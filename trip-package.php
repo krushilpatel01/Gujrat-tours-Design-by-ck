@@ -145,7 +145,7 @@ if (!$result) {
                         <?php
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo "<div class='col-12 col-lg-6 col-xl-4 trip-card'>
+                                echo "<div class='col-12  col-md-6 col-lg-6 col-xl-4 trip-card'>
                                         <h5>Trip: " . htmlspecialchars($row['name']) . "</h5>
                                         <p>" . htmlspecialchars($row['detail']) . "</p>
                                         <h2>Price : " . htmlspecialchars($row['price']) . "</h2>";
@@ -157,7 +157,7 @@ if (!$result) {
                                     echo "<p>Image not available</p>";
                                 }
 
-                                echo "<p>Destination: " . htmlspecialchars($row['destination']) . "</p>
+                                echo "<h6 class='mt-3'>Destination: " . htmlspecialchars($row['destination']) . "</h6>
                                       <p>Types: " . htmlspecialchars($row['types']) . "</p>
                                       <p>Trip Days: " . htmlspecialchars($row['trip_days']) . " Days & " . htmlspecialchars($row['trip_nights']) . " Nights</p>";
 

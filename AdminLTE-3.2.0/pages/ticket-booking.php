@@ -1,23 +1,45 @@
 <?php
-// include '../user/config.php';
+include '../../user/config.php';
 
 session_start();
 
 if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
     $user_id = $_SESSION['admin_id'];
     $user_name = $_SESSION['admin_name'];
-  
-    // Print user name and ID
-  //   echo "Welcome, $user_name!<br>";
-  //   echo "Your user ID is: $user_id<br>";
-  //   echo "Session status: Active";
-  // } else {
-  //   echo "Session not active or user not logged in.";
   }
   else{
     header('location:../login.php');
   }
-  ?>
+
+
+  if(isset($_POST['update_status'])) {
+    $trip_id = $_POST['trip_id'];
+    $status = $_POST['status'];
+
+    $update_query = "UPDATE `trip_bookings` SET `status`='$status' WHERE `id`='$trip_id'";
+    $result = mysqli_query($conn, $update_query);
+
+    if($result){
+        echo "<script>alert('Booking status updated successfully!');</script>";
+    } else {
+        echo "<script>alert('Failed to update booking status.');</script>";
+    }
+}
+
+if(isset($_POST['delete_trip'])) {
+    $trip_id = $_POST['trip_id'];
+
+    $delete_query = "DELETE FROM `trip_bookings` WHERE `id`='$trip_id'";
+    $result = mysqli_query($conn, $delete_query);
+
+    if($result){
+        echo "<script>alert('Booking deleted successfully!');</script>";
+    } else {
+        echo "<script>alert('Failed to delete booking.');</script>";
+    }
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,7 +61,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
 </head>
 
 <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
+  <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -387,29 +409,115 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
       <!-- /.sidebar -->
     </aside>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Ticket Booking</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
-                                <li class="breadcrumb-item active">ticket-booking</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div><!-- /.container-fluid -->
-            </section>
 
-            <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
-                <i class="fas fa-chevron-up"></i>
-            </a>
+        <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+              <h1>Ticket Booking</h1>
+          </div>
+          <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
+                    <li class="breadcrumb-item active">ticket-booking</li>
+                </ol>
+          </div>
         </div>
+        <div class="row trip-booking-list">
+            <div class="col-12 my-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Trip Name</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Trip Price</th>
+                            <th scope="col">Booking Date</th>
+                            <th scope="col">Adult Qty</th>
+                            <th scope="col">Child Qty</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Update/Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Pagination variables
+                    $limit = 10; // Number of bookings per page
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $start = ($page - 1) * $limit;
+                            
+                    // Fetch bookings ordered by oldest booking date first with pagination
+                    $select_user = mysqli_query($conn, "SELECT * FROM `trip_bookings` ORDER BY id DESC LIMIT $start, $limit") or die('Query failed');
+                            
+                    if (mysqli_num_rows($select_user) > 0) {
+                        while ($fetch_user = mysqli_fetch_assoc($select_user)) {
+                    ?>
+                    <tr>
+                        <th scope="row"><?php echo $fetch_user['id']; ?></th>
+                        <td><?php echo $fetch_user['trip_name']; ?></td>
+                        <td><?php echo $fetch_user['destination']; ?></td>
+                        <td><?php echo $fetch_user['trip_price']; ?></td>
+                        <td><?php echo $fetch_user['booking_date']; ?></td>
+                        <td><?php echo $fetch_user['adult_qty']; ?></td>
+                        <td><?php echo $fetch_user['child_qty']; ?></td>
+                        <td><?php echo $fetch_user['total_price']; ?></td>
+                        <td>
+                            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
+                                <select name="status" class="form-control">
+                                    <option value="pending" <?php if ($fetch_user['status'] == 'pending') { echo 'selected'; } ?>>Pending</option>
+                                    <option value="complete" <?php if ($fetch_user['status'] == 'complete') { echo 'selected'; } ?>>Complete</option>
+                                </select>
+                                <input type="submit" name="update_status" class="btn btn-warning" value="Update Status">
+                                <input type="submit" name="delete_trip" class="btn btn-danger" value="Delete">
+                            </form>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    } else {
+                        echo '<p class="empty">No bookings available!</p>';
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                      
+                <!-- Bootstrap Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <?php
+                        // Count total number of rows
+                        $total_query = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `trip_bookings`");
+                        $total_result = mysqli_fetch_assoc($total_query);
+                        $total_pages = ceil($total_result['total'] / $limit);
+                      
+                        // Display previous button
+                        if ($page > 1) {
+                            echo '<li class="page-item"><a class="page-link" href="?page='.($page - 1).'">Previous</a></li>';
+                        }
+                      
+                        // Display page numbers
+                        for ($i = 1; $i <= $total_pages; $i++) {
+                            echo '<li class="page-item '.($i == $page ? 'active' : '').'"><a class="page-link" href="?page='.$i.'">'.$i.'</a></li>';
+                        }
+                      
+                        // Display next button
+                        if ($page < $total_pages) {
+                            echo '<li class="page-item"><a class="page-link" href="?page='.($page + 1).'">Next</a></li>';
+                        }
+                        ?>
+                    </ul>
+                </nav>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+    </div>
+
+
 
         <!-- footer link -->
         <?php
@@ -421,7 +529,7 @@ if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
             <!-- Control sidebar content goes here -->
         </aside>
         <!-- /.control-sidebar -->
-    </div>
+  </div>
     <!-- ./wrapper -->
 
     <!-- jQuery -->

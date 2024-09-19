@@ -13,62 +13,70 @@ if (!isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
 $error_message = '';
 
 // Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check required fields
     if (isset($_POST['trip_id']) && isset($_POST['adult_qty']) && isset($_POST['child_qty']) && isset($_POST['selected_date'])) {
+        // Get form data
         $trip_id = $_POST['trip_id'];
         $adult_qty = $_POST['adult_qty'];
         $child_qty = $_POST['child_qty'];
         $selected_date = $_POST['selected_date'];
-        $coupon_used = isset($_POST['coupon_used']) ? $_POST['coupon_used'] : ''; // Ensure it's a string
-        $user_id = $_SESSION['user_id']; // Fetch the user ID from the session
-        
-        // Fetch trip price from the database
-        $stmt = $conn->prepare("SELECT price FROM trip WHERE id = ?");
+        $coupon_used = isset($_POST['coupon_used']) ? $_POST['coupon_used'] : ''; // Optional coupon
+        $user_id = $_SESSION['user_id']; // Assuming the user is logged in
+
+        // echo $selected_date; // Debugging: check if the date is passed correctly
+
+        // Fetch trip details from the database
+        $stmt = $conn->prepare("SELECT name, price, destination FROM trip WHERE id = ?");
         $stmt->bind_param('i', $trip_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $trip = $result->fetch_assoc();
-        $trip_price = $trip['price'];
-
-        // Trip price calculation (for each person)
-        $adult_price = $trip_price; // Use trip price fetched from DB
-        $child_price = $trip_price;
-        $total_price = ($adult_qty * $adult_price) + ($child_qty * $child_price);
-
-        // Convert booking date to "Y-m-d" format for database insertion
-        $booking_date = date('Y-m-d', strtotime($selected_date));
-
-        // Check if required fields are valid
-        if (empty($trip_id) || empty($adult_qty) || empty($child_qty) || empty($selected_date)) {
-            $error_message = "Required fields are missing!";
+        
+        if (!$trip) {
+            $error_message = "Trip not found.";
         } else {
-            // Fetch trip details to get trip_name
-            $stmt = $conn->prepare("SELECT name FROM trip WHERE id = ?");
-            $stmt->bind_param('i', $trip_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $trip = $result->fetch_assoc();
+            // Get trip details
             $trip_name = $trip['name'];
+            $trip_price = $trip['price'];
+            $destination = $trip['destination'];
 
-            // Insert booking details into the database
-            $stmt = $conn->prepare("INSERT INTO trip_bookings (trip_id, trip_name, booking_date, adult_qty, child_qty, trip_price, total_price, coupon_used, client_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param('issiiissi', $trip_id, $trip_name, $booking_date, $adult_qty, $child_qty, $trip_price, $total_price, $coupon_used, $user_id);
-            if ($stmt->execute()) {
-                echo "<script>
-                alert('Your Trip Booking has been successfully.');
-              </script>";
-                if (!empty($coupon_used)) {
-                    echo "Coupon Applied: " . htmlspecialchars($coupon_used) . "<br>";
-                }
+            // Price calculation
+            $adult_price = $trip_price;
+            $child_price = $trip_price;
+            $total_price = ($adult_qty * $adult_price) + ($child_qty * $child_price);
+
+
+            // $booking_date = '2024-09-19'; // Manually set a date
+
+            // Convert selected date to Y-m-d format for database
+            $booking_date = date('Y-m-d', strtotime($selected_date));
+            // echo $booking_date;
+
+            // Ensure at least one adult or child is selected
+            if ($adult_qty == 0 && $child_qty == 0) {
+                $error_message = "Please select at least one adult or child to proceed with booking.";
             } else {
-                $error_message = "Failed to process booking.";
+                $sql = "INSERT INTO trip_bookings (trip_id, trip_name, destination, booking_date, adult_qty, child_qty, trip_price, total_price, coupon_used, client_id) 
+                VALUES ($trip_id, '$trip_name', '$destination', '$booking_date', $adult_qty, $child_qty, $trip_price, $total_price, '$coupon_used', $user_id)";
+        
+        if ($conn->query($sql)) {
+            echo "<script>
+            alert('Your Trip Booking has been successfully processed.');
+            window.location.href = 'booking-success.php';
+            </script>";
+        } else {
+            // Output the SQL error
+            echo "Error: " . $conn->error;
+        }
+        
             }
-            $stmt->close();
         }
     } else {
         $error_message = "Required fields are missing!";
     }
 }
+
 
 // Fetch current trip details
 if (isset($_GET['trip_id'])) {
@@ -83,8 +91,7 @@ if (isset($_GET['trip_id'])) {
     exit();
 }
 ?>
-
-
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,7 +153,7 @@ if (isset($_GET['trip_id'])) {
     <!-- nav start -->
     <?php include ("components/header-footer/header.php"); ?>
     <!-- nav over -->
-<div class="container my-5">
+    <div class="container my-5">
     <div class="row">
         <!-- Date and Time Section -->
         <div class="col-12 col-lg-8">
@@ -308,12 +315,17 @@ $(document).ready(function() {
 
     // Date selection
     $('#continue-btn').click(function() {
-        $('#date-time-section').hide();
-        $('#traveller-section').show();
-        // Set the selected date to the hidden input field
         const selectedDate = $('#calendar-body .selected-date').data('date');
-        $('#selected-date-hidden').val(selectedDate);
-        $('#selected-date').text(selectedDate);
+        
+        if (selectedDate) {
+            $('#date-time-section').hide();
+            $('#traveller-section').show();
+            // Set the selected date to the hidden input field
+            $('#selected-date-hidden').val(selectedDate);
+            $('#selected-date').text(selectedDate);
+        } else {
+            alert('Please select a date.');
+        }
     });
 
     $('#back-btn').click(function() {
@@ -387,6 +399,7 @@ $(document).ready(function() {
     populateCalendar();
 });
 </script>
+
 
     <!-- include css all files -->
     <?php

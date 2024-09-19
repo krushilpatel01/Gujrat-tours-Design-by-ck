@@ -48,7 +48,7 @@ session_start();
                 $tripCount = isset($tripCountRow['trip_count']) ? $tripCountRow['trip_count'] : 0;
             
                 // Output data of each destination
-                echo "<a href='destination-show.php?destination_id=" . urlencode($destinationId) . "' class='col-12 col-lg-4 destination-card' style='text-decoration:none;'>
+                echo "<a href='destination-show.php?destination_id=" . urlencode($destinationId) . "'class='col-12 col-md-6 col-lg-4 destination-card my-2' style='text-decoration:none;'>
                             <div class='destination-image'>";
                 // Check if the image file exists before displaying it
                 if (file_exists($destinationImage)) {

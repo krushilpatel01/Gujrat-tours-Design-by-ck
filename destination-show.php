@@ -143,8 +143,8 @@ if (isset($_POST['show_trip'])) {
                     <button type="reset" class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
                 </form>
             </aside>
-            <section class="col-12 col-lg-9 spe-destination">
-            <div class="row" style="width:100%">
+            <section class="col-12 col-lg-9 spe-destination my-3">
+            <div class="row mx-auto" style="width:100%">
                 <?php
                 $sql = "SELECT * FROM trip WHERE destination = '" . $row2["name"] . "'";
                 $result = $conn->query($sql);
