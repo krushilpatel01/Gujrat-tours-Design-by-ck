@@ -98,7 +98,7 @@ session_start();
         <div class="hero-slider">
         <nav class="navbar navbar-expand-lg navbar-dark py-1" style="height: 100px;">
             <div class="container">
-                <a class="navbar-brand text-white" href="index.php">Gujrat Tours</a>
+                <a class="navbar-brand text-white" href="index.php">Guj<span style="color:red;">rat</span> Tours</a>
                 <button class="navbar-toggler" style="border:1px solid white" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">

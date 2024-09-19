@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 05, 2024 at 08:31 AM
+-- Generation Time: Sep 19, 2024 at 07:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bookly_db`
+-- Database: `gujrat_tour-database`
 --
 
 -- --------------------------------------------------------
@@ -300,6 +300,44 @@ INSERT INTO `trip` (`id`, `name`, `price`, `detail`, `image`, `trip_days`, `trip
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `trip_bookings`
+--
+
+CREATE TABLE `trip_bookings` (
+  `id` int(100) NOT NULL,
+  `trip_id` int(100) NOT NULL,
+  `trip_name` varchar(255) NOT NULL,
+  `destination` varchar(100) NOT NULL,
+  `trip_price` int(100) NOT NULL,
+  `booking_date` date NOT NULL,
+  `adult_qty` int(100) NOT NULL,
+  `child_qty` int(100) NOT NULL,
+  `total_price` int(100) NOT NULL,
+  `coupon_used` varchar(100) NOT NULL,
+  `client_id` int(100) NOT NULL,
+  `status` varchar(100) NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `trip_bookings`
+--
+
+INSERT INTO `trip_bookings` (`id`, `trip_id`, `trip_name`, `destination`, `trip_price`, `booking_date`, `adult_qty`, `child_qty`, `total_price`, `coupon_used`, `client_id`, `status`) VALUES
+(82, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '2024-09-24', 1, 1, 49200, '', 40, 'pending'),
+(83, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '2024-09-27', 1, 0, 24600, '', 40, 'pending'),
+(84, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 1, 1, 49200, '', 40, 'pending'),
+(85, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 1, 0, 24600, '', 40, 'pending'),
+(86, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 1, 0, 24600, '', 40, 'pending'),
+(87, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 0, 1, 24600, '', 40, 'pending'),
+(88, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 1, 0, 24600, '', 40, 'pending'),
+(89, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '0000-00-00', 1, 0, 24600, '', 40, 'pending'),
+(90, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '2024-09-26', 1, 0, 24600, '', 40, 'pending'),
+(91, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '2024-09-30', 1, 1, 49200, '', 40, 'pending'),
+(92, 76, 'Thailand – pattaya & Bangkok 4N – 5D', 'Thailand / Bangkok', 24600, '2024-09-25', 1, 0, 24600, '', 40, 'pending');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `trip_query`
 --
 
@@ -387,7 +425,8 @@ INSERT INTO `user` (`id`, `image`, `name`, `email`, `password`, `confirm_pw`, `u
 (34, '', 'deep', 'deep@gmail.com', 'dd4936bf8f4c399b2bd95c07486172b5', 'dd4936bf8f4c399b2bd95c07486172b5', 'User', ''),
 (35, '', 'abc', 'abc@gmail.com', '900150983cd24fb0d6963f7d28e17f72', '900150983cd24fb0d6963f7d28e17f72', 'User', ''),
 (36, '', 'karan', 'karan@gmail.com', 'db068ce9f744fbb35eedc9a883f91085', 'karan', 'User', ''),
-(38, '—Pngtree—india flag waving transparent background_6167661.png', 'ck', 'ck@gmail.com', 'ck@123', 'ck@123', 'Admin', '');
+(38, '—Pngtree—india flag waving transparent background_6167661.png', 'ck', 'ck@gmail.com', 'ck@123', 'ck@123', 'Admin', ''),
+(40, '', 'patel', 'patel@gmail.com', '64a43b6ca15d128ac6a0679b39bc9c07', 'patel', 'User', '');
 
 --
 -- Indexes for dumped tables
@@ -453,6 +492,12 @@ ALTER TABLE `room`
 ALTER TABLE `trip`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `trip_bookings`
+--
+ALTER TABLE `trip_bookings`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `trip_query`
@@ -537,6 +582,12 @@ ALTER TABLE `trip`
   MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
+-- AUTO_INCREMENT for table `trip_bookings`
+--
+ALTER TABLE `trip_bookings`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+
+--
 -- AUTO_INCREMENT for table `trip_query`
 --
 ALTER TABLE `trip_query`
@@ -552,7 +603,7 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

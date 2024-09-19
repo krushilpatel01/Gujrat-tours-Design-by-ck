@@ -471,8 +471,8 @@ if(isset($_POST['delete_trip'])) {
                                     <option value="pending" <?php if ($fetch_user['status'] == 'pending') { echo 'selected'; } ?>>Pending</option>
                                     <option value="complete" <?php if ($fetch_user['status'] == 'complete') { echo 'selected'; } ?>>Complete</option>
                                 </select>
-                                <input type="submit" name="update_status" class="btn btn-warning" value="Update Status">
-                                <input type="submit" name="delete_trip" class="btn btn-danger" value="Delete">
+                                <input type="submit" name="update_status" class="btn btn-warning mt-2" value="Update Status">
+                                <input type="submit" name="delete_trip" class="btn btn-danger mt-2" value="Delete">
                             </form>
                         </td>
                     </tr>

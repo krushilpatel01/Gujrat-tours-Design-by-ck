@@ -1,6 +1,6 @@
 <footer>
         <div class="container">
-            <div class="row our-partners mx-auto">
+            <div class="row our-partners mx-auto mb-4">
                 <div class="col-12 col-md-4 my-2 col-lg-2 Company-logo">
                     <img src="https://dynamic.design.com/asset/logo/263b30ec-856b-4208-be0d-012ca7fde1cc/logo-search-grid-1x?logoTemplateVersion=1&v=638579088984670000&text=tours+and+tavel+logo"
                         alt="" srcset="">
@@ -28,7 +28,7 @@
             </div>
             <div class="row">
                 <div class="col-12 col-lg-4 about-gujtar-tour my-2">
-                    <h2>GUJRAT TOURS</h2>
+                    <h2>GUJ<span style="color:red;">RAT</span>  TOURS</h2>
                     <p>Your one-stop travel solution, from planning to discovering, booking, and sharing memories.
                     </p>
                     <div class="ul icon-list" style="list-style: none; display: flex; gap: 10px;">
@@ -63,9 +63,9 @@
                         </div>
                         <div class="col-6 col-md-3 col-lg-3 my-2 fmenu-list">
                             <h2 class="fmenu-title">Contact Info</h2>
-                            <h4>- KKV holl, near 150ft Ring Road - 360005.</h4>
+                            <h4>- KKV holl, near 150 ft Ring Road - 360005.</h4>
                             <h4>- +91 6353635363</h4>
-                            <h4>- Support krshilpattel@gmail.com</h4>
+                            <h4>- Support gujrattours01@gmail.com</h4>
                         </div>
                     </div>
                 </div>
