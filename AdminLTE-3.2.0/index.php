@@ -395,7 +395,7 @@ else{
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Dashboard</h1>
+              <h1 class="m-0"><span style="color:red;">User</span> Information Dashboard</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -408,68 +408,215 @@ else{
       </div>
       <!-- /.content-header -->
 
-      <!-- Main content -->
+      <!-- Main User content -->
       <section class="content">
         <div class="container-fluid">
           <!-- Small boxes (Stat box) -->
           <div class="row">
+            <!-- trip query -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-info">
                 <div class="inner">
-                  <h3>150</h3>
+                <?php
+                $sql = "SELECT * FROM trip_query"; // Replace with your table name
+                $result = $conn->query($sql);
 
-                  <p>New Orders</p>
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Trip Query</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-bag"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="pages/trips-setting/trip-query.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
+             <!-- trip booking -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <?php
+                $sql = "SELECT * FROM trip_bookings"; // Replace with your table name
+                $result = $conn->query($sql);
 
-                  <p>Bounce Rate</p>
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Trip Booking</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="pages/ticket-booking.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
+             <!-- user registation -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-warning">
                 <div class="inner">
-                  <h3>44</h3>
+                <?php
+                $sql = "SELECT * FROM user where user_type = 'User'"; // Replace with your table name
+                $result = $conn->query($sql);
 
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
                   <p>User Registrations</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-person-add"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="pages/site-users/user.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->
+             <!-- contact message -->
             <div class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>65</h3>
+                <?php
+                $sql = "SELECT * FROM contact_us_message"; // Replace with your table name
+                $result = $conn->query($sql);
 
-                  <p>Unique Visitors</p>
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Contact Message</p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="pages/mailbox/mailbox.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+          </div>
+          <!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0"><span style="color:red;">Admin</span> Information Dashboard</h1>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main Admin content -->
+      <section class="content">
+        <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+            <!-- trip query -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                <?php
+                $sql = "SELECT * FROM trip"; // Replace with your table name
+                $result = $conn->query($sql);
+
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Total Trip Available</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-bag"></i>
+                </div>
+                <a href="pages/trips-setting/add-trip.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+             <!-- destintion-->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                <?php
+                $sql = "SELECT * FROM destination"; // Replace with your table name
+                $result = $conn->query($sql);
+
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Total Destination Available</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="pages/trips-setting/destination.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+             <!-- categories -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                <?php
+                $sql = "SELECT * FROM types"; // Replace with your table name
+                $result = $conn->query($sql);
+
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Trip Categories Available</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                </div>
+                <a href="pages/trips-setting/trip-categories.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+            </div>
+            <!-- ./col -->
+             <!-- coupen -->
+            <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                <?php
+                $sql = "SELECT * FROM coupen"; // Replace with your table name
+                $result = $conn->query($sql);
+
+                // Count the total number of rows
+                $total_rows = $result->num_rows;
+
+                echo "<h3>$total_rows</h3>";
+                ?>
+                  <p>Trip Coupen Available</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="pages/trips-setting/trip-coupen.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
               </div>
             </div>
             <!-- ./col -->

@@ -1,45 +1,53 @@
 <?php
 include '../../user/config.php';
-
 session_start();
 
-if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
-    $user_id = $_SESSION['admin_id'];
-    $user_name = $_SESSION['admin_name'];
-  }
-  else{
-    header('location:../login.php');
-  }
+// Redirect to login if not logged in
+if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
+    header('Location: ../login.php');
+    exit();
+}
 
-
-  if(isset($_POST['update_status'])) {
+// Handle booking status update
+if (isset($_POST['update_status'])) {
     $trip_id = $_POST['trip_id'];
     $status = $_POST['status'];
 
     $update_query = "UPDATE `trip_bookings` SET `status`='$status' WHERE `id`='$trip_id'";
     $result = mysqli_query($conn, $update_query);
 
-    if($result){
-        echo "<script>alert('Booking status updated successfully!');</script>";
+    if ($result) {
+        $_SESSION['message'] = 'Booking status updated successfully!';
+        $_SESSION['message_type'] = 'success';
     } else {
-        echo "<script>alert('Failed to update booking status.');</script>";
+        $_SESSION['message'] = 'Failed to update booking status.';
+        $_SESSION['message_type'] = 'danger';
     }
+
+    header('Location:ticket-booking.php'); // Redirect back to booking page
+    exit();
 }
 
-if(isset($_POST['delete_trip'])) {
+// Handle booking deletion
+if (isset($_POST['delete_trip'])) {
     $trip_id = $_POST['trip_id'];
 
     $delete_query = "DELETE FROM `trip_bookings` WHERE `id`='$trip_id'";
     $result = mysqli_query($conn, $delete_query);
 
-    if($result){
-        echo "<script>alert('Booking deleted successfully!');</script>";
+    if ($result) {
+        $_SESSION['message'] = 'Booking deleted successfully!';
+        $_SESSION['message_type'] = 'success';
     } else {
-        echo "<script>alert('Failed to delete booking.');</script>";
+        $_SESSION['message'] = 'Failed to delete booking.';
+        $_SESSION['message_type'] = 'danger';
     }
-}
 
+    header('Location: ticket-booking.php'); // Redirect back to booking page
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -469,7 +477,7 @@ if(isset($_POST['delete_trip'])) {
                                 <input type="hidden" name="trip_id" value="<?php echo $fetch_user['id']; ?>">
                                 <select name="status" class="form-control">
                                     <option value="pending" <?php if ($fetch_user['status'] == 'pending') { echo 'selected'; } ?>>Pending</option>
-                                    <option value="complete" <?php if ($fetch_user['status'] == 'complete') { echo 'selected'; } ?>>Complete</option>
+                                    <option value="Confirmed" <?php if ($fetch_user['status'] == 'Confirmed') { echo 'selected'; } ?>>Confirmed</option>
                                 </select>
                                 <input type="submit" name="update_status" class="btn btn-warning mt-2" value="Update Status">
                                 <input type="submit" name="delete_trip" class="btn btn-danger mt-2" value="Delete">

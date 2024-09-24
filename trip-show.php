@@ -73,7 +73,6 @@ $row2 = $result2->fetch_assoc();
     <style>
         input:not([type="submit"]){
             width: 100%;
-            margin: 10px auto;
             padding: 10px 0px;
             text-indent: 10px;
         }
@@ -87,10 +86,9 @@ $row2 = $result2->fetch_assoc();
     </style>
 </head>
 <body>
-    <!-- <div class="main"> -->
-        <!-- nav start -->
-        <?php include ("components/header-footer/header.php"); ?>
-        <!-- nav over -->
+    <!-- nav start -->
+    <?php include ("components/header-footer/header.php"); ?>
+    <!-- nav over -->
 
         <div class="container">
             <div class="row page-section my-5">  
@@ -248,8 +246,6 @@ $row2 = $result2->fetch_assoc();
         <!-- container over -->
         </div>
 
-        <!-- main clsas over -->
-    <!-- </div>  -->
 
     <?php
     // Close the connection

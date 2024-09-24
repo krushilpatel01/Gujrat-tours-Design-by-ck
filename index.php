@@ -82,6 +82,14 @@ session_start();
                 margin: 2px auto;
             }
         }
+        .u-name{
+            color: red;
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+            color: darkslateblue;
+        }
     </style>
 </head>
 
@@ -105,7 +113,7 @@ session_start();
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center pe-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="index.php">Home</a>
                         </li>
@@ -145,7 +153,7 @@ session_start();
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index: 999;">
                                 <?php
                                 if (isset($_SESSION['user_name'])) {
-                                    echo "<li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li>";
+                                    echo "<a href='user.php'><li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li></a>";
                                 } else {
                                     echo "<li><a class='dropdown-item' href='#'>Welcome User</a></li>";
                                 }

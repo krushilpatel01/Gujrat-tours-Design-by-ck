@@ -19,6 +19,16 @@ if (isset($_SESSION['user_name'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip Coupen Page</title>
+    <style>
+        .u-name{
+            color: red;
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: none;
+            color: darkslateblue;
+        }
+    </style>
     <!-- include css online files -->
     <?php
         include '../components/files/css.php';
@@ -76,7 +86,7 @@ if (isset($_SESSION['user_name'])) {
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="z-index: 999;">
                                 <?php
                                     if (isset($_SESSION['user_name'])) {
-                                        echo "<li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li>";
+                                        echo "<a href='user.php'><li class='dropdown-item'>Welcome " . $_SESSION['user_name'] . "</li></a>";
                                     } else {
                                         echo "<li><a class='dropdown-item' href='#'>Welcome User</a></li>";
                                     }
