@@ -189,7 +189,9 @@ if (isset($_POST['show_trip'])) {
         </div>
     </div>
 
-        
+                <!-- footer start -->
+                <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
 
 </body>
     <!-- include css all files -->

@@ -2,11 +2,13 @@
 include '../../user/config.php';
 session_start();
 
-// Redirect to login if not logged in
-if (!isset($_SESSION['admin_name']) || !isset($_SESSION['admin_id'])) {
-    header('Location: ../login.php');
-    exit();
-}
+if (isset($_SESSION['admin_name']) && isset($_SESSION['admin_id'])) {
+    $user_id = $_SESSION['admin_id'];
+    $user_name = $_SESSION['admin_name'];
+  }
+  else{
+    header('location:../login.php');
+  }
 
 // Handle booking status update
 if (isset($_POST['update_status'])) {
@@ -478,6 +480,7 @@ if (isset($_POST['delete_trip'])) {
                                 <select name="status" class="form-control">
                                     <option value="pending" <?php if ($fetch_user['status'] == 'pending') { echo 'selected'; } ?>>Pending</option>
                                     <option value="Confirmed" <?php if ($fetch_user['status'] == 'Confirmed') { echo 'selected'; } ?>>Confirmed</option>
+                                    <option value="Canceled" <?php if ($fetch_user['status'] == 'Canceled') { echo 'selected'; } ?>>Canceled</option>
                                 </select>
                                 <input type="submit" name="update_status" class="btn btn-warning mt-2" value="Update Status">
                                 <input type="submit" name="delete_trip" class="btn btn-danger mt-2" value="Delete">

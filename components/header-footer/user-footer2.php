@@ -42,17 +42,17 @@
                     <div class="row">
                         <div class="col-6 col-md-3 col-lg-3 my-2 fmenu-list">
                             <h2 class="fmenu-title">Our Company</h2>
-                            <h4><a href="index.php" style="color:white;" onMouseOver="this.style.color='red'">- Home</a></h4>
-                            <h4><a href="about-us.php" style="color:white;" onMouseOver="this.style.color='red'">- About Us</a></h4>
-                            <h4><a href="trip-package.php" style="color:white;" onMouseOver="this.style.color='red'">- All Trips</a></h4>
-                            <h4><a href="contact-us.php" style="color:white;" onMouseOver="this.style.color='red'">- Contact Us</a></h4>
+                            <h4><a href="../index.php" style="color:white;" onMouseOver="this.style.color='red'">- Home</a></h4>
+                            <h4><a href="../about-us.php" style="color:white;" onMouseOver="this.style.color='red'">- About Us</a></h4>
+                            <h4><a href="../trip-package.php" style="color:white;" onMouseOver="this.style.color='red'">- All Trips</a></h4>
+                            <h4><a href="../contact-us.php" style="color:white;" onMouseOver="this.style.color='red'">- Contact Us</a></h4>
                         </div>
                         <div class="col-6 col-md-3 col-lg-3 my-2 fmenu-list">
                             <h2 class="fmenu-title">Quick Links</h2>
-                            <h4><a href="user.php" style="color:white;" onMouseOver="this.style.color='red'">- View Account</a></h4>
+                            <h4><a href="../user.php" style="color:white;" onMouseOver="this.style.color='red'">- View Account</a></h4>
                             <h4  style="color:white;">- Check Booking</h4>
                             <h4  style="color:white;">- Return & Exchange</h4>
-                            <h4><a href="trip-coupen.php" style="color:white;" onMouseOver="this.style.color='red'">- latest Coupen</a></h4>
+                            <h4><a href="../trip-coupen.php" style="color:white;" onMouseOver="this.style.color='red'">- latest Coupen</a></h4>
                         </div>
                         <div class="col-6 col-md-3 col-lg-3 my-2 fmenu-list">
                             <h2 class="fmenu-title">Top Destinations</h2>

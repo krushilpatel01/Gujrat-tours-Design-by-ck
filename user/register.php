@@ -74,6 +74,9 @@ if (isset($_POST['submit'])) {
         </section>
     </div>
 
+            <!-- footer start -->
+            <?php include ("../components/header-footer/user-footer2.php"); ?>
+        <!-- footer over -->
 
 
 </body>

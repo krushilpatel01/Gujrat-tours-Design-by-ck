@@ -439,36 +439,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['blog_submit'])) {
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
                 <h1>Blog</h1>
-              </div>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
-                  <li class="breadcrumb-item active">Blog</li>
-                </ol>
-              </div>
             </div>
-            <div class="row add-blog">
-                <div class="col-4 mb-5">
-                <form action="" method="post" enctype="multipart/form-data">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="../index.php">Home</a></li>
+                    <li class="breadcrumb-item active">Blog</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- Add Blog Form -->
+        <div class="row add-blog">
+            <div class="col-4 mb-5">
+                <form action="admin_blog.php" method="post" enctype="multipart/form-data">
                     <h2>Create a New Blog Post</h2>
 
                     <label for="blog_title">Blog Title:</label>
                     <input type="text" name="blog_title" id="blog_title" placeholder="Enter Blog Title" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
 
                     <label for="blog_description">Blog Description:</label>
                     <textarea name="blog_description" id="blog_description" placeholder="Enter Blog Description" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"></textarea>
+                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;"></textarea>
 
                     <label for="blog_action">Blog Action:</label>
                     <select name="blog_action" id="blog_action" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
+                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline: none;">
                         <option value="feature">Feature</option>
                         <option value="main">Main</option>
                         <option value="demo">Demo</option>
@@ -476,44 +478,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['blog_submit'])) {
 
                     <label for="blog_img">Blog Image:</label>
                     <input type="file" name="blog_img" id="blog_img" required
-                    style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline:1px;">
+                        style="width:100%; margin:10px auto; padding:10px 0px; text-indent:10px; outline:1px;">
 
                     <input type="submit" name="blog_submit" class="btn btn-warning my-2" value="Create Blog">
                 </form>
-                </div>
             </div>
-            <div class="row show-blog">
-            <?php
-                // Fetch blog posts from the database
-                $query = "SELECT * FROM blog ORDER BY id DESC";
-                $result = $conn->query($query);
+        </div>
 
-                if ($result->num_rows > 0) {
-                    while ($fetch_blog = $result->fetch_assoc()) {
-                        // Ensure that the blog_img column contains the image filename and extension
-                        $imageSrc = '' . htmlspecialchars($fetch_blog['blog_img']);
-                        
-                        echo '<div class="col-12 col-lg-3 px-2 d-block" style="width:100%; margin:20px 0px">';
-                        echo '<img src="' . $imageSrc . '" alt="Blog Image" style="width:100%; height:auto;">';
-                        echo '<p class="detail">Blog ID: ' . htmlspecialchars($fetch_blog['id']) . '</p>';
-                        echo '<h4 class="name">Blog Title : ' . htmlspecialchars($fetch_blog['blog_title']) . '</h4>';
-                        echo '<p class="detail">Description: ' . htmlspecialchars($fetch_blog['blog_desc']) . '</p>';
-                        echo '<p class="detail">Action: ' . htmlspecialchars($fetch_blog['blog_action']) . '</p>';
-                        echo '<form method="post" action="">';
-                        echo '<input type="hidden" name="blog_id" value="' . htmlspecialchars($fetch_blog['id']) . '">';
-                        echo '<input type="submit" name="delete_blog" class="btn btn-warning" value="Delete">';
-                        echo '<input type="submit" name="update_blog" class="btn btn-warning" value="Update">';
-                        echo '</form>';
-                        echo '</div>';
-                    }
-                } else {
-                    echo "<p>No blogs found.</p>";
+        <!-- Display Blogs -->
+        <div class="row show-blog">
+            <?php
+            // Fetch blog posts from the database
+            $query = "SELECT * FROM blog ORDER BY id DESC";
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                while ($fetch_blog = $result->fetch_assoc()) {
+                    $imageSrc = 'uploads/blog_images/' . htmlspecialchars($fetch_blog['blog_img']);
+                    
+                    echo '<div class="col-12 col-lg-3 px-2 d-block" style="width:100%; margin:20px 0px">';
+                    echo '<img src="' . $imageSrc . '" alt="Blog Image" style="width:100%; height:auto;">';
+                    echo '<p class="detail">Blog ID: ' . htmlspecialchars($fetch_blog['id']) . '</p>';
+                    echo '<h4 class="name">Blog Title: ' . htmlspecialchars($fetch_blog['blog_title']) . '</h4>';
+                    echo '<p class="detail">Description: ' . htmlspecialchars($fetch_blog['blog_desc']) . '</p>';
+                    echo '<p class="detail">Action: ' . htmlspecialchars($fetch_blog['blog_action']) . '</p>';
+                    echo '<form method="post" action="admin_blog.php">';
+                    echo '<input type="hidden" name="blog_id" value="' . htmlspecialchars($fetch_blog['id']) . '">';
+                    echo '<input type="submit" name="delete_blog" class="btn btn-warning" value="Delete">';
+                    echo '</form>';
+                    echo '</div>';
                 }
-                $conn->close();
-                ?>
-            </div>
-        </div><!-- /.container-fluid -->
-      </section>
+            } else {
+                echo "<p>No blogs found.</p>";
+            }
+            ?>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
 
     <!-- /.content-wrapper -->
      </div>

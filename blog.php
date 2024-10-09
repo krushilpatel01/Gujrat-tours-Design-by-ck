@@ -28,7 +28,9 @@ $result = $conn->query($sql);
         <!-- nav over -->
 
 
-
+        <!-- footer start -->
+        <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
 </body>
     <!-- include css all files -->
     <?php

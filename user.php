@@ -96,7 +96,15 @@ $bookings_result = $booking_query->get_result();
                                         <td><?php echo htmlspecialchars(date('Y-m-d', strtotime($booking['booking_date']))); ?></td>
                                         <td>$<?php echo htmlspecialchars($booking['total_price']); ?></td>
                                         <td>
-                                            <span class="badge bg-<?php echo $booking['status'] == 'Confirmed' ? 'success' : 'warning'; ?>">
+                                            <span class="badge bg-<?php 
+                                                if ($booking['status'] == 'Confirmed') {
+                                                    echo 'success';  // Green for confirmed bookings
+                                                } elseif ($booking['status'] == 'pending') {
+                                                    echo 'warning';  // Yellow for pending bookings
+                                                } elseif ($booking['status'] == 'Canceled') {
+                                                    echo 'danger';   // Red for canceled bookings
+                                                } 
+                                            ?>">
                                                 <?php echo htmlspecialchars($booking['status']); ?>
                                             </span>
                                         </td>
@@ -104,7 +112,7 @@ $bookings_result = $booking_query->get_result();
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="5">No bookings found.</td>
+                                    <td colspan="6">No bookings found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -119,6 +127,10 @@ $bookings_result = $booking_query->get_result();
         </div>
         <!-- main class over -->
     </div>
+
+            <!-- footer start -->
+            <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
 
     <!-- Include JS files -->
     <?php include "components/files/js.php"; ?>

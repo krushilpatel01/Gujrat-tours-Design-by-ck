@@ -25,9 +25,6 @@ session_start();
         <?php include ("components\header-footer\header.php"); ?>
         <!-- nav over -->
 
-
-
-</body>
     <!-- include css all files -->
     <div class="container">
         <!-- show trip code -->
@@ -65,6 +62,14 @@ session_start();
                     ?>
         </div>
     </div>
+
+
+            <!-- footer start -->
+            <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
+
+</body>
+
     <?php
     include "components/files/js.php";
     ?>

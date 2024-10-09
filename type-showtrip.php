@@ -214,7 +214,9 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
-        
+                <!-- footer start -->
+                <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
 
 </body>
     <!-- include css all files -->

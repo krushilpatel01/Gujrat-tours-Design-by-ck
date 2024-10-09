@@ -177,6 +177,10 @@ if (!$result) {
         </div>
     </section>
 
+            <!-- footer start -->
+            <?php include ("components/header-footer/user-footer.php"); ?>
+        <!-- footer over -->
+
     <!-- Include JS files -->
     <?php include "components/files/js.php"; ?>
 

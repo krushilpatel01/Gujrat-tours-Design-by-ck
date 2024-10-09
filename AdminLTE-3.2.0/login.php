@@ -147,8 +147,7 @@ if (isset($_POST['submit'])) {
             <div class="col side-detail2">
                 <section class="form-container">
                     <form action="" method="post">
-                        <img src="../components/images/Gujrat-Tours-logo.png" class="logo-class" width="200px" height="200px" alt="gujrat-tours" srcset="">
-                        <h3>Welcome To Gujrat Tours</h3>
+                        <h2>Welcome To Guj<span style="color:red;">rat</span> Tours Admin</h2>
                         <h3>Login Form</h3>
                         <input type="email" name="email" placeholder="Enter your email" id="" class="box" required>
                         <input type="password" name="password" placeholder="Enter your password" id="" class="box" required>
